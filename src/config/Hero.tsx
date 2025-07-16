@@ -27,13 +27,12 @@ import Github from '@/components/svgs/Github';
 import LinkedIn from '@/components/svgs/LinkedIn';
 import Mail from '@/components/svgs/Mail';
 import X from '@/components/svgs/X';
-import Bun from '@/components/technologies/Bun';
+import Flutter from '@/components/technologies/Flutter';
+import Java from '@/components/technologies/Java';
 import JavaScript from '@/components/technologies/JavaScript';
 import MongoDB from '@/components/technologies/MongoDB';
-import NextJs from '@/components/technologies/NextJs';
 import NodeJs from '@/components/technologies/NodeJs';
 import PostgreSQL from '@/components/technologies/PostgreSQL';
-import Prisma from '@/components/technologies/Prisma';
 import ReactIcon from '@/components/technologies/ReactIcon';
 // Technology Components
 import TypeScript from '@/components/technologies/TypeScript';
@@ -42,19 +41,18 @@ import TypeScript from '@/components/technologies/TypeScript';
 export const skillComponents = {
   TypeScript: TypeScript,
   ReactIcon: ReactIcon,
-  NextJs: NextJs,
-  Bun: Bun,
   PostgreSQL: PostgreSQL,
-  NodeJs: NodeJs,
+  NodeJS: NodeJs,
   MongoDB: MongoDB,
-  Prisma: Prisma,
   JavaScript: JavaScript,
+  Flutter: Flutter,
+  Java: Java,
 };
 
 export const heroConfig = {
   // Personal Information
-  name: 'Ram',
-  title: 'A Full Stack web developer.',
+  name: 'Shashank Jain',
+  title: 'A Full Stack developer.',
   avatar: '/assets/logo.png',
 
   // Skills Configuration
@@ -70,26 +68,36 @@ export const heroConfig = {
       component: 'ReactIcon',
     },
     {
-      name: 'Next.js',
-      href: 'https://nextjs.org/',
-      component: 'NextJs',
+      name: 'Node',
+      href: 'https://nodejs.org/',
+      component: 'NodeJS',
     },
     {
-      name: 'Bun',
-      href: 'https://bun.sh/',
-      component: 'Bun',
+      name: 'Java',
+      href: 'https://java.com/',
+      component: 'Java',
+    },
+    {
+      name: 'Flutter',
+      href: 'https://flutter.dev/',
+      component: 'Flutter',
     },
     {
       name: 'PostgreSQL',
       href: 'https://www.postgresql.org/',
       component: 'PostgreSQL',
     },
+    {
+      name: 'MongoDB',
+      href: 'https://www.mongodb.com/',
+      component: 'MongoDB',
+    },
   ],
 
   // Description Configuration
   description: {
     template:
-      'I build interactive web apps using {skills:0}, {skills:1}, {skills:2}, {skills:3} and {skills:4}. With a focus on <b>UI</b> design. Enthusiastic about <b>Three.js</b>, driven by a keen eye for design.',
+      'I build interactive, scalable, cloud-native applications web & mobile apps using {skills:0}, {skills:1}, {skills:2}, {skills:3}, {skills:4} and {skills:5}. Passionate about system architecture, performance optimization, and delivering robust solutions with a focus on GenAI and cloud technologies.',
   },
 
   // Buttons Configuration
@@ -113,22 +121,22 @@ export const heroConfig = {
 export const socialLinks = [
   {
     name: 'X',
-    href: 'https://x.com/ramxcodes',
+    href: 'https://x.com/Jainshashank7',
     icon: <X />,
   },
   {
     name: 'LinkedIn',
-    href: 'https://www.linkedin.com/in/ramxcodes/',
+    href: 'https://www.linkedin.com/in/shashankjain7125/',
     icon: <LinkedIn />,
   },
   {
     name: 'Github',
-    href: 'https://github.com/ramxcodes',
+    href: 'https://github.com/Jainshashank7125',
     icon: <Github />,
   },
   {
     name: 'Email',
-    href: 'mailto:ramxcodes@gmail.com',
+    href: 'mailto:sjainsahajpur7125@gmail.com',
     icon: <Mail />,
   },
 ];

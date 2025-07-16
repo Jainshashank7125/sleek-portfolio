@@ -13,15 +13,15 @@ export interface PageMeta {
 export const siteConfig = {
   name: heroConfig.name,
   title: 'Sleek Portfolio',
-  description: 'Sleek Portfolio Template by @Ramxcodes',
+  description: 'Sleek Portfolio Template by @Jainshashank',
   url: process.env.NEXT_PUBLIC_URL || 'http://localhost:3000',
   ogImage: '/meta/opengraph-image.png',
   author: {
     name: about.name,
-    twitter: '@ramxcodes',
-    github: 'ramxcodes',
-    linkedin: 'ramxcodes',
-    email: 'ramxcodes@gmail.com',
+    twitter: '@Jainshashank7',
+    github: 'Jainshashank7125',
+    linkedin: 'shashankjain7125',
+    email: 'sjainsahajpur7125@gmail.com',
   },
   keywords: [
     'portfolio',

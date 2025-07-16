@@ -1,26 +1,32 @@
-import Bun from '@/components/technologies/Bun';
+import AWS from '@/components/technologies/AWS';
+import Flutter from '@/components/technologies/Flutter';
+import Java from '@/components/technologies/Java';
 import JavaScript from '@/components/technologies/JavaScript';
 import MongoDB from '@/components/technologies/MongoDB';
-import NextJs from '@/components/technologies/NextJs';
+import MySQL from '@/components/technologies/MySql';
 import NodeJs from '@/components/technologies/NodeJs';
 import PostgreSQL from '@/components/technologies/PostgreSQL';
-import Prisma from '@/components/technologies/Prisma';
 import ReactIcon from '@/components/technologies/ReactIcon';
+import Spring from '@/components/technologies/Spring';
+import TailwindCss from '@/components/technologies/TailwindCss';
 import TypeScript from '@/components/technologies/TypeScript';
 
 export const mySkills = [
-  <ReactIcon key="react" />,
-  <Bun key="bun" />,
   <JavaScript key="javascript" />,
   <TypeScript key="typescript" />,
-  <MongoDB key="mongodb" />,
-  <NextJs key="nextjs" />,
+  <Java key="java" />,
+  <Spring key="spring" />,
+  <Flutter key="flutter" />,
+  <ReactIcon key="react" />,
+  <TailwindCss key="tailwind" />,
   <NodeJs key="nodejs" />,
+  <MongoDB key="mongodb" />,
   <PostgreSQL key="postgresql" />,
-  <Prisma key="prisma" />,
+  <MySQL key="mysql" />,
+  <AWS key="aws" />,
 ];
 
 export const about = {
-  name: 'Ramkrishna Swarnkar',
-  description: `I'm a Full Stack web developer and Open Source Contributor, I love building products to solve real-world problems. I'm specialized in building MVP's.`,
+  name: 'Shashank Jain',
+  description: `Full Stack Engineer with 3+ years of experience building high-traffic, cloud-native applications (1M+ monthly requests). Proficient in Java/Spring Boot, Node.js, React, and cloud platforms (AWS, Docker). Passionate about system architecture, performance optimization, and delivering scalable solutions. Experienced in GenAI, microservices, and DevOps.`,
 };

@@ -1,5 +1,6 @@
 'use client';
 
+import ChatBubbleIcon from '@/components/svgs/ChatBubbleIcon';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,7 +14,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { heroConfig } from '@/config/Hero';
 import { cn } from '@/lib/utils';
 import React, { useEffect, useRef, useState } from 'react';
-import ChatBubbleIcon from '@/components/svgs/ChatBubbleIcon';
+
 import SendIcon from '../svgs/SendIcon';
 
 interface Message {
@@ -27,7 +28,7 @@ interface Message {
 const initialMessages: Message[] = [
   {
     id: 1,
-    text: "Hello! I'm Ram's Portfolio Assistant. How can I help you?",
+    text: "Hello! I'm Shashank's Portfolio Assistant. How can I help you?",
     sender: 'bot',
     timestamp: new Date().toLocaleTimeString([], {
       hour: '2-digit',

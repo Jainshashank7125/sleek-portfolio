@@ -1,25 +1,20 @@
 'use client';
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from '@/components/ui/card';
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogTitle,
+//   DialogTrigger,
+// } from '@/components/ui/dialog';
 import { type Project } from '@/types/project';
 import { Link } from 'next-view-transitions';
-import Image from 'next/image';
-import React, { useState } from 'react';
+// import Image from 'next/image';
+import React from 'react';
 
 import ArrowRight from '../svgs/ArrowRight';
 import Github from '../svgs/Github';
-import PlayCircle from '../svgs/PlayCircle';
+// import PlayCircle from '../svgs/PlayCircle';
 import Website from '../svgs/Website';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
@@ -28,11 +23,11 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  // const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   return (
     <Card className="group h-full w-full overflow-hidden transition-all p-0 border-gray-100 dark:border-gray-800 shadow-none">
-      <CardHeader className="p-0">
+      {/* <CardHeader className="p-0">
         <div className="group relative aspect-video overflow-hidden">
           <Image
             className="h-full w-full object-cover"
@@ -65,9 +60,9 @@ export function ProjectCard({ project }: ProjectCardProps) {
             </Dialog>
           )}
         </div>
-      </CardHeader>
+      </CardHeader> */}
 
-      <CardContent className="px-6">
+      <CardContent className="px-6 py-6">
         <div className="space-y-4">
           {/* Project Header */}
           <div className="flex items-start justify-between gap-4">
@@ -78,34 +73,42 @@ export function ProjectCard({ project }: ProjectCardProps) {
               <p className="text-secondary mt-2">{project.description}</p>
             </div>
             <div className="flex items-center gap-2">
-              <Tooltip>
-                <TooltipTrigger>
-                  <Link
-                    className="text-secondary flex size-6 items-center justify-center hover:text-primary transition-colors"
-                    href={project.link}
-                    target="_blank"
-                  >
-                    <Website />
-                  </Link>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>View Website</p>
-                </TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Link
-                    className="text-secondary flex size-6 items-center justify-center hover:text-primary transition-colors"
-                    href={project.github}
-                    target="_blank"
-                  >
-                    <Github />
-                  </Link>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>View GitHub</p>
-                </TooltipContent>
-              </Tooltip>
+              {project.link != '' ? (
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Link
+                      className="text-secondary flex size-6 items-center justify-center hover:text-primary transition-colors"
+                      href={project.link}
+                      target="_blank"
+                    >
+                      <Website />
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>View Website</p>
+                  </TooltipContent>
+                </Tooltip>
+              ) : (
+                <></>
+              )}
+              {project.github != '' ? (
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Link
+                      className="text-secondary flex size-6 items-center justify-center hover:text-primary transition-colors"
+                      href={project.github}
+                      target="_blank"
+                    >
+                      <Github />
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>View GitHub</p>
+                  </TooltipContent>
+                </Tooltip>
+              ) : (
+                <></>
+              )}
             </div>
           </div>
 
