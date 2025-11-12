@@ -4,18 +4,86 @@ import Docker from '@/components/technologies/Docker';
 import ExpressJs from '@/components/technologies/ExpressJs';
 import Firebase from '@/components/technologies/Firebase';
 import Flutter from '@/components/technologies/Flutter';
+import FramerMotion from '@/components/technologies/FramerMotion';
+import Gemini from '@/components/technologies/Gemini';
 import Java from '@/components/technologies/Java';
+import Jest from '@/components/technologies/Jest';
 import MongoDB from '@/components/technologies/MongoDB';
 import MySQL from '@/components/technologies/MySql';
+import NextJs from '@/components/technologies/NextJs';
 import NodeJs from '@/components/technologies/NodeJs';
+import OpenAI from '@/components/technologies/OpenAI';
 import PostgreSQL from '@/components/technologies/PostgreSQL';
 import ReactIcon from '@/components/technologies/ReactIcon';
 import Spring from '@/components/technologies/Spring';
+import Supabase from '@/components/technologies/Supabase';
+import Swagger from '@/components/technologies/Swagger';
 import TailwindCss from '@/components/technologies/TailwindCss';
 import TypeScript from '@/components/technologies/TypeScript';
 import { Project } from '@/types/project';
 
 export const projects: Project[] = [
+  {
+    title: 'Coupon Management API',
+    description:
+      'Production-ready RESTful API for e-commerce discount coupons supporting cart-wise, product-wise, and BxGy (Buy X Get Y) discount types. Features comprehensive validation, usage limits, expiration handling, and detailed discount calculations with Swagger documentation.',
+    image: '/project/coupon-api.png',
+    technologies: [
+      { name: 'Node.js', icon: <NodeJs key="nodejs" /> },
+      { name: 'Express.js', icon: <ExpressJs key="express" /> },
+      { name: 'PostgreSQL', icon: <PostgreSQL key="postgresql" /> },
+      { name: 'Supabase', icon: <Supabase key="supabase" /> },
+      { name: 'Docker', icon: <Docker key="docker" /> },
+      { name: 'Jest', icon: <Jest key="jest" /> },
+      { name: 'Swagger', icon: <Swagger key="swagger" /> },
+    ],
+    github: 'https://github.com/Jainshashank7125/coupon-management-api',
+    live: 'https://coupon-management-api.onrender.com', // Add your deployment URL when available
+    link: '', // Add demo link if available
+    projectDetailsPageSlug: '/projects/coupon-management',
+    details: true, // Set to true since you have comprehensive documentation
+    isWorking: true,
+  },
+  {
+    title: 'WhiteCarrot ATS - Careers Page Builder',
+    description:
+      'Multi-tenant careers page builder enabling recruiters to create branded company pages with custom sections, job listings, and CSV bulk import. Features per-user drafts, secure preview tokens, and real-time collaboration with conflict resolution.',
+    image: '/project/whitecarrot-ats.png',
+    technologies: [
+      { name: 'Next.js', icon: <NextJs key="nextjs" /> },
+      { name: 'React', icon: <ReactIcon key="react" /> },
+      { name: 'TypeScript', icon: <TypeScript key="typescript" /> },
+      { name: 'Supabase', icon: <Supabase key="supabase" /> },
+      { name: 'PostgreSQL', icon: <PostgreSQL key="postgresql" /> },
+      { name: 'Tailwind CSS', icon: <TailwindCss key="tailwind" /> },
+      { name: 'Framer Motion', icon: <FramerMotion key="framer" /> },
+    ],
+    github: 'https://github.com/Jainshashank7125/whitecarrort-ats-branded',
+    live: '', // Add your production URL when deployed
+    link: '', // Add demo link if different from live
+    projectDetailsPageSlug: '/projects/whitecarrot-ats',
+    details: true, // This project has comprehensive features worth detailing
+    isWorking: true, // Assuming this is actively developed
+  },
+  {
+    title: 'AI Agent Form - Intelligent Copilot Assistant',
+    description:
+      'Interactive Next.js application featuring an AI-powered copilot that guides users through form submission. Implements real-time form updates, conversational AI integration, and step-by-step user guidance with field validation.',
+    image: '/project/ai-agent-form.png',
+    technologies: [
+      { name: 'Next.js', icon: <NextJs key="nextjs" /> },
+      { name: 'TypeScript', icon: <TypeScript key="typescript" /> },
+      { name: 'React', icon: <ReactIcon key="react" /> },
+      { name: 'Tailwind CSS', icon: <TailwindCss key="tailwind" /> },
+      { name: 'Gemini API', icon: <Gemini key="gemini" /> },
+    ],
+    github: 'https://github.com/Jainshashank7125/ai-agent-idea',
+    live: 'https://ai-agent-idea.vercel.app/', // Add your deployment URL here
+    link: '', // Add any additional link here
+    projectDetailsPageSlug: '/projects/ai-agent-form',
+    details: true, // Since this has detailed implementation
+    isWorking: true, // Currently functional
+  },
   {
     title: 'Health Care Platform (Mobex Health Suite)',
     description:
@@ -65,7 +133,7 @@ export const projects: Project[] = [
   {
     title: 'Cross-Platform Auth SDK',
     description:
-      'Built reusable authentication module supporting OAuth2 + Biometrics deployed in 3 production apps. Implemented offline-first sync with 250ms latency using Hive for local storage. Achieved 100% security audit pass rate with penetration testing.',
+      'Built reusable authentication module supporting OAuth2 + Biometrics deployed in 3 production apps. Implemented offline-first sync with 250ms latency using Hive for local storage.',
     image: '/project/authsdk.png',
     technologies: [
       { name: 'Flutter', icon: <Flutter key="flutter" /> },
