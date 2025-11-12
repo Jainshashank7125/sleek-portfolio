@@ -12,7 +12,6 @@ import MongoDB from '@/components/technologies/MongoDB';
 import MySQL from '@/components/technologies/MySql';
 import NextJs from '@/components/technologies/NextJs';
 import NodeJs from '@/components/technologies/NodeJs';
-import OpenAI from '@/components/technologies/OpenAI';
 import PostgreSQL from '@/components/technologies/PostgreSQL';
 import ReactIcon from '@/components/technologies/ReactIcon';
 import Spring from '@/components/technologies/Spring';
