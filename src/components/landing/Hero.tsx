@@ -1,110 +1,117 @@
-import { heroConfig, skillComponents, socialLinks } from '@/config/Hero';
-import { parseTemplate } from '@/lib/hero';
+import { heroConfig, socialLinks } from '@/config/Hero';
 import { Link } from 'next-view-transitions';
-import Image from 'next/image';
 import React from 'react';
 
 import Container from '../common/Container';
-import Skill from '../common/Skill';
 import CV from '../svgs/CV';
 import Chat from '../svgs/Chat';
+import Code from '../svgs/Code';
 import { Button } from '../ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 const buttonIcons = {
   CV: CV,
   Chat: Chat,
+  Code: Code,
 };
 
 export default function Hero() {
-  const { name, title, avatar, skills, description, buttons } = heroConfig;
+  const { eyebrow, headline, emphasis, subheadline, proof, skills, buttons } =
+    heroConfig;
 
-  const renderDescription = () => {
-    const parts = parseTemplate(description.template, skills);
-
-    return parts.map((part) => {
-      if (part.type === 'skill' && 'skill' in part && part.skill) {
-        const SkillComponent =
-          skillComponents[part.skill.component as keyof typeof skillComponents];
-        return (
-          <Skill key={part.key} name={part.skill.name} href={part.skill.href}>
-            <SkillComponent />
-          </Skill>
-        );
-      } else if (part.type === 'bold' && 'text' in part) {
-        return (
-          <b key={part.key} className="whitespace-pre-wrap text-primary">
-            {part.text}
-          </b>
-        );
-      } else if (part.type === 'text' && 'text' in part) {
-        return (
-          <span key={part.key} className="whitespace-pre-wrap">
-            {part.text}
-          </span>
-        );
-      }
-      return null;
-    });
-  };
+  // Split the headline so the emphasis phrase can be gradient-highlighted.
+  const [headStart, headEnd] = emphasis
+    ? headline.split(emphasis)
+    : [headline, ''];
 
   return (
-    <Container className="mx-auto max-w-5xl">
-      {/* Image */}
-      <Image
-        src={avatar}
-        alt="hero"
-        width={100}
-        height={100}
-        className="size-24 rounded-full dark:bg-yellow-300 bg-blue-300"
-      />
+    <Container className="relative max-w-5xl pt-10 md:pt-16">
+      {/* Subtle backdrop */}
+      <div className="pointer-events-none absolute inset-x-0 -top-24 h-72 bg-brand-glow" />
+      <div className="pointer-events-none absolute inset-x-0 -top-16 -z-10 h-64 bg-dot-grid opacity-60" />
 
-      {/* Text Area */}
-      <div className="mt-8 flex flex-col gap-2">
-        <h1 className="text-4xl font-bold">
-          Hi, I&apos;m {name} — <span className="text-secondary">{title}</span>
+      <div className="relative flex flex-col gap-6">
+        <p className="eyebrow">{eyebrow}</p>
+
+        <h1 className="max-w-3xl text-4xl font-bold leading-[1.1] tracking-tight text-balance md:text-6xl">
+          {headStart}
+          {emphasis && <span className="text-gradient">{emphasis}</span>}
+          {headEnd}
         </h1>
 
-        <div className="mt-4 flex flex-wrap items-center gap-x-1.5 gap-y-2 text-base md:text-lg text-neutral-500 whitespace-pre-wrap">
-          {renderDescription()}
-        </div>
-      </div>
+        <p className="max-w-2xl text-lg text-muted-foreground md:text-xl">
+          {subheadline}
+        </p>
 
-      {/* Buttons */}
-      <div className="mt-8 flex gap-4">
-        {buttons.map((button, index) => {
-          const IconComponent =
-            buttonIcons[button.icon as keyof typeof buttonIcons];
-          return (
-            <Button
-              key={index}
-              variant={button.variant as 'outline' | 'default'}
+        {/* Stack line */}
+        <div className="flex flex-wrap gap-2">
+          {skills.map((skill) => (
+            <Link
+              key={skill.name}
+              href={skill.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="tech-chip"
             >
-              {IconComponent && <IconComponent />}
-              <Link href={button.href}>{button.text}</Link>
-            </Button>
-          );
-        })}
-      </div>
+              {skill.name}
+            </Link>
+          ))}
+        </div>
 
-      {/* Social Links */}
-      <div className="mt-8 flex gap-2">
-        {socialLinks.map((link) => (
-          <Tooltip key={link.name} delayDuration={0}>
-            <TooltipTrigger asChild>
-              <Link
-                href={link.href}
-                key={link.name}
-                className="text-secondary flex items-center gap-2"
+        {/* CTAs */}
+        <div className="mt-2 flex flex-wrap gap-3">
+          {buttons.map((button) => {
+            const IconComponent =
+              buttonIcons[button.icon as keyof typeof buttonIcons];
+            return (
+              <Button
+                key={button.text}
+                variant={button.variant as 'outline' | 'default'}
+                asChild
               >
-                <span className="size-6">{link.icon}</span>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{link.name}</p>
-            </TooltipContent>
-          </Tooltip>
-        ))}
+                <Link href={button.href} className="flex items-center gap-2">
+                  {IconComponent && <IconComponent />}
+                  {button.text}
+                </Link>
+              </Button>
+            );
+          })}
+        </div>
+
+        {/* Proof line (static) */}
+        <div className="mt-4 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-border pt-6">
+          {proof.map((stat) => (
+            <div key={stat.label} className="flex flex-col">
+              <span className="metric-value text-2xl font-semibold md:text-3xl">
+                {stat.value}
+              </span>
+              <span className="text-xs text-muted-foreground">
+                {stat.label}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Social Links */}
+        <div className="mt-2 flex gap-3">
+          {socialLinks.map((link) => (
+            <Tooltip key={link.name} delayDuration={0}>
+              <TooltipTrigger asChild>
+                <Link
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  <span className="size-5">{link.icon}</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{link.name}</p>
+              </TooltipContent>
+            </Tooltip>
+          ))}
+        </div>
       </div>
     </Container>
   );

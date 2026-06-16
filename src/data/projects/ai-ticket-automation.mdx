@@ -1,0 +1,94 @@
+---
+title: 'AI Ticket Automation Platform'
+category: 'AI · Event-Driven'
+description: 'Intelligent customer-support automation: AI intent classification and retention workflows over a distributed, idempotent ingestion pipeline.'
+problem: 'Manual triage of 10K+ monthly support tickets did not scale, and naive webhook ingestion lost events under load.'
+technologies:
+  [
+    'Python',
+    'FastAPI',
+    'OpenAI',
+    'AWS Lambda',
+    'AWS SQS',
+    'API Gateway',
+    'Redis',
+    'Terraform',
+  ]
+github: ''
+live: ''
+timeline: '2025 — 2026'
+role: 'Software Development Engineer'
+status: 'completed'
+featured: true
+confidential: true
+challenges:
+  [
+    'Webhook ingestion that loses zero events under bursty load',
+    'Classifying and routing tickets accurately enough to trust automation',
+    'Keeping AI calls fast and cheap at 10K+ tickets/month',
+    'Reproducible cloud infrastructure across environments',
+  ]
+learnings:
+  [
+    'Idempotency keys + DLQs are non-negotiable for webhook pipelines',
+    'AI is most valuable when it removes repetitive human triage',
+    'Cache the expensive, deterministic parts; spend tokens only where they help',
+    'Infrastructure as Code pays for itself the first time you rebuild an environment',
+  ]
+isPublished: true
+---
+
+> **TODO (Shashank):** verify metrics and add an architecture diagram. Kept high-level for confidentiality.
+
+## Context
+
+An intelligent **customer-support automation platform** built with **Python / FastAPI** and **OpenAI**, processing **10K+ monthly support tickets** with automated intent classification and retention workflows.
+
+## Problem
+
+Support volume outgrew manual triage:
+
+- Agents spent time **classifying and routing** tickets instead of resolving them.
+- Cancellation/retention cases needed **consistent, personalized** handling.
+- The webhook ingestion path had to **never drop events**, even under bursts.
+
+## Architecture
+
+A distributed, event-driven ingestion pipeline on AWS:
+
+- **API Gateway → AWS Lambda** for webhook ingestion.
+- **AWS SQS** as the buffer between ingestion and processing, with a **dead-letter queue** for poison messages.
+- **Idempotency keys** so retried/duplicate webhooks are processed exactly once.
+- **FastAPI** services for the application logic and AI orchestration.
+- **Redis** caching in front of hot, repeated lookups.
+
+> **TODO:** insert the ingestion → queue → processing → AI classification diagram.
+
+## Implementation
+
+- **AI intent classification** routes incoming tickets automatically.
+- **Retention automation** analyzes cancellation requests and generates **personalized offers**, removing most manual intervention.
+- **Idempotency + retries + DLQ** eliminate data loss in the webhook path.
+- **Redis caching** and strategic database indexing cut response time on hot paths.
+- **Terraform** provisions all AWS resources, making environments reproducible.
+
+## Key Tradeoffs
+
+- **Queue-based async processing** adds operational surface (a DLQ to monitor) but decouples ingestion from slower AI work and absorbs spikes.
+- **AI in the loop** is powerful but costs tokens and latency — so it runs only where it removes real human work, with deterministic caching around it.
+- **IaC** is slower than clicking in a console once, but turns environment setup into a repeatable, reviewable artifact.
+
+## Results
+
+- Processed **10K+ monthly tickets** with automated classification and routing.
+- Retention automation reduced manual intervention by **~70%**.
+- Response time improved **~60%** via indexing and Redis caching.
+- Provisioning time dropped **~80%** after moving to Terraform.
+
+> **TODO:** confirm the above percentages against the original metrics.
+
+## Lessons
+
+- **Idempotency keys and DLQs are non-negotiable** for any webhook pipeline that must not lose data.
+- **AI earns its place** when it removes repetitive triage — not because it's novel.
+- **Cache the deterministic, spend tokens on the genuinely hard** — that's how AI stays affordable at volume.

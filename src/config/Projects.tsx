@@ -1,189 +1,210 @@
-import AWS from '@/components/technologies/AWS';
-import Dart from '@/components/technologies/Dart';
-import Docker from '@/components/technologies/Docker';
-import ExpressJs from '@/components/technologies/ExpressJs';
-import Firebase from '@/components/technologies/Firebase';
-import Flutter from '@/components/technologies/Flutter';
-import FramerMotion from '@/components/technologies/FramerMotion';
-import Gemini from '@/components/technologies/Gemini';
-import Java from '@/components/technologies/Java';
-import Jest from '@/components/technologies/Jest';
-import MongoDB from '@/components/technologies/MongoDB';
-import MySQL from '@/components/technologies/MySql';
-import NextJs from '@/components/technologies/NextJs';
-import NodeJs from '@/components/technologies/NodeJs';
-import PostgreSQL from '@/components/technologies/PostgreSQL';
-import ReactIcon from '@/components/technologies/ReactIcon';
-import Spring from '@/components/technologies/Spring';
-import Supabase from '@/components/technologies/Supabase';
-import Swagger from '@/components/technologies/Swagger';
-import TailwindCss from '@/components/technologies/TailwindCss';
-import TypeScript from '@/components/technologies/TypeScript';
 import { Project } from '@/types/project';
 
 export const projects: Project[] = [
+  /* ---------- Flagship case studies (work — high-level, no public links) ---------- */
   {
-    title: 'Coupon Management API',
+    title: 'Deeply — AI Agent System for Couples',
+    category: 'AI Systems',
     description:
-      'Production-ready RESTful API for e-commerce discount coupons supporting cart-wise, product-wise, and BxGy (Buy X Get Y) discount types. Features comprehensive validation, usage limits, expiration handling, and detailed discount calculations with Swagger documentation.',
-    image: '/project/coupon-api.png',
+      "A production LLM agent system that turns two partners' private inputs into one shared synthesis both recognize as fair — conversation engine, agent tools, artifact generation, and context assembly.",
+    problem:
+      'Synthesize two private perspectives into one fair, shared artifact — reliably, in production.',
+    metric: '0→1 founding-engineer build',
     technologies: [
-      { name: 'Node.js', icon: <NodeJs key="nodejs" /> },
-      { name: 'Express.js', icon: <ExpressJs key="express" /> },
-      { name: 'PostgreSQL', icon: <PostgreSQL key="postgresql" /> },
-      { name: 'Supabase', icon: <Supabase key="supabase" /> },
-      { name: 'Docker', icon: <Docker key="docker" /> },
-      { name: 'Jest', icon: <Jest key="jest" /> },
-      { name: 'Swagger', icon: <Swagger key="swagger" /> },
-    ],
-    github: 'https://github.com/Jainshashank7125/coupon-management-api',
-    live: 'https://coupon-management-api.onrender.com', // Add your deployment URL when available
-    link: '', // Add demo link if available
-    projectDetailsPageSlug: '/projects/coupon-management',
-    details: true, // Set to true since you have comprehensive documentation
-    isWorking: true,
-  },
-  {
-    title: 'WhiteCarrot ATS - Careers Page Builder',
-    description:
-      'Multi-tenant careers page builder enabling recruiters to create branded company pages with custom sections, job listings, and CSV bulk import. Features per-user drafts, secure preview tokens, and real-time collaboration with conflict resolution.',
-    image: '/project/whitecarrot-ats.png',
-    technologies: [
-      { name: 'Next.js', icon: <NextJs key="nextjs" /> },
-      { name: 'React', icon: <ReactIcon key="react" /> },
-      { name: 'TypeScript', icon: <TypeScript key="typescript" /> },
-      { name: 'Supabase', icon: <Supabase key="supabase" /> },
-      { name: 'PostgreSQL', icon: <PostgreSQL key="postgresql" /> },
-      { name: 'Tailwind CSS', icon: <TailwindCss key="tailwind" /> },
-      { name: 'Framer Motion', icon: <FramerMotion key="framer" /> },
-    ],
-    github: 'https://github.com/Jainshashank7125/whitecarrort-ats-branded',
-    live: '', // Add your production URL when deployed
-    link: '', // Add demo link if different from live
-    projectDetailsPageSlug: '/projects/whitecarrot-ats',
-    details: true, // This project has comprehensive features worth detailing
-    isWorking: true, // Assuming this is actively developed
-  },
-  {
-    title: 'AI Agent Form - Intelligent Copilot Assistant',
-    description:
-      'Interactive Next.js application featuring an AI-powered copilot that guides users through form submission. Implements real-time form updates, conversational AI integration, and step-by-step user guidance with field validation.',
-    image: '/project/ai-agent-form.png',
-    technologies: [
-      { name: 'Next.js', icon: <NextJs key="nextjs" /> },
-      { name: 'TypeScript', icon: <TypeScript key="typescript" /> },
-      { name: 'React', icon: <ReactIcon key="react" /> },
-      { name: 'Tailwind CSS', icon: <TailwindCss key="tailwind" /> },
-      { name: 'Gemini API', icon: <Gemini key="gemini" /> },
-    ],
-    github: 'https://github.com/Jainshashank7125/ai-agent-idea',
-    live: 'https://ai-agent-idea.vercel.app/', // Add your deployment URL here
-    link: '', // Add any additional link here
-    projectDetailsPageSlug: '/projects/ai-agent-form',
-    details: true, // Since this has detailed implementation
-    isWorking: true, // Currently functional
-  },
-  {
-    title: 'Health Care Platform (Mobex Health Suite)',
-    description:
-      'Designed real-time data pipeline processing 50K+ daily events using AWS Lambda, reduced clinic operational costs by 40%. Implemented QR-based patient onboarding with Flutter, decreasing check-in time by 60%. Integrated CloudWatch monitoring, reducing MTTR by 60%.',
-    image: '/project/mobex.png',
-    technologies: [
-      { name: 'Node.js', icon: <NodeJs key="nodejs" /> },
-      { name: 'TypeScript', icon: <TypeScript key="typescript" /> },
-      { name: 'Flutter', icon: <Flutter key="flutter" /> },
-      { name: 'Dart', icon: <Dart key="dart" /> },
-      { name: 'React', icon: <ReactIcon key="react" /> },
-      { name: 'MongoDB', icon: <MongoDB key="mongodb" /> },
-      { name: 'AWS', icon: <AWS key="aws" /> },
-      { name: 'Docker', icon: <Docker key="docker" /> },
-      { name: 'PostgreSQL', icon: <PostgreSQL key="postgresql" /> },
-      { name: 'Express.js', icon: <ExpressJs key="expressjs" /> },
+      'TypeScript',
+      'Next.js',
+      'Anthropic Claude SDK',
+      'Langfuse',
+      'Supabase / Postgres',
+      'PostHog',
+      'Sentry',
+      'GitHub Actions',
     ],
     github: '',
     live: '',
     link: '',
+    image: '',
+    projectDetailsPageSlug: '/projects/deeply',
+    details: true,
+    isWorking: true,
+    confidential: true,
+  },
+  {
+    title: 'AI Ticket Automation Platform',
+    category: 'AI · Event-Driven',
+    description:
+      'Intelligent customer-support automation: AI intent classification and retention workflows over a distributed, idempotent ingestion pipeline with retries and dead-letter queues.',
+    problem: 'Manual triage of 10K+ monthly support tickets did not scale.',
+    metric: '70% less manual work',
+    technologies: [
+      'Python',
+      'FastAPI',
+      'OpenAI',
+      'AWS Lambda',
+      'SQS',
+      'API Gateway',
+      'Redis',
+      'Terraform',
+    ],
+    github: '',
+    live: '',
+    link: '',
+    image: '',
+    projectDetailsPageSlug: '/projects/ai-ticket-automation',
+    details: true,
+    isWorking: true,
+    confidential: true,
+  },
+  {
+    title: 'Drools Credentialing Rules Engine',
+    category: 'Backend · Rules Engine',
+    description:
+      'A 300+ rule Drools engine enforcing healthcare-provider credentialing compliance, with multi-tenant rule isolation and feature-flag-driven execution across health plans.',
+    problem:
+      'Encode payer-specific credentialing logic for 15+ health plans on one shared engine — without cross-org interference.',
+    metric: '300+ rules · 15+ orgs · zero-redeploy toggles',
+    technologies: ['Java', 'Drools', 'DRL', 'Spring Boot', 'JSON', 'Shell'],
+    github: '',
+    live: '',
+    link: '',
+    image: '',
+    projectDetailsPageSlug: '/projects/drools-credentialing-engine',
+    details: true,
+    isWorking: true,
+    confidential: true,
+  },
+  {
+    title: 'Multi-Source Analytics Aggregation Platform',
+    category: 'Multi-Tenant SaaS',
+    description:
+      'A multi-tenant analytics platform aggregating 3+ external APIs into a unified, dependency-aware pipeline, with real-time sync tracking over WebSockets and Redis token caching.',
+    problem:
+      'Aggregate 50K+ daily records from many external APIs for 50+ tenants, reliably and concurrently.',
+    metric: '50K+ daily records · 50+ tenants · 99.9% uptime',
+    technologies: [
+      'Python',
+      'FastAPI',
+      'PostgreSQL',
+      'WebSockets',
+      'Redis',
+      'AsyncIO',
+    ],
+    github: '',
+    live: '',
+    link: '',
+    image: '',
+    projectDetailsPageSlug: '/projects/analytics-aggregation-platform',
+    details: true,
+    isWorking: true,
+    confidential: true,
+  },
+
+  /* ---------- Secondary work (cards only — high-level, no public links) ---------- */
+  {
+    title: 'Multi-Tenant Smart Irrigation Platform',
+    category: 'Multi-Tenant SaaS',
+    description:
+      'Multi-tenant SaaS with role-based access control, an OAuth2 CRM sync engine with batch upserts, an offline-first PWA for field operations, and an automated email pipeline with SMTP failover.',
+    metric: 'Offline-first field operations',
+    technologies: ['Django', 'React', 'PostgreSQL', 'Docker', 'PWA'],
+    github: '',
+    live: '',
+    link: '',
+    image: '',
+    projectDetailsPageSlug: '/projects/smart-irrigation',
+    details: false,
+    isWorking: false,
+    confidential: true,
+  },
+  {
+    title: 'Mobex Health Suite',
+    category: 'Healthcare',
+    description:
+      'Real-time patient monitoring processing 50K+ daily events, with a Flutter QR-based onboarding module and AWS RDS multi-AZ deployment with CloudWatch alerting.',
+    metric: '50K+ daily events · 60% faster check-in',
+    technologies: ['Java', 'Flutter', 'AWS', 'MySQL', 'CloudWatch'],
+    github: '',
+    live: '',
+    link: '',
+    image: '',
     projectDetailsPageSlug: '/projects/mobex',
     details: false,
     isWorking: false,
+    confidential: true,
   },
   {
-    title: 'Multi-tenant SaaS Platform',
+    title: 'Infozech iTower Link',
+    category: 'Mobile · Telecom',
     description:
-      'Built tenant isolation architecture supporting 10+ organizations with RBAC and data partitioning. Deployed Kafka event streaming reducing notification latency from 2s to 200ms for 100K+ users.',
-    image: '/project/saas.png',
-    technologies: [
-      { name: 'Node', icon: <NodeJs key="node" /> },
-      { name: 'Flutter', icon: <Flutter key="flutter" /> },
-      { name: 'React', icon: <ReactIcon key="react" /> },
-      { name: 'TypeScript', icon: <TypeScript key="typescript" /> },
-      { name: 'Tailwind', icon: <TailwindCss key="tailwind" /> },
-      { name: 'MySQL', icon: <MySQL key="mysql" /> },
-      { name: 'Docker', icon: <Docker key="docker" /> },
-      { name: 'AWS', icon: <AWS key="aws" /> },
-    ],
+      'Re-engineered telecom tower-management app with an offline-first architecture for 500+ field technicians, plus Java middleware integrating the AWS SDK for large-scale asset synchronization.',
+    metric: '500+ field technicians',
+    technologies: ['Flutter', 'Java', 'AWS'],
     github: '',
     live: '',
     link: '',
-    projectDetailsPageSlug: '/projects/saas',
+    image: '',
+    projectDetailsPageSlug: '/projects/itower-link',
     details: false,
     isWorking: false,
+    confidential: true,
+  },
+
+  /* ---------- Open source / public projects (with links) ---------- */
+  {
+    title: 'Coupon Management API',
+    category: 'Open Source',
+    description:
+      'Production-ready REST API for e-commerce discounts — cart-wise, product-wise, and BxGy (Buy X Get Y) — with validation, usage limits, expiration handling, and Swagger docs.',
+    technologies: [
+      'Node.js',
+      'Express.js',
+      'PostgreSQL',
+      'Supabase',
+      'Docker',
+      'Jest',
+      'Swagger',
+    ],
+    github: 'https://github.com/Jainshashank7125/coupon-management-api',
+    live: 'https://coupon-management-api.onrender.com',
+    link: '',
+    image: '',
+    projectDetailsPageSlug: '',
+    details: false,
+    isWorking: true,
   },
   {
-    title: 'Cross-Platform Auth SDK',
+    title: 'WhiteCarrot ATS — Careers Page Builder',
+    category: 'Open Source',
     description:
-      'Built reusable authentication module supporting OAuth2 + Biometrics deployed in 3 production apps. Implemented offline-first sync with 250ms latency using Hive for local storage.',
-    image: '/project/authsdk.png',
+      'Multi-tenant careers-page builder letting recruiters create branded company pages with custom sections, job listings, CSV bulk import, per-user drafts, and secure preview tokens.',
     technologies: [
-      { name: 'Flutter', icon: <Flutter key="flutter" /> },
-      { name: 'Dart', icon: <Dart key="dart" /> },
-      { name: 'Firebase', icon: <Firebase key="firebase" /> },
-      { name: 'AWS', icon: <AWS key="aws" /> },
+      'Next.js',
+      'React',
+      'TypeScript',
+      'Supabase',
+      'PostgreSQL',
+      'Tailwind CSS',
     ],
-    github: '',
+    github: 'https://github.com/Jainshashank7125/whitecarrort-ats-branded',
     live: '',
     link: '',
-    projectDetailsPageSlug: '/projects/authsdk',
+    image: '',
+    projectDetailsPageSlug: '',
     details: false,
-    isWorking: false,
+    isWorking: true,
   },
   {
-    title: 'Enterprise Organization Management System',
+    title: 'AI Agent Form — Intelligent Copilot',
+    category: 'Open Source',
     description:
-      'Designed and implemented a scalable platform serving 50K+ users across departments, reducing system latency by 65% via Redis caching and SQL query optimization. Developed RESTful APIs handling over 1M+ monthly requests with JWT-based authentication and rate limiting, ensuring 99.95% uptime. Integrated Kafka for real-time notifications, reducing latency from 2s to 200ms. Created custom data visualization components improving user engagement by 25%.',
-    image: '/project/enterprise.png',
-    technologies: [
-      { name: 'Java', icon: <Java key="java" /> },
-      { name: 'Springboot', icon: <Spring key="springboot" /> },
-      { name: 'PostgreSQL', icon: <PostgreSQL key="postgresql" /> },
-      { name: 'React', icon: <ReactIcon key="react" /> },
-      { name: 'Tailwind', icon: <TailwindCss key="tailwind" /> },
-      { name: 'AWS', icon: <AWS key="aws" /> },
-    ],
-    github: '',
-    live: '',
+      'A Next.js app with an AI copilot that guides users through form submission with real-time form updates, conversational AI, and step-by-step field validation.',
+    technologies: ['Next.js', 'TypeScript', 'React', 'Tailwind CSS', 'Gemini API'],
+    github: 'https://github.com/Jainshashank7125/ai-agent-idea',
+    live: 'https://ai-agent-idea.vercel.app/',
     link: '',
-    projectDetailsPageSlug: '/projects/enterprise',
+    image: '',
+    projectDetailsPageSlug: '/projects/ai-agent-form',
     details: false,
-    isWorking: false,
-  },
-  {
-    title: 'Polls Application',
-    description:
-      'Developed complete polling platform supporting 1k+ concurrent users with real-time results. Implemented role-based access control and logging using log4j.',
-    image: '/project/polls.png',
-    technologies: [
-      { name: 'Java', icon: <Java key="java" /> },
-      { name: 'Springboot', icon: <Spring key="springboot" /> },
-      { name: 'React', icon: <ReactIcon key="react" /> },
-      { name: 'PostgreSQL', icon: <PostgreSQL key="postgresql" /> },
-      { name: 'Tailwind', icon: <TailwindCss key="tailwind" /> },
-    ],
-    github: 'https://github.com/Jainshashank7125/java_polls_application',
-    live: '',
-    link: '',
-    projectDetailsPageSlug: '/projects/polls',
-    details: false,
-    isWorking: false,
+    isWorking: true,
   },
 ];

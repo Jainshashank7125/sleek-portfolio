@@ -1,20 +1,11 @@
 'use client';
 
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
-// import {
-//   Dialog,
-//   DialogContent,
-//   DialogTitle,
-//   DialogTrigger,
-// } from '@/components/ui/dialog';
 import { type Project } from '@/types/project';
 import { Link } from 'next-view-transitions';
-// import Image from 'next/image';
 import React from 'react';
 
 import ArrowRight from '../svgs/ArrowRight';
 import Github from '../svgs/Github';
-// import PlayCircle from '../svgs/PlayCircle';
 import Website from '../svgs/Website';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
@@ -23,147 +14,111 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
-  // const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const {
+    title,
+    category,
+    description,
+    metric,
+    technologies,
+    github,
+    live,
+    link,
+    details,
+    projectDetailsPageSlug,
+    confidential,
+  } = project;
+
+  const externalLink = live || link;
 
   return (
-    <Card className="group h-full w-full overflow-hidden transition-all p-0 border-gray-100 dark:border-gray-800 shadow-none">
-      {/* <CardHeader className="p-0">
-        <div className="group relative aspect-video overflow-hidden">
-          <Image
-            className="h-full w-full object-cover"
-            src={project.image}
-            alt={project.title}
-            width={1920}
-            height={1080}
-          />
-          {project.video && (
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger asChild>
-                <div className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100 hover:backdrop-blur-xs">
-                  <button className="flex size-16 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm transition-colors duration-200 group-hover:cursor-pointer hover:bg-white/30">
-                    <PlayCircle />
-                  </button>
-                </div>
-              </DialogTrigger>
-              <DialogContent className="max-w-4xl w-full p-0 border-0">
-                <div className="aspect-video w-full">
-                  <video
-                    className="h-full w-full object-cover rounded-lg"
-                    src={project.video}
-                    autoPlay
-                    loop
-                    controls
-                  />
-                </div>
-                <DialogTitle className="sr-only">{project.title}</DialogTitle>
-              </DialogContent>
-            </Dialog>
+    <div className="card-hover group relative flex h-full flex-col rounded-xl border border-border bg-card p-6">
+      {/* Header */}
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          {category && <p className="eyebrow">{category}</p>}
+          <h3 className="mt-2 text-lg font-semibold leading-tight tracking-tight">
+            {title}
+          </h3>
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+          {externalLink && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  className="flex size-5 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
+                  href={externalLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="View live"
+                >
+                  <Website />
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent>Live</TooltipContent>
+            </Tooltip>
+          )}
+          {github && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  className="flex size-5 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
+                  href={github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="View source"
+                >
+                  <Github />
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent>Source</TooltipContent>
+            </Tooltip>
           )}
         </div>
-      </CardHeader> */}
+      </div>
 
-      <CardContent className="px-6 py-6">
-        <div className="space-y-4">
-          {/* Project Header */}
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex-1">
-              <h3 className="text-xl font-semibold leading-tight group-hover:text-primary">
-                {project.title}
-              </h3>
-              <p className="text-secondary mt-2">{project.description}</p>
-            </div>
-            <div className="flex items-center gap-2">
-              {project.link != '' ? (
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Link
-                      className="text-secondary flex size-6 items-center justify-center hover:text-primary transition-colors"
-                      href={project.link}
-                      target="_blank"
-                    >
-                      <Website />
-                    </Link>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>View Website</p>
-                  </TooltipContent>
-                </Tooltip>
-              ) : (
-                <></>
-              )}
-              {project.github != '' ? (
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Link
-                      className="text-secondary flex size-6 items-center justify-center hover:text-primary transition-colors"
-                      href={project.github}
-                      target="_blank"
-                    >
-                      <Github />
-                    </Link>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>View GitHub</p>
-                  </TooltipContent>
-                </Tooltip>
-              ) : (
-                <></>
-              )}
-            </div>
-          </div>
+      {/* Description */}
+      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+        {description}
+      </p>
 
-          {/* Technologies */}
-          <div>
-            <h4 className="text-sm font-medium mb-2 text-secondary">
-              Technologies
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {project.technologies.map((technology, index) => (
-                <Tooltip key={index}>
-                  <TooltipTrigger>
-                    <div className="size-6 hover:scale-120 transition-all duration-300 hover:cursor-pointer">
-                      {technology.icon}
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{technology.name}</p>
-                  </TooltipContent>
-                </Tooltip>
-              ))}
-            </div>
-          </div>
-        </div>
-      </CardContent>
-
-      {project.details && (
-        <CardFooter className="p-6 pt-0 flex justify-between">
-          <div
-            className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs ${
-              project.isWorking
-                ? 'border-green-300 bg-green-500/10'
-                : 'border-red-300 bg-red-500/10'
-            }`}
-          >
-            {project.isWorking ? (
-              <>
-                <div className="size-2 rounded-full bg-green-500 animate-pulse" />
-                All Systems Operational
-              </>
-            ) : (
-              <>
-                <div className="size-2 rounded-full bg-red-500 animate-pulse" />
-                Building
-              </>
-            )}
-          </div>
-          <Link
-            href={project.projectDetailsPageSlug}
-            className="text-secondary flex items-center gap-2 text-sm hover:underline underline-offset-4 hover:text-primary transition-colors"
-          >
-            View Details <ArrowRight className="size-4" />
-          </Link>
-        </CardFooter>
+      {/* Headline metric */}
+      {metric && (
+        <p className="metric-value mt-4 text-sm font-medium text-brand">
+          {metric}
+        </p>
       )}
-    </Card>
+
+      {/* Tech chips */}
+      <div className="mt-4 flex flex-wrap gap-1.5">
+        {technologies.map((tech) => (
+          <span key={tech} className="tech-chip">
+            {tech}
+          </span>
+        ))}
+      </div>
+
+      {/* Footer */}
+      {(details || confidential) && (
+        <div className="mt-auto flex items-center justify-between gap-3 pt-5">
+          {confidential ? (
+            <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+              <span className="size-1.5 rounded-full bg-muted-foreground/50" />
+              Confidential — high-level only
+            </span>
+          ) : (
+            <span />
+          )}
+          {details && projectDetailsPageSlug && (
+            <Link
+              href={projectDetailsPageSlug}
+              className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Read case study
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+          )}
+        </div>
+      )}
+    </div>
   );
 }

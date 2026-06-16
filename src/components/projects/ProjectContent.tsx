@@ -19,7 +19,9 @@ interface ProjectContentProps {
 export function ProjectContent({ frontmatter, content }: ProjectContentProps) {
   const {
     title,
+    category,
     description,
+    problem,
     image,
     technologies,
     github,
@@ -28,6 +30,7 @@ export function ProjectContent({ frontmatter, content }: ProjectContentProps) {
     role,
     team,
     status,
+    confidential,
     challenges,
     learnings,
   } = frontmatter;
@@ -38,190 +41,177 @@ export function ProjectContent({ frontmatter, content }: ProjectContentProps) {
       : status === 'in-progress'
         ? 'secondary'
         : 'outline';
+  const statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
 
   return (
     <article className="mx-auto max-w-4xl">
-      {/* Hero Section */}
-      <header className="mb-8 space-y-6">
-        <div className="relative aspect-video overflow-hidden rounded-lg">
-          <Image
-            src={image}
-            alt={title}
-            fill
-            className="object-cover"
-            priority
-          />
+      <header className="mb-10 space-y-6">
+        {/* Banner */}
+        <div className="relative flex aspect-[16/6] items-end overflow-hidden rounded-xl border border-border bg-card">
+          {image ? (
+            <Image src={image} alt={title} fill className="object-cover" priority />
+          ) : (
+            <>
+              <div className="absolute inset-0 bg-dot-grid opacity-60" />
+              <div className="absolute inset-x-0 top-0 h-40 bg-brand-glow" />
+              <div className="relative p-6">
+                {category && <p className="eyebrow">{category}</p>}
+                <p className="metric-value mt-2 text-xl font-semibold tracking-tight md:text-2xl">
+                  {title}
+                </p>
+              </div>
+            </>
+          )}
         </div>
 
         <div className="space-y-4">
-          {/* Project Status and Technologies */}
           <div className="flex flex-wrap items-center gap-3">
             <Badge variant={statusVariant} className="text-sm">
-              {status.charAt(0).toUpperCase() + status.slice(1)}
+              {statusLabel}
             </Badge>
-            {technologies.slice(0, 3).map((tech) => (
-              <Badge key={tech} variant="outline" className="text-xs">
-                {tech}
-              </Badge>
-            ))}
-            {technologies.length > 3 && (
+            {category && (
               <Badge variant="outline" className="text-xs">
-                +{technologies.length - 3} more
+                {category}
               </Badge>
             )}
           </div>
 
-          <h1 className="text-4xl font-bold leading-tight lg:text-5xl">
+          <h1 className="text-4xl font-bold leading-tight tracking-tight lg:text-5xl">
             {title}
           </h1>
 
           <p className="text-xl text-muted-foreground">{description}</p>
 
-          {/* Project Meta Information */}
-          <div className="grid gap-4 rounded-lg border bg-muted/20 p-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div>
-              <h5 className="text-sm font-semibold text-muted-foreground">
-                Timeline
-              </h5>
-              <p className="text-sm">{timeline}</p>
+          {/* Problem callout */}
+          {problem && (
+            <div className="rounded-lg border border-border bg-brand-muted p-4">
+              <p className="eyebrow">The problem</p>
+              <p className="mt-1.5 text-sm leading-relaxed">{problem}</p>
             </div>
+          )}
+
+          {/* Meta */}
+          <div className="grid gap-4 rounded-lg border border-border bg-muted/20 p-4 sm:grid-cols-2 lg:grid-cols-4">
+            <Meta label="Timeline" value={timeline} />
+            <Meta label="Role" value={role} />
+            {team && <Meta label="Team" value={team} />}
             <div>
-              <h5 className="text-sm font-semibold text-muted-foreground">
-                Role
-              </h5>
-              <p className="text-sm">{role}</p>
-            </div>
-            {team && (
-              <div>
-                <h5 className="text-sm font-semibold text-muted-foreground">
-                  Team
-                </h5>
-                <p className="text-sm">{team}</p>
-              </div>
-            )}
-            <div>
-              <h5 className="text-sm font-semibold text-muted-foreground">
+              <h5 className="text-xs font-medium text-muted-foreground">
                 Status
               </h5>
-              <Badge variant={statusVariant} className="text-xs">
-                {status.charAt(0).toUpperCase() + status.slice(1)}
+              <Badge variant={statusVariant} className="mt-1 text-xs">
+                {statusLabel}
               </Badge>
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-wrap gap-3">
-            {live && (
-              <Button asChild>
-                <Link
-                  href={live}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2"
-                >
-                  <Website className="size-4" />
-                  Live Demo
-                </Link>
-              </Button>
-            )}
-            {github && (
-              <Button variant="outline" asChild>
-                <Link
-                  href={github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2"
-                >
-                  <Github className="size-4" />
-                  Source Code
-                </Link>
-              </Button>
-            )}
-          </div>
+          {/* Links (only when present) */}
+          {(live || github) && (
+            <div className="flex flex-wrap gap-3">
+              {live && (
+                <Button asChild>
+                  <Link
+                    href={live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2"
+                  >
+                    <Website className="size-4" />
+                    Live
+                  </Link>
+                </Button>
+              )}
+              {github && (
+                <Button variant="outline" asChild>
+                  <Link
+                    href={github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2"
+                  >
+                    <Github className="size-4" />
+                    Source Code
+                  </Link>
+                </Button>
+              )}
+            </div>
+          )}
+
+          {confidential && (
+            <p className="text-xs text-muted-foreground">
+              This is professional work shared at a high level — architecture,
+              decisions, and outcomes without proprietary detail or links.
+            </p>
+          )}
         </div>
 
         <Separator />
       </header>
 
-      {/* Technology Stack */}
-      <div className="mb-8">
-        <div className="rounded-lg border bg-muted/20 p-4">
-          <h3 className="mb-3 text-lg font-semibold">Technology Stack</h3>
-          <div className="flex flex-wrap gap-2">
-            {technologies.map((tech) => (
-              <div
-                key={tech}
-                className="inline-flex items-center gap-2 rounded-full bg-muted/50 px-3 py-1.5 text-sm font-medium"
-              >
-                <span>{tech}</span>
-              </div>
-            ))}
-          </div>
+      {/* Tech stack */}
+      <div className="mb-10">
+        <p className="eyebrow mb-3">Stack</p>
+        <div className="flex flex-wrap gap-1.5">
+          {technologies.map((tech) => (
+            <span key={tech} className="tech-chip">
+              {tech}
+            </span>
+          ))}
         </div>
       </div>
 
-      {/* Challenges and Learnings */}
-      {(challenges?.length || learnings?.length) && (
-        <div className="mb-8 grid gap-6 md:grid-cols-2">
-          {challenges && challenges.length > 0 && (
-            <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-800 dark:bg-yellow-950/20">
-              <h3 className="mb-3 text-lg font-semibold text-yellow-800 dark:text-yellow-200">
-                Key Challenges
-              </h3>
-              <ul className="space-y-2">
-                {challenges.map((challenge, index) => (
-                  <li
-                    key={index}
-                    className="flex items-start gap-2 text-sm text-yellow-700 dark:text-yellow-300"
-                  >
-                    <span className="mt-1 block size-1.5 rounded-full bg-yellow-500 dark:bg-yellow-400" />
-                    {challenge}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {learnings && learnings.length > 0 && (
-            <div className="rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-950/20">
-              <h3 className="mb-3 text-lg font-semibold text-green-800 dark:text-green-200">
-                Key Learnings
-              </h3>
-              <ul className="space-y-2">
-                {learnings.map((learning, index) => (
-                  <li
-                    key={index}
-                    className="flex items-start gap-2 text-sm text-green-700 dark:text-green-300"
-                  >
-                    <span className="mt-1 block size-1.5 rounded-full bg-green-500 dark:bg-green-400" />
-                    {learning}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-      )}
-
       {/* Content */}
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
+      <div className="prose prose-neutral max-w-none dark:prose-invert prose-headings:tracking-tight prose-pre:rounded-lg prose-pre:border prose-pre:border-border">
         <MDXRemote
           source={content}
           components={ProjectComponents}
           options={{
             mdxOptions: {
-              rehypePlugins: [
-                [
-                  rehypeHighlight,
-                  {
-                    theme: 'github-dark',
-                  },
-                ],
-              ],
+              rehypePlugins: [[rehypeHighlight, { theme: 'github-dark' }]],
             },
           }}
         />
       </div>
+
+      {/* Challenges & learnings */}
+      {(challenges?.length || learnings?.length) && (
+        <div className="mt-10 grid gap-6 md:grid-cols-2">
+          {challenges && challenges.length > 0 && (
+            <ListCard title="Key Challenges" items={challenges} />
+          )}
+          {learnings && learnings.length > 0 && (
+            <ListCard title="What I Took Away" items={learnings} />
+          )}
+        </div>
+      )}
     </article>
+  );
+}
+
+function Meta({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <h5 className="text-xs font-medium text-muted-foreground">{label}</h5>
+      <p className="mt-1 text-sm">{value}</p>
+    </div>
+  );
+}
+
+function ListCard({ title, items }: { title: string; items: string[] }) {
+  return (
+    <div className="rounded-lg border border-border bg-card p-5">
+      <h3 className="mb-3 text-base font-semibold tracking-tight">{title}</h3>
+      <ul className="space-y-2.5">
+        {items.map((item, index) => (
+          <li
+            key={index}
+            className="flex items-start gap-2.5 text-sm text-muted-foreground"
+          >
+            <span className="mt-1.5 block size-1.5 shrink-0 rounded-full bg-brand" />
+            {item}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

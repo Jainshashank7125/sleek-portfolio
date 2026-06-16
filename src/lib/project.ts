@@ -1,4 +1,4 @@
-import { projects } from '@/config/Projects';
+import { projects as configProjects } from '@/config/Projects';
 import {
   ProjectCaseStudy,
   ProjectCaseStudyFrontmatter,
@@ -133,6 +133,9 @@ export function getProjectNavigation(currentSlug: string): {
   previous: { title: string; slug: string } | null;
   next: { title: string; slug: string } | null;
 } {
+  // Only navigate between projects that actually have a case-study page.
+  const projects = configProjects.filter((project) => project.details);
+
   // Find current project in config
   const currentProjectIndex = projects.findIndex(
     (project) => project.projectDetailsPageSlug === `/projects/${currentSlug}`,

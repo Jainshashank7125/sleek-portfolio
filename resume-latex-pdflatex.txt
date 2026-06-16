@@ -1,0 +1,175 @@
+% ============================================================
+%  Shashank Jain - Resume  (pdfLaTeX-compatible variant)
+%  COMPILE WITH: pdfLaTeX  (also works with XeLaTeX / LuaLaTeX)
+%  Font: scaled Helvetica (PRD fallback). No fontspec required.
+%  For true Inter, use the XeLaTeX version (resume-latex.txt).
+% ============================================================
+\documentclass[a4paper,10pt]{article}
+
+\usepackage[top=0.45in, bottom=0.45in, left=0.5in, right=0.5in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[scaled=0.94]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{fontawesome5}
+\usepackage{parskip}
+\usepackage[unicode, draft=false]{hyperref}
+
+% ---- Color palette (from PRD) ----
+\definecolor{primary}{HTML}{0F172A}  % slate-900  - primary text
+\definecolor{accent}{HTML}{2563EB}   % blue-600   - accents / links
+\definecolor{muted}{HTML}{64748B}    % slate-500  - secondary text
+
+\hypersetup{colorlinks=true, urlcolor=accent, linkcolor=accent, pdftitle={Shashank Jain - Resume}}
+
+% ---- Section styling: bold slate title + thin blue rule ----
+\titleformat{\section}{\large\bfseries\color{primary}}{}{0em}{}[{\color{accent}\titlerule[1.1pt]}]
+\titlespacing*{\section}{0pt}{9pt}{4pt}
+
+% ---- Tight, consistent list spacing ----
+\setlist[itemize]{leftmargin=1.15em, itemsep=1.5pt, topsep=2pt, parsep=0pt}
+
+% ---- Centered fixed-width column for the snapshot row ----
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+
+\begin{document}
+\color{primary}
+\linespread{1.05}
+\pagestyle{empty}
+
+% ============================ HEADER ============================
+\begin{minipage}[b]{0.56\linewidth}
+  {\fontsize{26}{28}\selectfont\bfseries\color{primary}Shashank Jain}\\[4pt]
+  {\large\color{accent}AI-Enabled Full Stack Engineer}
+\end{minipage}\hfill
+\begin{minipage}[b]{0.42\linewidth}
+  \raggedleft\small\color{muted}
+  {\color{accent}\faPhone}~~\href{tel:+919340016492}{+91 93400 16492}\\[2pt]
+  {\color{accent}\faEnvelope}~~\href{mailto:sjainsahajpur7125@gmail.com}{sjainsahajpur7125@gmail.com}\\[2pt]
+  {\color{accent}\faLinkedin}~~\href{https://linkedin.com/in/shashankjain7125}{linkedin.com/in/shashankjain7125}\\[2pt]
+  {\color{accent}\faGithub}~~\href{https://github.com/jainshashank7125}{github.com/jainshashank7125}\\[2pt]
+  {\color{accent}\faGlobe}~~\href{https://portfolio.jainshashank.in}{portfolio.jainshashank.in}
+\end{minipage}
+
+\vspace{6pt}
+{\color{accent}\rule{\linewidth}{1.1pt}}
+\vspace{4pt}
+
+% ===================== ENGINEERING SNAPSHOT =====================
+\begin{tabularx}{\linewidth}{CCCCC}
+  {\large\bfseries\color{accent}3+} &
+  {\large\bfseries\color{accent}1M+} &
+  {\large\bfseries\color{accent}50K+} &
+  {\large\bfseries\color{accent}99.9\%} &
+  {\large\bfseries\color{accent}10+} \\[1pt]
+  {\footnotesize\color{muted}Years Experience} &
+  {\footnotesize\color{muted}API Requests Processed} &
+  {\footnotesize\color{muted}Records Processed / Day} &
+  {\footnotesize\color{muted}Platform Uptime} &
+  {\footnotesize\color{muted}Enterprise Clients} \\
+\end{tabularx}
+
+% ======================= PERSONAL SUMMARY =======================
+\section*{Summary}
+\textbf{AI-Enabled Full Stack Engineer} and systems builder with \textbf{3+ years} shipping production SaaS, fintech, healthcare, and automation platforms. I design \textbf{multi-tenant, event-driven, cloud-native systems} in \textbf{Java/Spring Boot}, \textbf{Python/FastAPI}, \textbf{Node.js}, and \textbf{React}, and build \textbf{AI-powered workflows} on top of them --- owning products end-to-end from schema and architecture to deployment, observability, and the AI layer.
+
+% ======================== CORE EXPERTISE ========================
+\section*{Core Expertise}
+\small AI Systems \textcolor{muted}{\enspace$\cdot$\enspace} Backend Architecture \textcolor{muted}{\enspace$\cdot$\enspace} Multi-Tenant SaaS \textcolor{muted}{\enspace$\cdot$\enspace} Cloud Infrastructure \textcolor{muted}{\enspace$\cdot$\enspace} Full Stack Development \textcolor{muted}{\enspace$\cdot$\enspace} Distributed Systems
+
+% ===================== PROFESSIONAL EXPERIENCE ==================
+\section*{Experience}
+
+\textbf{Software Development Engineer} \textcolor{muted}{$\vert$ Quido Fintech Pvt. Ltd.} \hfill \textcolor{muted}{Jan 2026 -- Present}
+\begin{itemize}
+    \item Build secure, high-throughput \textbf{AI full-stack systems} across fintech and healthcare domains in \textbf{Python}, \textbf{Java}, and \textbf{PostgreSQL}, with real-time data processing.
+    \item Shipped \textbf{AI-powered platforms} on \textbf{Python/FastAPI} and \textbf{OpenAI}, processing \textbf{10K+ monthly requests} through automated intent workflows and real-time \textbf{WebSocket} connections.
+    \item Consolidated fragmented credentialing logic into a \textbf{Drools rule-engine pipeline}, making compliance business logic maintainable and auditable across the healthcare-provider credentialing workflow.
+    \item As \textbf{founding engineer} on \textit{Deeply} (AI relationship platform), built a production \textbf{LLM agent system} (Anthropic Claude SDK) with \textbf{eval-driven} prompts (Langfuse) and a \textbf{per-PR ephemeral Postgres CI/CD} pipeline giving every pull request an isolated, seeded database.
+\end{itemize}
+
+\vspace{3pt}
+\textbf{Senior Application Engineer} \textcolor{muted}{$\vert$ Hexaview Technologies Inc.} \hfill \textcolor{muted}{Sep 2022 -- Dec 2025}
+\begin{itemize}
+    \item Led \textbf{full-stack development} of 5+ applications (\textbf{Flutter, React, TypeScript, Java/Spring Boot}), owning the SDLC from database schema design to production deployment.
+    \item Architected a \textbf{schema-based multi-tenant PostgreSQL} platform for \textbf{10+ enterprise clients} with strict data isolation and \textbf{role-based access control}.
+    \item Delivered \textbf{REST APIs handling 1M+ monthly requests} with JWT auth and rate limiting; cut API latency \textbf{65\%} via \textbf{Redis caching} and query optimization.
+    \item Built \textbf{event-driven systems} on \textbf{AWS Lambda + SQS} with dead-letter queues and automatic retries for reliable asynchronous processing.
+\end{itemize}
+
+% =========================== PROJECTS ===========================
+\section*{Projects}
+
+\textbf{Healthcare Provider Credentialing Rules Engine} \hfill \textcolor{muted}{\small Drools \enspace Java \enspace DRL \enspace Shell}
+\begin{itemize}
+    \item Designed and maintained \textbf{300+ Drools DRL rules} enforcing credentialing compliance across state licenses, DEA/CDS certifications, board certifications, malpractice insurance, sanctions, and NPDB reports.
+    \item Architected \textbf{multi-tenant rule isolation} for \textbf{15+ health plan organizations}, encoding distinct payer-specific logic on a shared engine without cross-org interference.
+    \item Implemented \textbf{feature-flag-driven rule execution} (\texttt{rulesConfiguration} map) enabling per-organization runtime toggling and A/B rollouts with \textbf{zero redeployment}.
+    \item Built a shell-based test framework with JSON fixtures and upsert-on-conflict matching, giving \textbf{regression coverage across hundreds of rule scenarios}.
+\end{itemize}
+
+\vspace{3pt}
+\textbf{AI Ticket Automation Platform} \hfill \textcolor{muted}{\small Python \enspace FastAPI \enspace OpenAI \enspace AWS Lambda \enspace SQS \enspace Redis}
+\begin{itemize}
+    \item Built an intelligent customer-support automation platform processing \textbf{10K+ monthly tickets} with AI intent classification and retention workflows, reducing manual intervention \textbf{70\%}.
+    \item Designed a distributed webhook ingestion pipeline (\textbf{Lambda, SQS, API Gateway}) with idempotency keys, retry strategies, and DLQ handling --- eliminating data loss.
+    \item Deployed \textbf{Terraform} IaC for reproducible environments (provisioning time down \textbf{80\%}); strategic indexing and \textbf{Redis caching} improved response time \textbf{60\%}.
+\end{itemize}
+
+\vspace{3pt}
+\textbf{Multi-Tenant SaaS Platform} \textcolor{muted}{(Smart Irrigation)} \hfill \textcolor{muted}{\small Django \enspace React \enspace PostgreSQL \enspace Docker}
+\begin{itemize}
+    \item Architected a \textbf{multi-tenant SaaS} platform with \textbf{RBAC} (Super-Admin / Company-Admin / Company-User) and complete company-level data isolation on a shared PostgreSQL database.
+    \item Built an \textbf{OAuth2 CRM sync engine} with paginated batch upserts and token caching, syncing thousands of records with zero data loss.
+    \item Engineered an \textbf{offline-first PWA} and an automated email pipeline with multi-account SMTP failover, enabling uninterrupted field operations in low-connectivity zones.
+\end{itemize}
+
+\vspace{3pt}
+\textbf{Multi-Source Analytics Aggregation Platform} \hfill \textcolor{muted}{\small Python \enspace FastAPI \enspace PostgreSQL \enspace WebSockets \enspace Redis}
+\begin{itemize}
+    \item Architected an async aggregation platform pulling \textbf{3+ external APIs}, processing \textbf{50K+ daily records} for \textbf{50+ tenants} at \textbf{99.9\% uptime}.
+    \item Built \textbf{WebSocket} real-time sync-job tracking and dependency-aware migrations; \textbf{Redis token caching} and batching cut redundant API calls \textbf{60\%}.
+\end{itemize}
+
+\vspace{3pt}
+\textbf{Mobex Health Suite} \hfill \textcolor{muted}{\small Java \enspace Flutter \enspace AWS \enspace MySQL}
+\begin{itemize}
+    \item Architected real-time patient monitoring processing \textbf{50K+ daily events}; a \textbf{Flutter} QR onboarding module cut check-in time \textbf{60\%}, and AWS RDS multi-AZ + CloudWatch reduced MTTR \textbf{60\%}.
+\end{itemize}
+
+\vspace{3pt}
+\textbf{Infozech iTower Link} \hfill \textcolor{muted}{\small Flutter \enspace Java \enspace AWS}
+\begin{itemize}
+    \item Re-engineered a telecom tower-management app with an \textbf{offline-first} architecture for \textbf{500+ field technicians}, with Java/AWS middleware for large-scale asset synchronization.
+\end{itemize}
+
+% ======================== TECHNICAL SKILLS ======================
+\section*{Skills}
+\begin{itemize}
+    \item \textbf{Languages:} Java, Python, TypeScript, JavaScript
+    \item \textbf{Frontend:} React, Flutter, Tailwind CSS
+    \item \textbf{Backend:} Spring Boot, FastAPI, Node.js
+    \item \textbf{Data:} PostgreSQL, Redis, MongoDB
+    \item \textbf{Cloud:} AWS (Lambda, SQS, API Gateway, RDS), Docker, Terraform
+    \item \textbf{Architecture:} Multi-Tenancy, Event-Driven Systems, RBAC, OAuth2
+\end{itemize}
+
+% ========================== ACHIEVEMENTS ========================
+\section*{Achievements}
+\begin{itemize}
+    \item \textbf{Top Performer Award (Hexaview)} --- delivered a critical full-stack platform two weeks ahead of schedule.
+    \item \textbf{500+ LeetCode problems} solved (Top 10\% globally); Bronze Medalist, Cisco APJC NetAcad Riders.
+    \item \textbf{10+ recognition awards} for system optimization, API performance, and critical bug resolution.
+\end{itemize}
+
+% =========================== EDUCATION ==========================
+\section*{Education}
+\textbf{B.Tech, Computer Science} \textcolor{muted}{$\vert$ Gyan Ganga College of Technology} \hfill \textcolor{muted}{2019 -- 2023}\\
+\textcolor{muted}{CGPA 9.05/10.0 --- graduated in the top 5\% of class.}
+
+\end{document}

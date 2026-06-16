@@ -1,0 +1,102 @@
+---
+title: 'Deeply — AI Agent System for Couples'
+category: 'AI Systems'
+description: "A production LLM agent system that turns two partners' private inputs into one shared synthesis both recognize as fair."
+problem: "Take two people's private, often conflicting perspectives and produce a single shared artifact that both recognize as fair — reliably, in production."
+technologies:
+  [
+    'TypeScript',
+    'Next.js 14',
+    'React',
+    'Anthropic Claude SDK',
+    'Langfuse',
+    'Supabase / Postgres',
+    'PostHog',
+    'Sentry',
+    'GitHub Actions',
+    'Vitest',
+  ]
+github: ''
+live: ''
+timeline: '2026 — Present'
+role: 'Founding Software Engineer'
+team: 'Small founding team'
+status: 'in-progress'
+featured: true
+confidential: true
+challenges:
+  [
+    'Making a two-player LLM experience feel fair to both partners',
+    'Catching prompt/quality regressions before they reach users',
+    'Giving every pull request a real, isolated database',
+    'Observability for non-deterministic AI conversations in production',
+  ]
+learnings:
+  [
+    'Evals are infrastructure, not an afterthought — treat them like tests',
+    'Ephemeral per-PR databases make AI changes safe to review',
+    'Tracing is the difference between debugging and guessing with LLMs',
+    'Owning a surface end-to-end means owning its observability too',
+  ]
+isPublished: true
+---
+
+> **TODO (Shashank):** verify metrics, add an architecture diagram, and confirm anything that can be shared publicly. Everything below is intentionally high-level.
+
+## Context
+
+Deeply is an AI product for couples: each partner privately shares their perspective, and the system produces **one shared synthesis** that both people recognize as fair. I joined as a **founding engineer** on a small team and own core product surfaces end-to-end — from prototype through the shipped artifact — across the production app and a separate strategy/prototyping repo.
+
+## Problem
+
+A two-player AI experience is fundamentally harder than a single-user chatbot:
+
+- The output has to feel **fair to two people at once**, not just coherent to one.
+- LLM behavior is **non-deterministic**, so "it worked when I tried it" is not a guarantee.
+- Every change to a prompt or tool can silently regress quality for real couples.
+
+The core problem was building this as a **dependable production system**, not a demo.
+
+## Architecture
+
+The system is a production LLM agent built on the **Anthropic Claude SDK**, with a few moving parts I own:
+
+- **Conversation engine** — orchestrates the two-player flow and turn-taking.
+- **Agent tools** — the actions the model can take during a session.
+- **Context assembly** — what each partner's private input contributes to the shared synthesis.
+- **Artifact generation** — producing the final shared output both partners see.
+
+Around the agent sits the platform: **Next.js 14 / React** app, **Supabase (Postgres)** for data, partner **invite / deep-link** flows, **Slack + in-app notifications**, and internal **admin tooling** for inspecting live AI conversations (system prompts, tools, artifacts).
+
+> **TODO:** insert a diagram of the conversation engine → tools → context assembly → artifact pipeline.
+
+## Implementation
+
+A few things I'm responsible for that make the AI layer trustworthy:
+
+- **Eval-driven prompt engineering.** Prompts and tracing live in **Langfuse**; I authored a custom **eval harness** (scenarios + assertions) that catches regressions before they ship.
+- **Per-PR ephemeral databases.** I designed a **Supabase branch-database CI/CD system** so every pull request gets an isolated, seeded Postgres database, with automatic apply-on-merge.
+- **End-to-end observability.** **Sentry** for errors, **PostHog** for analytics, a **cron watchdog**, and a public **status page**.
+- **Admin tooling.** Internal views to inspect live AI conversations — the exact system prompts, tools, and artifacts — so we can debug behavior, not guess at it.
+
+In a separate strategy repo, I also built design-system-driven prototypes and a **GitHub Actions → GitHub Pages** pipeline that auto-converts Markdown/HTML into a branded, searchable static site, giving non-technical stakeholders self-serve access to live mockups on every merge.
+
+## Key Tradeoffs
+
+- **Evals + tracing cost time up front** but turn "I think this is better" into "the assertions pass." For an AI product, that's the only way to move fast safely.
+- **Ephemeral per-PR databases** add CI complexity and cost, but remove an entire class of "it worked on my branch" bugs and make AI changes genuinely reviewable.
+- **Admin/inspection tooling** isn't user-facing, but it's where most debugging time is saved.
+
+## Results
+
+- Built and own core surfaces of a **production LLM agent system** powering a two-player couples experience.
+- Every pull request runs against an **isolated, seeded database**, with apply-on-merge.
+- Production is instrumented end-to-end — errors, analytics, a watchdog, and a public status page.
+
+> **TODO:** add concrete numbers (eval coverage, regressions caught, CI time, usage) where shareable.
+
+## Lessons
+
+- **Evals are infrastructure.** Treating them like tests is what lets a small team ship AI changes without fear.
+- **Tracing turns debugging into observation** — with LLMs, you cannot fix what you cannot see.
+- **Owning a surface means owning its reliability** — the invite flow, the notifications, the database lifecycle, and the observability around it, not just the happy path.

@@ -1,132 +1,51 @@
-# Sleek Portfolio by ramxcodes
+# Shashank Jain — Portfolio
 
-A modern, responsive portfolio website built with Next.js 15, TypeScript, Tailwind CSS, and Shadcn UI. Features a blog system, project showcase, work experience timeline, and contact form with Telegram integration.
+A systems-engineering portfolio for **Shashank Jain**, an AI-Enabled Full Stack Engineer building scalable, cloud-native systems. It showcases engineering case studies (architecture, tradeoffs, results), core expertise, and an engineering philosophy — not just a list of apps.
 
-![Portfolio Preview](/public/meta/hero.png)
-
-## Deploy 
-
-Click here to your portfolio template now:
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Framxcodes%2Fsleek-portfolio&env=TELEGRAM_BOT_TOKEN,TELEGRAM_CHAT_ID,GEMINI_API_KEY,NEXT_PUBLIC_URL)
+Built with Next.js 15, TypeScript, Tailwind CSS v4, and shadcn/ui. Live at **[portfolio.jainshashank.in](https://portfolio.jainshashank.in)**.
 
 ## Features
 
-- **Next.js 15** with App Router
-- **Tailwind CSS** for styling
-- **Shadcn UI** components
-- **Dark/Light** mode
-- **Responsive** design
-- **MDX** for blog posts and project details
-- **Contact Form** with Telegram integration
-- **SEO** optimized
-- **TypeScript** for type safety
+- **Next.js 15** (App Router) + **React 19**
+- **Tailwind CSS v4** design system with dark/light mode
+- **shadcn/ui** components
+- **MDX** case studies for projects (structured: Context · Problem · Architecture · Implementation · Tradeoffs · Results · Lessons)
+- **AI assistant** (Gemini) that answers questions about my work
+- **Contact form** with Telegram integration
+- SEO optimized, responsive, TypeScript-first
 
-## Prerequisites
+## Tech & Content Map
 
-Before you begin, ensure you have the following installed:
+The site is config-driven. Most content lives in `src/config`:
 
-- Node.js (v18 or higher)
-- Bun (preferred) or npm
+- `Hero.tsx` — headline, subheadline, CTAs, skills, social links
+- `Expertise.tsx` — core expertise pillars
+- `Projects.tsx` — project cards (flagship + secondary + open-source)
+- `Philosophy.tsx` — engineering principles
+- `Experience.tsx` — work history
+- `Meta.tsx` — SEO / metadata
+- `Navbar.tsx`, `Footer.tsx`, `Setup.tsx`, `Gears.tsx`, `Contact.tsx`, `Resume.ts`, `ChatPrompt.ts`
+
+Project case studies are MDX files in `src/data/projects/`.
 
 ## Environment Variables
-
-Create a `.env` file in the root directory with the following variables:
 
 ```env
 TELEGRAM_BOT_TOKEN="your-token"
 TELEGRAM_CHAT_ID="your-chat-id"
 GEMINI_API_KEY="your-api-key"
-NODE_ENV="development"
 NEXT_PUBLIC_URL="http://localhost:3000"
 ```
 
-### Setting up Telegram Integration
-
-1. Create a new bot with [@BotFather](https://t.me/botfather) on Telegram
-2. Copy the bot token provided
-3. Start a chat with your bot
-4. Get your chat ID by:
-   - Add your `bot` in a group as `admin`
-   - Then send `/id` to [@rosebot](https://t.me/MissRose_bot)
-   - Boom! you get your `id`
-
 ## Getting Started
 
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/ramxcodes/sleek-portfolio.git
-   cd sleek-portfolio
-   ```
-
-2. Install dependencies:
-
-   ```bash
-   # Using bun (recommended)
-   bun install
-
-   # Using npm
-   npm install
-   ```
-
-3. Run the development server:
-
-   ```bash
-   # Using bun
-   bun dev
-
-   # Using npm
-   npm run dev
-   ```
-
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
-
-## Configuration
-
-The project uses configuration files in the `src/config` directory for easy customization:
-
-- `About.tsx` - About section content
-- `Contact.tsx` - Contact form settings
-- `Experience.tsx` - Work experience details
-- `Footer.tsx` - Footer links and content
-- `Gears.tsx` - Setup/gear section
-- `Hero.tsx` - Hero section content
-- `Meta.tsx` - SEO and metadata
-- `Navbar.tsx` - Navigation links
-- `Projects.tsx` - Project showcase settings
-- `Quote.ts` - Random quotes configuration
-- `Resume.ts` - Resume section details
-- `Setup.tsx` - Development setup information
-
-## Adding New Technology Icons
-
-1. Visit [Devicon](https://devicon.dev/) to find the icon you want to add
-2. Create a new component in `src/components/technologies/`
-3. Follow the existing component structure for consistency
-
-Example:
-
-```tsx
-export const NewTechIcon = () => {
-  return <svg>// SVG content from devicon</svg>;
-};
+```bash
+bun install   # or npm install
+bun dev       # or npm run dev
 ```
 
-## Adding Content
-
-### Blog Posts
-
-1. Create a new MDX file in `src/data/blog/`
-2. Add metadata and content following existing post structure
-3. Add blog thumbnail in `public/blog/`
-
-### Projects
-
-1. Create a new MDX file in `src/data/projects/`
-2. Add metadata and content following existing project structure
-3. Add project thumbnail in `public/project/`
+Open [http://localhost:3000](http://localhost:3000).
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT — see [LICENSE](LICENSE).

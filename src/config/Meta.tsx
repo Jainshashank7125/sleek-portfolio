@@ -1,3 +1,5 @@
+import type { Metadata } from 'next';
+
 import { about } from './About';
 import { heroConfig } from './Hero';
 
@@ -12,9 +14,10 @@ export interface PageMeta {
 // Base site configuration
 export const siteConfig = {
   name: heroConfig.name,
-  title: 'Sleek Portfolio',
-  description: 'Sleek Portfolio Template by @Jainshashank',
-  url: process.env.NEXT_PUBLIC_URL || 'http://localhost:3000',
+  title: `${heroConfig.name} — ${heroConfig.title}`,
+  description:
+    'Shashank Jain designs and builds cloud-native platforms, AI agent systems, and multi-tenant SaaS with Java, Python, React, and AWS.',
+  url: process.env.NEXT_PUBLIC_URL || 'https://portfolio.jainshashank.in',
   ogImage: '/meta/opengraph-image.png',
   author: {
     name: about.name,
@@ -24,14 +27,21 @@ export const siteConfig = {
     email: 'sjainsahajpur7125@gmail.com',
   },
   keywords: [
-    'portfolio',
-    'developer',
-    'full-stack',
-    'react',
-    'nextjs',
-    'typescript',
-    'web development',
-    heroConfig.name.toLowerCase(),
+    'Shashank Jain',
+    'full stack engineer',
+    'AI engineer',
+    'systems engineer',
+    'backend architecture',
+    'multi-tenant SaaS',
+    'cloud-native',
+    'Java',
+    'Spring Boot',
+    'Python',
+    'FastAPI',
+    'React',
+    'Next.js',
+    'AWS',
+    'LLM agents',
   ],
 };
 
@@ -166,7 +176,7 @@ export function getPageMetadata(pathname: string): PageMeta {
 }
 
 // Helper function to generate complete metadata object for Next.js
-export function generateMetadata(pathname: string) {
+export function generateMetadata(pathname: string): Metadata {
   const pageMeta = getPageMetadata(pathname);
 
   return {

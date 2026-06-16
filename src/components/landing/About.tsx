@@ -1,39 +1,26 @@
-import { about, mySkills } from '@/config/About';
-import Image from 'next/image';
+import { about } from '@/config/About';
+import { CheckCircle } from 'lucide-react';
 import React from 'react';
 
 import Container from '../common/Container';
 import SectionHeading from '../common/SectionHeading';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 export default function About() {
   return (
-    <Container className="mt-20">
-      <SectionHeading subHeading="About" heading="Me" />
-      {/* About me */}
-      <div className="mt-8 flex flex-col gap-4 md:flex-row">
-        <Image
-          src="/assets/logo.png"
-          alt="About"
-          width={100}
-          height={100}
-          className="border-secondary size-60 rounded-md border-2 bg-blue-300 dark:bg-yellow-300"
-        />
-        <div className="mt-4">
-          <h3 className="text-2xl font-bold">{about.name}</h3>
-          <p className="text-secondary mt-4">{about.description}</p>
-          <p className="text-secondary mt-8 font-bold">Skills</p>
-          <div className="flex flex-wrap gap-2">
-            {mySkills.map((skill) => (
-              <Tooltip key={skill.key}>
-                <TooltipTrigger asChild>
-                  <div className="mt-4 size-6">{skill}</div>
-                </TooltipTrigger>
-                <TooltipContent>{skill.key}</TooltipContent>
-              </Tooltip>
-            ))}
-          </div>
-        </div>
+    <Container className="mt-24 max-w-5xl">
+      <SectionHeading subHeading="About" heading="A bit about me" />
+      <div className="mt-8 grid gap-10 md:grid-cols-5">
+        <p className="text-lg leading-relaxed text-muted-foreground md:col-span-3">
+          {about.description}
+        </p>
+        <ul className="flex flex-col gap-3 md:col-span-2">
+          {about.highlights.map((highlight) => (
+            <li key={highlight} className="flex items-start gap-3 text-sm">
+              <CheckCircle className="mt-0.5 size-4 shrink-0 text-brand" />
+              <span className="text-muted-foreground">{highlight}</span>
+            </li>
+          ))}
+        </ul>
       </div>
     </Container>
   );

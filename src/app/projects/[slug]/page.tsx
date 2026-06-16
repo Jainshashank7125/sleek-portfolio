@@ -44,6 +44,7 @@ export async function generateMetadata({
   }
 
   const { title, description, image } = caseStudy.frontmatter;
+  const ogImage = image || siteConfig.ogImage;
 
   return {
     metadataBase: new URL(siteConfig.url),
@@ -52,14 +53,14 @@ export async function generateMetadata({
     openGraph: {
       title: `${title} - Project Case Study`,
       description,
-      images: [image],
+      images: [ogImage],
       type: 'article',
     },
     twitter: {
       card: 'summary_large_image',
       title: `${title} - Project Case Study`,
       description,
-      images: [image],
+      images: [ogImage],
     },
   };
 }

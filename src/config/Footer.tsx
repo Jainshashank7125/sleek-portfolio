@@ -1,5 +1,5 @@
 export const footerConfig = {
-  developer: 'Jainshashank',
-  text: 'Developed by',
+  developer: 'Shashank Jain',
+  text: 'Designed & built by',
   copyright: 'All rights reserved.',
 };

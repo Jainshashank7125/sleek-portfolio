@@ -8,22 +8,22 @@ import ThemeSwitch from './ThemeSwitch';
 
 export default function Navbar() {
   return (
-    <Container className="sticky top-0 z-50 rounded-md py-4 backdrop-blur-sm">
-      <div className="flex items-center justify-between px-6">
-        <div className="flex items-baseline gap-4">
-          <Link href="/">
+    <Container className="sticky top-0 z-50 max-w-5xl py-4 backdrop-blur-sm">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-5">
+          <Link href="/" className="font-semibold tracking-tight">
             <Image
-              className="h-12 w-12 rounded-md border border-gray-200 bg-blue-300 transition-all duration-300 ease-in-out hover:scale-90 dark:bg-yellow-300"
+              className="size-9 rounded-md border border-border transition-all duration-300 ease-in-out hover:scale-95"
               src={navbarConfig.logo.src}
               alt={navbarConfig.logo.alt}
               width={navbarConfig.logo.width}
               height={navbarConfig.logo.height}
             />
           </Link>
-          <div className="flex items-center justify-center gap-4">
+          <div className="flex items-center gap-4 text-sm">
             {navbarConfig.navItems.map((item) => (
               <Link
-                className="transition-all duration-300 ease-in-out hover:underline hover:decoration-2 hover:underline-offset-4"
+                className="text-muted-foreground transition-colors hover:text-foreground"
                 key={item.label}
                 href={item.href}
               >
