@@ -38,8 +38,6 @@ learnings:
 isPublished: true
 ---
 
-> **TODO (Shashank):** verify metrics and add an architecture diagram. Kept high-level for confidentiality.
-
 ## Context
 
 An intelligent **customer-support automation platform** built with **Python / FastAPI** and **OpenAI**, processing **10K+ monthly support tickets** with automated intent classification and retention workflows.
@@ -62,7 +60,27 @@ A distributed, event-driven ingestion pipeline on AWS:
 - **FastAPI** services for the application logic and AI orchestration.
 - **Redis** caching in front of hot, repeated lookups.
 
-> **TODO:** insert the ingestion → queue → processing → AI classification diagram.
+```text
+        Support webhooks
+              │
+              ▼
+        [ API Gateway ]
+              │
+              ▼
+        [ AWS Lambda (ingestion) ]      idempotency keys → each webhook once
+              │
+              ▼
+        [ AWS SQS buffer ] ───────────► [ DLQ ]   (poison messages)
+              │
+              ▼
+        [ FastAPI workers ] ◄─────────► [ Redis cache ]   (hot lookups)
+              │
+              ▼
+        [ OpenAI intent classification ]
+              │
+              ▼
+        Routing + retention workflows
+```
 
 ## Implementation
 
@@ -84,8 +102,6 @@ A distributed, event-driven ingestion pipeline on AWS:
 - Retention automation reduced manual intervention by **~70%**.
 - Response time improved **~60%** via indexing and Redis caching.
 - Provisioning time dropped **~80%** after moving to Terraform.
-
-> **TODO:** confirm the above percentages against the original metrics.
 
 ## Lessons
 

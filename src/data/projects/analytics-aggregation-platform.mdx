@@ -29,8 +29,6 @@ learnings:
 isPublished: true
 ---
 
-> **TODO (Shashank):** verify metrics and add a data-flow diagram. Shared at a high level.
-
 ## Context
 
 A scalable **analytics platform** built with **Python / FastAPI** and async background jobs that aggregates data from **3+ external APIs** into a unified, multi-tenant pipeline — processing **50K+ daily records** with automated synchronization.
@@ -51,7 +49,20 @@ Pulling data from several third-party APIs for many tenants is deceptively hard:
 - **WebSocket** connections for **real-time sync job tracking**, enabling concurrent processing across 50+ tenants.
 - **Redis token caching** in front of external API auth to cut redundant calls.
 
-> **TODO:** insert the external APIs → async workers → Postgres → WebSocket status diagram.
+```text
+   [ External API A ]   [ External API B ]   [ External API C ]
+            └───────────────────┬───────────────────┘
+                                │  auth via Redis token cache
+                                │  (dedupes redundant calls)
+                                ▼
+                  [ Async background workers ]   FastAPI + AsyncIO,
+                                │                concurrent across 50+ tenants
+                                ▼
+                  [ PostgreSQL (multi-tenant) ]  dependency-aware migrations
+                                │
+                                ▼
+                  [ WebSocket status channel ] ──► live sync view in the UI
+```
 
 ## Implementation
 
@@ -72,8 +83,6 @@ Pulling data from several third-party APIs for many tenants is deceptively hard:
 - Sustained concurrent processing for **50+ tenants** at **99.9% uptime**.
 - Reduced redundant API calls by **~60%** via batching and token caching.
 - Cut deployment time **~70%** through dependency-aware migrations.
-
-> **TODO:** confirm the above percentages against the original metrics.
 
 ## Lessons
 

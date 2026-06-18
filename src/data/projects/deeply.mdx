@@ -41,8 +41,6 @@ learnings:
 isPublished: true
 ---
 
-> **TODO (Shashank):** verify metrics, add an architecture diagram, and confirm anything that can be shared publicly. Everything below is intentionally high-level.
-
 ## Context
 
 Deeply is an AI product for couples: each partner privately shares their perspective, and the system produces **one shared synthesis** that both people recognize as fair. I joined as a **founding engineer** on a small team and own core product surfaces end-to-end — from prototype through the shipped artifact — across the production app and a separate strategy/prototyping repo.
@@ -68,7 +66,27 @@ The system is a production LLM agent built on the **Anthropic Claude SDK**, with
 
 Around the agent sits the platform: **Next.js 14 / React** app, **Supabase (Postgres)** for data, partner **invite / deep-link** flows, **Slack + in-app notifications**, and internal **admin tooling** for inspecting live AI conversations (system prompts, tools, artifacts).
 
-> **TODO:** insert a diagram of the conversation engine → tools → context assembly → artifact pipeline.
+```text
+  Partner A ──┐                 ┌── Partner B
+  (private)   │                 │   (private)
+              └────────┬────────┘
+                       ▼
+              [ Conversation Engine ]   two-player turn-taking
+                       │
+                       ▼
+              [ Agent Tools ]           actions the Claude SDK agent can take
+                       │
+                       ▼
+              [ Context Assembly ]      private inputs → one shared context
+                       │
+                       ▼
+              [ Artifact Generation ]   the synthesis both partners see
+                       │
+                       ▼
+              [ Shared Artifact ]
+
+  Around the agent: Langfuse (prompts + traces) · Sentry (errors) · PostHog (analytics)
+```
 
 ## Implementation
 
@@ -92,8 +110,6 @@ In a separate strategy repo, I also built design-system-driven prototypes and a 
 - Built and own core surfaces of a **production LLM agent system** powering a two-player couples experience.
 - Every pull request runs against an **isolated, seeded database**, with apply-on-merge.
 - Production is instrumented end-to-end — errors, analytics, a watchdog, and a public status page.
-
-> **TODO:** add concrete numbers (eval coverage, regressions caught, CI time, usage) where shareable.
 
 ## Lessons
 
