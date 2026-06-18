@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 450" role="img" aria-label="AI Ticket Automation Platform">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#101114"/>
+      <stop offset="1" stop-color="#0a0a0b"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="0%" r="70%">
+      <stop offset="0" stop-color="#3d6bf5" stop-opacity="0.30"/>
+      <stop offset="0.7" stop-color="#3d6bf5" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="dotfade" cx="50%" cy="0%" r="78%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="0.7" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="1" fill="#ffffff" fill-opacity="0.09"/>
+    </pattern>
+    <mask id="dotmask"><rect width="1200" height="450" fill="url(#dotfade)"/></mask>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5b8cf0"/></marker>
+  </defs>
+
+  <rect width="1200" height="450" fill="url(#bg)"/>
+  <rect width="1200" height="450" fill="url(#dots)" mask="url(#dotmask)"/>
+  <rect width="1200" height="450" fill="url(#glow)"/>
+
+  <!-- ingress -> queue buffer -> worker -> DLQ branch -->
+  <g fill="none" stroke="#5b8cf0" stroke-width="2">
+    <path d="M698,150 L732,150" marker-end="url(#ah)"/>
+    <path d="M930,150 L963,150" marker-end="url(#ah)"/>
+    <path d="M995,182 L995,247" marker-end="url(#ah)"/>
+  </g>
+
+  <!-- gateway -->
+  <circle cx="668" cy="150" r="30" fill="#141a2b" stroke="#5b8cf0" stroke-width="1.6"/>
+  <g stroke="#9db6f7" stroke-width="2" fill="none" stroke-linecap="round">
+    <path d="M654,150 a14,9 0 0 0 28,0 a14,9 0 0 0 -28,0"/>
+    <line x1="668" y1="136" x2="668" y2="164"/>
+  </g>
+
+  <!-- queue buffer (messages) -->
+  <rect x="734" y="118" width="196" height="64" rx="8" fill="#11172a" stroke="#33405f" stroke-width="1.2"/>
+  <g fill="#16213f" stroke="#5b8cf0" stroke-width="1.4">
+    <rect x="746" y="130" width="38" height="40" rx="5"/>
+    <rect x="792" y="130" width="38" height="40" rx="5"/>
+    <rect x="838" y="130" width="38" height="40" rx="5"/>
+    <rect x="884" y="130" width="34" height="40" rx="5" fill="#11172a" stroke="#33405f"/>
+  </g>
+
+  <!-- worker (AI) -->
+  <circle cx="995" cy="150" r="32" fill="#16213f" stroke="#7aa2ff" stroke-width="1.8"/>
+  <path d="M995,134 L999,146 L1011,150 L999,154 L995,166 L991,154 L979,150 L991,146 Z" fill="#7aa2ff"/>
+
+  <!-- DLQ -->
+  <rect x="962" y="249" width="66" height="44" rx="8" fill="#141a2b" stroke="#5b8cf0" stroke-width="1.6"/>
+  <text x="995" y="276" fill="#9db6f7" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="15" text-anchor="middle">DLQ</text>
+
+  <text x="70" y="360" fill="#7aa2ff" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="15" letter-spacing="3">AI · EVENT-DRIVEN</text>
+  <text x="68" y="402" fill="#e9ecf4" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="34" font-weight="600">AI Ticket Automation</text>
+</svg>

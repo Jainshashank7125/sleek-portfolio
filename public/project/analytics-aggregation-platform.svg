@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 450" role="img" aria-label="Multi-Source Analytics Aggregation Platform">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#101114"/>
+      <stop offset="1" stop-color="#0a0a0b"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="0%" r="70%">
+      <stop offset="0" stop-color="#3d6bf5" stop-opacity="0.30"/>
+      <stop offset="0.7" stop-color="#3d6bf5" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="dotfade" cx="50%" cy="0%" r="78%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="0.7" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="1" fill="#ffffff" fill-opacity="0.09"/>
+    </pattern>
+    <mask id="dotmask"><rect width="1200" height="450" fill="url(#dotfade)"/></mask>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5b8cf0"/></marker>
+  </defs>
+
+  <rect width="1200" height="450" fill="url(#bg)"/>
+  <rect width="1200" height="450" fill="url(#dots)" mask="url(#dotmask)"/>
+  <rect width="1200" height="450" fill="url(#glow)"/>
+
+  <!-- 3 sources -> aggregator -> chart -->
+  <g fill="none" stroke="#5b8cf0" stroke-width="2">
+    <path d="M695,118 C770,118 778,185 832,185" marker-end="url(#ah)"/>
+    <path d="M695,185 L832,185" marker-end="url(#ah)"/>
+    <path d="M695,252 C770,252 778,185 832,185" marker-end="url(#ah)"/>
+    <path d="M902,185 L962,185" marker-end="url(#ah)"/>
+  </g>
+
+  <g fill="#141a2b" stroke="#5b8cf0" stroke-width="1.6">
+    <circle cx="668" cy="118" r="24"/>
+    <circle cx="668" cy="185" r="24"/>
+    <circle cx="668" cy="252" r="24"/>
+  </g>
+  <circle cx="868" cy="185" r="34" fill="#16213f" stroke="#7aa2ff" stroke-width="1.8"/>
+  <path d="M868,170 L872,181 L884,185 L872,189 L868,200 L864,189 L852,185 L864,181 Z" fill="#7aa2ff"/>
+
+  <!-- chart panel -->
+  <rect x="964" y="126" width="156" height="118" rx="10" fill="#11172a" stroke="#33405f" stroke-width="1.2"/>
+  <g fill="#2a3a63">
+    <rect x="982" y="196" width="20" height="32" rx="3"/>
+    <rect x="1012" y="178" width="20" height="50" rx="3"/>
+    <rect x="1042" y="160" width="20" height="68" rx="3"/>
+    <rect x="1072" y="146" width="20" height="82" rx="3"/>
+  </g>
+  <polyline points="992,194 1022,176 1052,158 1082,144" fill="none" stroke="#7aa2ff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <text x="70" y="360" fill="#7aa2ff" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="15" letter-spacing="3">MULTI-TENANT SAAS</text>
+  <text x="68" y="402" fill="#e9ecf4" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="30" font-weight="600">Analytics Aggregation Platform</text>
+</svg>

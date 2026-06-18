@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 450" role="img" aria-label="Deeply — AI Agent System">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#101114"/>
+      <stop offset="1" stop-color="#0a0a0b"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="0%" r="70%">
+      <stop offset="0" stop-color="#3d6bf5" stop-opacity="0.30"/>
+      <stop offset="0.7" stop-color="#3d6bf5" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="dotfade" cx="50%" cy="0%" r="78%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="0.7" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="1" fill="#ffffff" fill-opacity="0.09"/>
+    </pattern>
+    <mask id="dotmask"><rect width="1200" height="450" fill="url(#dotfade)"/></mask>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5b8cf0"/></marker>
+  </defs>
+
+  <rect width="1200" height="450" fill="url(#bg)"/>
+  <rect width="1200" height="450" fill="url(#dots)" mask="url(#dotmask)"/>
+  <rect width="1200" height="450" fill="url(#glow)"/>
+
+  <!-- two private inputs -> shared synthesis -> artifact -->
+  <g fill="none" stroke="#5b8cf0" stroke-width="2">
+    <path d="M737,150 C815,150 818,225 872,225" marker-end="url(#ah)"/>
+    <path d="M737,300 C815,300 818,225 872,225" marker-end="url(#ah)"/>
+    <path d="M944,225 L1030,225" marker-end="url(#ah)"/>
+  </g>
+  <circle cx="705" cy="150" r="30" fill="#141a2b" stroke="#5b8cf0" stroke-width="1.6"/>
+  <circle cx="705" cy="300" r="30" fill="#141a2b" stroke="#5b8cf0" stroke-width="1.6"/>
+  <circle cx="908" cy="225" r="34" fill="#16213f" stroke="#7aa2ff" stroke-width="1.8"/>
+  <rect x="1046" y="193" width="60" height="64" rx="8" fill="#141a2b" stroke="#5b8cf0" stroke-width="1.6"/>
+  <g fill="#cdd8f5" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="22" text-anchor="middle">
+    <text x="705" y="158">A</text>
+    <text x="705" y="308">B</text>
+  </g>
+  <path d="M908,209 L912,221 L924,225 L912,229 L908,241 L904,229 L892,225 L904,221 Z" fill="#7aa2ff"/>
+  <g stroke="#9db6f7" stroke-width="2" stroke-linecap="round">
+    <line x1="1058" y1="212" x2="1094" y2="212"/>
+    <line x1="1058" y1="225" x2="1094" y2="225"/>
+    <line x1="1058" y1="238" x2="1080" y2="238"/>
+  </g>
+
+  <text x="70" y="360" fill="#7aa2ff" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="15" letter-spacing="3">AI SYSTEMS</text>
+  <text x="68" y="402" fill="#e9ecf4" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="34" font-weight="600">Deeply · AI Agent System</text>
+</svg>
