@@ -2,13 +2,6 @@
 
 import { Button } from '@/components/ui/button';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import {
   Form,
   FormControl,
   FormField,
@@ -34,14 +27,6 @@ const contactFormSchema = z.object({
   email: z.string().email({
     message: 'Please enter a valid email address.',
   }),
-  phone: z
-    .string()
-    .min(10, {
-      message: 'Phone number must be at least 10 characters.',
-    })
-    .regex(/^[\+]?[1-9][\d]{0,15}$/, {
-      message: 'Please enter a valid phone number.',
-    }),
   message: z
     .string()
     .min(10, {
@@ -62,7 +47,6 @@ export default function ContactForm() {
     defaultValues: {
       name: '',
       email: '',
-      phone: '',
       message: '',
     },
   });
@@ -98,98 +82,73 @@ export default function ContactForm() {
   };
 
   return (
-    <Card className="border-none shadow-none bg-transparent">
-      <CardHeader>
-        <CardTitle>Send me a message</CardTitle>
-        <CardDescription>
-          Fill out the form below and I will get back to you as soon as
-          possible.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name *</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Your full name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone *</FormLabel>
-                    <FormControl>
-                      <Input placeholder="+1 (123) xxx-xxxx" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Your full name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="your@email.com"
+                    type="email"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email *</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="your.email@example.com"
-                      type="email"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <FormField
+          control={form.control}
+          name="message"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Message</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Tell me about your project, a role, or just say hello..."
+                  className="min-h-[140px] resize-none"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <FormField
-              control={form.control}
-              name="message"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Message *</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Tell me about your project or just say hello..."
-                      className="min-h-[120px] resize-none"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <Button type="submit" className="w-fit" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Sending your message...
-                </>
-              ) : (
-                <>
-                  <Chat className="mr-2 h-4 w-4" />
-                  Send Message
-                </>
-              )}
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+        <Button type="submit" className="w-fit" disabled={isSubmitting}>
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Sending…
+            </>
+          ) : (
+            <>
+              <Chat className="mr-2 h-4 w-4" />
+              Send Message
+            </>
+          )}
+        </Button>
+      </form>
+    </Form>
   );
 }

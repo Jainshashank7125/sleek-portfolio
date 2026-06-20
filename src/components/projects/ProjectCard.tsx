@@ -1,5 +1,3 @@
-'use client';
-
 import { type Project } from '@/types/project';
 import { Link } from 'next-view-transitions';
 import React from 'react';
@@ -83,7 +81,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
       {/* Headline metric */}
       {metric && (
-        <p className="metric-value mt-4 text-sm font-medium text-brand">
+        <p className="metric-value mt-4 inline-block rounded-md bg-brand-muted px-2 py-1 text-xs font-medium text-brand">
           {metric}
         </p>
       )}

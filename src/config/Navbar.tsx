@@ -20,6 +20,10 @@ export const navbarConfig = {
       href: '/work-experience',
     },
     {
+      label: 'Writing',
+      href: '/blog',
+    },
+    {
       label: 'Resume',
       href: '/resume',
     },

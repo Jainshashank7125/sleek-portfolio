@@ -1,0 +1,180 @@
+---
+title: 'Give Every Pull Request Its Own Postgres Database'
+description: 'Shared staging databases make schema and data changes scary to review. Here is the per-PR ephemeral database pattern — create, migrate, seed, and tear down automatically — that makes those changes safe to merge.'
+image: '/blog/per-pr-ephemeral-databases.svg'
+tags: ['backend', 'postgres', 'ci-cd', 'devops', 'databases']
+date: '2026-06-18'
+isPublished: true
+---
+
+Most teams test code in isolation and data in production. A pull request gets a clean preview deployment, a fresh container, an isolated build — and then all of them point at the same shared staging database. That shared database is where the careful isolation quietly breaks down.
+
+I hit this hard while building a data-heavy product where the **data itself** was often the thing under review — a migration, a backfill, the shape of what an AI step produced. "The code looks right" wasn't enough. Reviewers needed to exercise the change against realistic data without stepping on each other. The fix was to stop treating the database as shared infrastructure and start treating it like any other per-PR artifact.
+
+## What a shared staging database actually costs you
+
+A single staging database looks economical until two pull requests are open at once:
+
+- **Migrations collide.** PR A adds a `NOT NULL` column; PR B is mid-review with rows that violate it. Whoever's migration runs second fails, and now staging is wedged for everyone.
+- **State leaks between branches.** One PR's seed data or test run mutates rows another PR is depending on. Bugs appear that belong to neither change.
+- **"Works on my branch" is unfalsifiable.** The reviewer can't reproduce the author's local state, so review degrades into reading the diff and trusting it.
+- **Destructive changes are untestable.** Nobody wants to run a risky backfill against the database five other people are using, so it gets rubber-stamped and discovered in production.
+
+The root cause is that the database has a different lifecycle than everything else in the PR. The code is ephemeral and isolated; the data is shared and long-lived.
+
+## The idea: one database per pull request
+
+Give each pull request its own database, with the same lifecycle as the PR itself:
+
+```text
+PR opened / pushed   ──►  create isolated DB · run migrations · seed
+        │
+        ▼
+Preview deployment   ──►  DATABASE_URL points at the PR's database
+        │
+        ▼
+PR merged            ──►  apply migrations to production (gated)
+        │
+        ▼
+PR closed            ──►  destroy the PR database
+```
+
+The reviewer opens the preview, clicks around against real-shaped data, and watches the actual migration run in CI logs. Schema and data changes become as reviewable as a function rename.
+
+## The lifecycle, as a GitHub Actions pipeline
+
+Three triggers do the work: `opened`/`synchronize` provisions, `closed`/`merged` cleans up and promotes. Here's the shape of it.
+
+```yaml
+# .github/workflows/pr-database.yml
+name: PR database
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+
+concurrency:
+  # One run per PR — a new push cancels the in-flight provision.
+  group: pr-db-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  provision:
+    if: github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create or reuse the PR database
+        id: db
+        run: ./scripts/db-branch.sh create "pr-${{ github.event.pull_request.number }}"
+
+      - name: Run migrations
+        env:
+          DATABASE_URL: ${{ steps.db.outputs.url }}
+        run: npm run migrate:deploy
+
+      - name: Seed deterministic fixtures
+        env:
+          DATABASE_URL: ${{ steps.db.outputs.url }}
+        run: npm run seed:ci
+
+      - name: Hand the URL to the preview deploy
+        run: ./scripts/set-preview-env.sh DATABASE_URL "${{ steps.db.outputs.url }}"
+
+  teardown:
+    if: github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Drop the PR database
+        run: ./scripts/db-branch.sh drop "pr-${{ github.event.pull_request.number }}"
+
+      - name: Apply migrations to production
+        if: github.event.pull_request.merged == true
+        env:
+          DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+        run: npm run migrate:deploy
+```
+
+Two details that matter more than they look:
+
+- **`concurrency` with `cancel-in-progress`.** PRs get pushed to repeatedly. Without this you race two provisions against the same database name and corrupt the very isolation you're buying.
+- **Migrations run twice** — once against the PR database (to *prove* they apply cleanly), once against production on merge. The PR run is your safety net: a migration that can't apply never reaches `main`.
+
+## Creating the database: two ways
+
+How you provision the database is the only part that depends on your stack.
+
+**Managed branching.** Modern Postgres platforms (Neon, Supabase, PlanetScale-style services) expose database *branches* — a copy-on-write fork of the parent, created in seconds, billed only for the diff. This is what I'd reach for first; the create/drop is a single API call.
+
+```bash
+#!/usr/bin/env bash
+# scripts/db-branch.sh  (managed-branching flavor)
+set -euo pipefail
+action="$1"; name="$2"
+
+case "$action" in
+  create)
+    url=$(provider branches create --name "$name" --parent main --output json | jq -r '.connection_url')
+    echo "url=$url" >> "$GITHUB_OUTPUT"
+    ;;
+  drop)
+    provider branches delete --name "$name" --if-exists
+    ;;
+esac
+```
+
+**Self-hosted.** No managed branching? Postgres can clone a database from a template, which is dramatically faster than replaying every migration from empty:
+
+```sql
+-- Build a template once (migrated + seeded), then clone per PR.
+CREATE DATABASE "pr_128" TEMPLATE "ci_template";
+```
+
+```bash
+# Clone is near-instant because Postgres copies the template's files.
+psql "$ADMIN_URL" -c "CREATE DATABASE \"$name\" TEMPLATE \"ci_template\";"
+```
+
+The template trick keeps provisioning under a few seconds even as your migration history grows into the hundreds — you're copying a finished database, not rebuilding one.
+
+## Seed data: synthetic, deterministic, never a prod dump
+
+The instinct is to seed from a production snapshot so the preview "feels real." Don't. A prod dump drags PII into CI logs and ephemeral databases that were never scoped for it, and it makes every review non-reproducible because the data shifts under you.
+
+Seed **synthetic** data instead, and make it **deterministic** — fixed IDs, a seeded RNG, a known set of edge cases:
+
+```ts
+// seed:ci — same input every run, so reviews are reproducible.
+const SEED = 42;
+const rng = mulberry32(SEED);
+
+await db.insert(users).values(
+  Array.from({ length: 50 }, (_, i) => makeUser(i, rng)),
+);
+// Deliberately include the awkward rows: the null, the unicode name,
+// the row that the migration under review is supposed to handle.
+```
+
+Deterministic fixtures mean a reviewer who reports "row 37 looks wrong" is looking at the same row 37 you are.
+
+## The parts that bite
+
+This pattern is worth it, but it isn't free. The failure modes I actually ran into:
+
+- **Connection limits.** N open PRs × a preview app that opens a pool each = exhausted Postgres connections fast. Put a pooler (PgBouncer, or your provider's built-in pooler) in front, and cap pool size per preview.
+- **Orphaned databases.** A `closed` event can be missed (force-pushed, deleted branch, failed run). Run a nightly sweeper that drops any PR database older than its PR or past a TTL — otherwise you slowly accumulate cost.
+- **Migrations must be safe to apply on merge.** Promotion to production should be **idempotent and ordered**. For anything risky, use expand/contract: ship the additive change, deploy, backfill, then remove the old shape in a later PR. Never couple a destructive migration to the same deploy that stops using the column.
+- **Secrets hygiene.** The PR database URL is a real credential. Keep it out of logs, scope it to the preview environment, and never expose production secrets to the PR-provision job — only the `merged` teardown step touches production.
+- **CI time.** If provisioning adds minutes, people resent it. Template/branch cloning is what keeps it in the seconds range.
+
+## Why it's worth the moving parts
+
+Once every PR has its own database, an entire category of bugs stops existing. There's no shared mutable state to corrupt, so "it passed on my branch" becomes meaningful. Migrations are proven against a real database before they can merge. And for data or AI-shaped products, reviewers can finally inspect the *behavior and the data*, not just the code that produces them — which is the whole point of review.
+
+The mental shift is small but load-bearing: **the database is a per-PR artifact, not shared infrastructure.** Once you treat it that way, the tooling above is just bookkeeping.
+
+---
+
+*I build backend and AI systems with a focus on making changes safe to ship. More writing and work at [my portfolio](https://portfolio.jainshashank.in), or say hi on [X](https://x.com/Jainshashank7).*

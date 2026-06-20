@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="An idempotent webhook pipeline that loses zero events">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#101114"/>
+      <stop offset="1" stop-color="#0a0a0b"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="0%" r="70%">
+      <stop offset="0" stop-color="#3d6bf5" stop-opacity="0.30"/>
+      <stop offset="0.7" stop-color="#3d6bf5" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="dotfade" cx="50%" cy="0%" r="80%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="0.7" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="1" fill="#ffffff" fill-opacity="0.09"/>
+    </pattern>
+    <mask id="dotmask"><rect width="1200" height="675" fill="url(#dotfade)"/></mask>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5b8cf0"/></marker>
+  </defs>
+
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <rect width="1200" height="675" fill="url(#dots)" mask="url(#dotmask)"/>
+  <rect width="1200" height="675" fill="url(#glow)"/>
+
+  <!-- duplicate inbound events -> idempotency gate -> queue -> worker -> DLQ -->
+  <g fill="none" stroke="#5b8cf0" stroke-width="2">
+    <path d="M598,176 L686,210" marker-end="url(#ah)"/>
+    <path d="M598,228 L686,228" marker-end="url(#ah)"/>
+    <path d="M598,280 L686,246" marker-end="url(#ah)"/>
+    <path d="M752,228 L806,228" marker-end="url(#ah)"/>
+    <path d="M966,228 L998,228" marker-end="url(#ah)"/>
+    <path d="M1032,262 L1032,342" marker-end="url(#ah)"/>
+  </g>
+
+  <!-- idempotency gate (key) -->
+  <rect x="690" y="200" width="56" height="56" rx="12" fill="#16213f" stroke="#7aa2ff" stroke-width="1.8"/>
+  <g stroke="#bcd0ff" stroke-width="2" fill="none" stroke-linecap="round">
+    <circle cx="710" cy="220" r="7"/>
+    <line x1="715" y1="225" x2="732" y2="242"/>
+    <line x1="727" y1="237" x2="727" y2="244"/>
+    <line x1="722" y1="232" x2="722" y2="238"/>
+  </g>
+  <text x="718" y="286" fill="#9db6f7" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="13" text-anchor="middle">idempotency</text>
+
+  <!-- queue buffer -->
+  <rect x="808" y="200" width="156" height="56" rx="8" fill="#11172a" stroke="#33405f" stroke-width="1.2"/>
+  <g fill="#16213f" stroke="#5b8cf0" stroke-width="1.4">
+    <rect x="820" y="212" width="30" height="32" rx="5"/>
+    <rect x="858" y="212" width="30" height="32" rx="5"/>
+    <rect x="896" y="212" width="30" height="32" rx="5"/>
+    <rect x="934" y="212" width="22" height="32" rx="5" fill="#11172a" stroke="#33405f"/>
+  </g>
+
+  <!-- worker -->
+  <circle cx="1032" cy="228" r="32" fill="#16213f" stroke="#7aa2ff" stroke-width="1.8"/>
+  <path d="M1032,212 L1036,224 L1048,228 L1036,232 L1032,244 L1028,232 L1016,228 L1028,224 Z" fill="#7aa2ff"/>
+
+  <!-- DLQ -->
+  <rect x="999" y="344" width="66" height="44" rx="8" fill="#141a2b" stroke="#5b8cf0" stroke-width="1.6"/>
+  <text x="1032" y="371" fill="#9db6f7" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="15" text-anchor="middle">DLQ</text>
+
+  <text x="70" y="500" fill="#7aa2ff" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="16" letter-spacing="3">RELIABILITY · EVENT-DRIVEN</text>
+  <text x="68" y="548" fill="#e9ecf4" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="34" font-weight="600">Webhooks that lose zero events</text>
+</svg>

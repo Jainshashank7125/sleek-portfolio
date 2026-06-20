@@ -1,0 +1,159 @@
+---
+title: 'Idempotency Keys and Dead-Letter Queues: A Webhook Pipeline That Loses Zero Events'
+description: 'Webhooks are bursty, retried, and duplicated. Here is the ingestion pattern — acknowledge fast, buffer in a queue, dedupe with idempotency keys, and quarantine poison messages in a DLQ — that turns at-least-once delivery into exactly-once effects.'
+image: '/blog/idempotent-webhook-pipeline.svg'
+tags: ['backend', 'distributed-systems', 'aws', 'reliability', 'event-driven']
+date: '2026-06-17'
+isPublished: true
+---
+
+Webhooks look like the easiest integration you'll ever write: a provider POSTs you some JSON, you do something with it, you return `200`. Then you put it in production behind real traffic and discover that "the provider POSTs you some JSON" hides three hard problems — bursts, retries, and duplicates — and the naive handler quietly loses or double-processes events under all three.
+
+I learned this building an ingestion pipeline that had to absorb tens of thousands of support events a month without dropping a single one. Here's the pattern that got it to zero data loss, and the subtleties that decide whether it actually works.
+
+## Why the obvious handler drops events
+
+The first version everyone writes is synchronous: do the work, then acknowledge.
+
+```python
+@app.post("/webhooks/provider")
+async def handle(request: Request):
+    event = verify_and_parse(await request.body())
+    await write_to_db(event)          # slow
+    await call_downstream_api(event)  # slower, can fail
+    await maybe_run_ai_step(event)    # slowest
+    return {"ok": True}               # 200 — finally
+```
+
+This fails in two directions at once:
+
+- **You lose events.** The provider has a timeout (often a few seconds). Under a burst, your slow handler blows past it. The provider records a failure and retries — but if your process crashed *after* the DB write and *before* the downstream call, that work is half-done and the retry may not fix it. Worse, if you crash before acknowledging, the provider thinks it failed even though you did the work.
+- **You duplicate events.** Every serious provider guarantees **at-least-once** delivery: on timeout or `5xx`, they retry, usually with backoff. So the same event arrives twice. The naive handler happily processes it twice — two charges, two emails, two rows.
+
+You cannot make these go away by being faster. At-least-once delivery is a property of the network, not your code. The design has to *expect* duplicates and partial failures.
+
+## Three principles
+
+### 1. Acknowledge fast, process asynchronously
+
+The webhook handler should do the minimum provable work and return `200` immediately: verify the signature, enqueue the raw event, done. Everything slow happens behind a queue.
+
+```python
+@app.post("/webhooks/provider")
+async def handle(request: Request):
+    raw = await request.body()
+    verify_signature(raw, request.headers["X-Signature"])  # reject forgeries
+
+    event_id = json.loads(raw)["id"]
+    await sqs.send_message(
+        QueueUrl=QUEUE_URL,
+        MessageBody=raw.decode(),
+        MessageAttributes={"event_id": {"DataType": "String", "StringValue": event_id}},
+    )
+    return {"accepted": True}  # fast, predictable, under the provider's timeout
+```
+
+The queue (SQS here, but any durable queue works) is the buffer that decouples a bursty, latency-sensitive ingress from slow, retry-heavy processing. A spike that would time out a synchronous handler just becomes a temporarily deeper queue.
+
+A `200` now means **"accepted,"** not **"processed."** That's the deal you're making, and it's the right one.
+
+### 2. At-least-once + idempotent = exactly-once *effect*
+
+You can't buy exactly-once *delivery*. You can build exactly-once *effects* by making processing **idempotent**: processing the same event twice produces the same result as processing it once.
+
+The mechanism is an **idempotency key** — a stable identifier for the event — and a record of which keys you've already handled. Use the provider's event ID if they give you one (they usually do); fall back to a hash of the canonical payload, never a hash that includes a receive-timestamp or you'll defeat yourself.
+
+The durable way to store it is a unique constraint in the same database as your side effect, so the dedupe and the work commit together:
+
+```sql
+CREATE TABLE processed_events (
+    event_id    TEXT PRIMARY KEY,
+    processed_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+```
+
+```python
+async def process(event: dict, conn) -> None:
+    async with conn.transaction():
+        # Claim the key. ON CONFLICT = we've already done this one.
+        claimed = await conn.fetchval(
+            """
+            INSERT INTO processed_events (event_id) VALUES ($1)
+            ON CONFLICT (event_id) DO NOTHING
+            RETURNING event_id
+            """,
+            event["id"],
+        )
+        if claimed is None:
+            return  # duplicate — no-op, then delete from the queue
+
+        # Side effect lives in the SAME transaction as the claim.
+        await apply_effect(event, conn)
+```
+
+Because the dedupe row and the side effect commit atomically, you never end up in the "marked done but didn't do it" state — the failure mode a separate Redis `SETNX` check is prone to. (Redis dedupe is fine when the effect *is* the cache, or as a cheap pre-filter, but for a durable side effect, put the key in the same transactional store.)
+
+### 3. Quarantine poison messages in a dead-letter queue
+
+Some messages can never succeed — malformed payloads, a schema your code doesn't understand, a bug that throws on a specific shape. Left alone, a poison message retries forever: it burns throughput, fills your logs, and can stall the queue behind it.
+
+A **dead-letter queue (DLQ)** is the release valve. After N delivery attempts, the broker moves the message to a separate queue instead of redelivering it. On SQS that's a redrive policy:
+
+```hcl
+resource "aws_sqs_queue" "dlq" {
+  name = "webhooks-dlq"
+}
+
+resource "aws_sqs_queue" "main" {
+  name                       = "webhooks"
+  visibility_timeout_seconds = 90   # MUST exceed worst-case processing time
+  redrive_policy = jsonencode({
+    deadLetterTargetArn = aws_sqs_queue.dlq.arn
+    maxReceiveCount     = 5         # 5 failed attempts -> DLQ
+  })
+}
+```
+
+The DLQ turns "silent infinite failure" into "a queue with depth > 0," which you can alert on, inspect, fix, and **redrive** (replay) once the bug is shipped. Nothing is lost; it's parked.
+
+## Putting it together
+
+```text
+provider ──(at-least-once, retried)──► [ ingest: verify + enqueue, 200 fast ]
+                                              │
+                                              ▼
+                                      [ SQS buffer ] ──(N failures)──► [ DLQ ]
+                                              │                          (alert + redrive)
+                                              ▼
+                              [ worker: idempotency claim + effect (one txn) ]
+```
+
+The ingress is fast and dumb. The queue absorbs bursts and drives retries. The worker is idempotent, so retries are safe. Poison messages end up somewhere visible instead of looping forever.
+
+## The subtleties that decide whether it works
+
+Most "we still got duplicates" and "we still lost events" stories trace back to one of these:
+
+- **Visibility timeout vs. processing time.** If a message's visibility timeout is shorter than how long you take to process it, SQS assumes you died and redelivers it *while you're still working* — a self-inflicted duplicate. The timeout must comfortably exceed your worst-case processing time. For long jobs, extend the timeout via heartbeat.
+- **Order of operations: claim and effect must be atomic.** Claim the key, *then* crash before the effect, and you've recorded "done" for work you never did. Keeping both in one transaction (as above) avoids it. If the side effect lives in another system, use the transactional outbox pattern instead of a bare check.
+- **Idempotency key TTL.** You can't keep keys forever. Keep them at least as long as the provider's retry window, plus a margin. Sweep older rows so the table doesn't grow unbounded.
+- **Delete-after-process, not before.** With SQS you delete the message only after a successful (or successfully-deduped) process. Delete early and a crash mid-work loses the event; that's the one place the queue's at-least-once guarantee is protecting you.
+- **Verify the signature before anything else.** The endpoint is public. An attacker can POST forged events; reject them on HMAC before they ever reach the queue.
+
+## Operating it
+
+Reliability you can't see isn't reliability. The dashboard that mattered:
+
+- **DLQ depth** — alert the moment it's `> 0`. A message in the DLQ is a bug waiting to be triaged.
+- **Queue depth and age of oldest message** — rising age means workers aren't keeping up; depth alone can be a healthy burst.
+- **Processing latency and retry rate** — a climbing retry rate is the early warning before the DLQ fills.
+
+Pair that with a written redrive runbook ("fix → deploy → redrive the DLQ") so replaying parked messages is routine, not an incident.
+
+## The takeaway
+
+You don't get zero data loss by writing a careful handler. You get it by **assuming delivery is at-least-once and partial failure is normal**, then designing around it: acknowledge fast so you never time out, buffer in a queue so bursts can't overwhelm you, make processing idempotent so duplicates are harmless, and route poison messages to a DLQ so nothing fails silently. None of the pieces are exotic — but they only add up to "zero events lost" when all four are present.
+
+---
+
+*I build backend and event-driven systems for reliability at scale. More writing and work at [my portfolio](https://portfolio.jainshashank.in), or say hi on [X](https://x.com/Jainshashank7).*

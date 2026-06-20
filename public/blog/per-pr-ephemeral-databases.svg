@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="Give every pull request its own Postgres database">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#101114"/>
+      <stop offset="1" stop-color="#0a0a0b"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="0%" r="70%">
+      <stop offset="0" stop-color="#3d6bf5" stop-opacity="0.30"/>
+      <stop offset="0.7" stop-color="#3d6bf5" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="dotfade" cx="50%" cy="0%" r="80%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="0.7" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="1" fill="#ffffff" fill-opacity="0.09"/>
+    </pattern>
+    <mask id="dotmask"><rect width="1200" height="675" fill="url(#dotfade)"/></mask>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5b8cf0"/></marker>
+  </defs>
+
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <rect width="1200" height="675" fill="url(#dots)" mask="url(#dotmask)"/>
+  <rect width="1200" height="675" fill="url(#glow)"/>
+
+  <!-- main branch + two PR branches, each with its own database -->
+  <g fill="none" stroke="#5b8cf0" stroke-width="2">
+    <path d="M612,230 L1042,230" marker-end="url(#ah)"/>
+    <path d="M820,230 C820,300 760,302 760,344" marker-end="url(#ah)"/>
+    <path d="M1000,230 C1000,300 980,302 980,344" marker-end="url(#ah)"/>
+  </g>
+  <g fill="#7aa2ff">
+    <circle cx="650" cy="230" r="6"/>
+    <circle cx="820" cy="230" r="6"/>
+    <circle cx="1000" cy="230" r="6"/>
+  </g>
+
+  <!-- prod DB on main -->
+  <g fill="#141a2b" stroke="#5b8cf0" stroke-width="1.6">
+    <path d="M1057,214 V244 a20,6 0 0 0 40,0 V214 Z"/>
+    <ellipse cx="1077" cy="214" rx="20" ry="6" fill="#16213f"/>
+  </g>
+  <path d="M1057,226 a20,6 0 0 0 40,0" fill="none" stroke="#5b8cf0" stroke-width="1.2"/>
+  <text x="1077" y="276" fill="#9db6f7" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="14" text-anchor="middle">prod</text>
+
+  <!-- PR DB #1 -->
+  <g fill="#141a2b" stroke="#7aa2ff" stroke-width="1.6">
+    <path d="M740,350 V384 a20,6 0 0 0 40,0 V350 Z"/>
+    <ellipse cx="760" cy="350" rx="20" ry="6" fill="#16213f"/>
+  </g>
+  <path d="M740,363 a20,6 0 0 0 40,0" fill="none" stroke="#7aa2ff" stroke-width="1.2"/>
+  <text x="760" y="416" fill="#9db6f7" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="14" text-anchor="middle">pr-128</text>
+
+  <!-- PR DB #2 -->
+  <g fill="#141a2b" stroke="#7aa2ff" stroke-width="1.6">
+    <path d="M960,350 V384 a20,6 0 0 0 40,0 V350 Z"/>
+    <ellipse cx="980" cy="350" rx="20" ry="6" fill="#16213f"/>
+  </g>
+  <path d="M960,363 a20,6 0 0 0 40,0" fill="none" stroke="#7aa2ff" stroke-width="1.2"/>
+  <text x="980" y="416" fill="#9db6f7" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="14" text-anchor="middle">pr-131</text>
+
+  <text x="70" y="500" fill="#7aa2ff" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="16" letter-spacing="3">CI/CD · DATABASES</text>
+  <text x="68" y="548" fill="#e9ecf4" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="34" font-weight="600">A database per pull request</text>
+</svg>

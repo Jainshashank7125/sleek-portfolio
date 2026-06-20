@@ -1,9 +1,7 @@
 import { BlogList } from '@/components/blog/BlogList';
 import Container from '@/components/common/Container';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { getAllTags, getPublishedBlogPosts } from '@/lib/blog';
 import { generateMetadata as getMetadata } from '@/config/Meta';
+import { getAllTags, getPublishedBlogPosts } from '@/lib/blog';
 import { Metadata } from 'next';
 import { Robots } from 'next/dist/lib/metadata/types/metadata-types';
 
@@ -20,8 +18,8 @@ export const generateMetadata = (): Metadata => {
         'max-video-preview': -1,
         'max-image-preview': 'large',
         'max-snippet': -1,
-      } as Robots['googleBot']
-    }
+      } as Robots['googleBot'],
+    },
   };
 };
 
@@ -30,49 +28,39 @@ export default function BlogPage() {
   const tags = getAllTags();
 
   return (
-    <Container className="py-16">
-      <div className="space-y-8">
-        {/* Header */}
-        <div className="space-y-4 text-center">
-          <h1 className="text-4xl font-bold tracking-tight lg:text-5xl">
-            Blogs
-          </h1>
-          <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-            Thoughts, tutorials, and insights on engineering, and programming.
+    <Container className="max-w-5xl py-16">
+      {/* Header — consistent with other page headers */}
+      <div className="flex flex-col gap-2">
+        <p className="eyebrow">Technical writing</p>
+        <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
+          Writing
+        </h1>
+        <p className="mt-1 max-w-2xl text-muted-foreground">
+          Deep-dives on backend systems, distributed architectures, AI
+          engineering, and the tradeoffs behind real production decisions.
+        </p>
+      </div>
+
+      {/* Tags */}
+      {tags.length > 0 && (
+        <div className="mt-8 flex flex-wrap gap-2">
+          {tags.map((tag) => (
+            <span key={tag} className="tech-chip capitalize">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Posts */}
+      <div className="mt-10">
+        <div className="mb-6 flex items-center justify-between">
+          <p className="text-sm text-muted-foreground">
+            <span className="metric-value">{posts.length}</span>{' '}
+            {posts.length === 1 ? 'post' : 'posts'}
           </p>
         </div>
-
-        <Separator />
-
-        {/* Tags */}
-        {tags.length > 0 && (
-          <div className="space-y-4">
-            <h2 className="text-lg font-semibold">Popular Tags</h2>
-            <div className="flex flex-wrap gap-2">
-              {tags.map((tag) => (
-                <Badge key={tag} variant="outline" className="capitalize">
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Blog Posts */}
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-semibold">
-              Latest Posts
-              {posts.length > 0 && (
-                <span className="ml-2 text-sm font-normal text-muted-foreground">
-                  ({posts.length} {posts.length === 1 ? 'post' : 'posts'})
-                </span>
-              )}
-            </h2>
-          </div>
-
-          <BlogList posts={posts} />
-        </div>
+        <BlogList posts={posts} />
       </div>
     </Container>
   );

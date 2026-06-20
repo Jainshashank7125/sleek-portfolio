@@ -10,16 +10,12 @@ interface ThemeSwitchProps {
 }
 
 export default function ThemeSwitch({ className }: ThemeSwitchProps) {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
   const [mounted, setMounted] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
-    const savedTheme =
-      localStorage.getItem('theme') ||
-      (window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light');
+    const savedTheme = localStorage.getItem('theme') || 'dark';
 
     setTheme(savedTheme as 'light' | 'dark');
     document.documentElement.classList.toggle('dark', savedTheme === 'dark');
@@ -41,7 +37,7 @@ export default function ThemeSwitch({ className }: ThemeSwitchProps) {
       transition.style.zIndex = '9999';
       transition.style.pointerEvents = 'none';
       transition.style.backgroundColor =
-        theme === 'light' ? 'oklch(0.145 0 0)' : 'oklch(1 0 0)';
+        theme === 'light' ? '#0a0a0f' : 'oklch(1 0 0)';
       transition.style.clipPath = 'circle(0% at var(--x) var(--y))';
       transition.style.transition = 'clip-path 600ms ease-in-out';
       transition.style.setProperty('--x', `${x}px`);

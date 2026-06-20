@@ -85,8 +85,8 @@ export function ExperienceCard({ experience }: ExperienceCardProps) {
       {/* Description */}
       <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
         {experience.description.map((description, descIndex) => (
-          <li key={descIndex} className="flex items-start gap-2.5">
-            <span className="mt-1.5 block size-1.5 shrink-0 rounded-full bg-border" />
+          <li key={descIndex} className="flex items-start gap-3">
+            <span className="mt-2 block size-1 shrink-0 rounded-full bg-brand/50" />
             <span
               dangerouslySetInnerHTML={{
                 __html: parseDescription(description),

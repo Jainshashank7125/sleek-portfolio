@@ -1,16 +1,8 @@
-import { Badge } from '@/components/ui/badge';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from '@/components/ui/card';
 import { BlogPostPreview } from '@/types/blog';
 import { Link } from 'next-view-transitions';
 import Image from 'next/image';
 
 import ArrowRight from '../svgs/ArrowRight';
-import Calender from '../svgs/Calender';
 
 interface BlogCardProps {
   post: BlogPostPreview;
@@ -22,59 +14,59 @@ export function BlogCard({ post }: BlogCardProps) {
 
   const formattedDate = new Date(date).toLocaleDateString('en-US', {
     year: 'numeric',
-    month: 'long',
+    month: 'short',
     day: 'numeric',
   });
 
   return (
-    <Card className="group h-full w-full overflow-hidden transition-all p-0 border-gray-100 dark:border-gray-800 shadow-none">
-      <CardHeader className="p-0">
-        <div className="relative aspect-video overflow-hidden">
-          <Link href={`/blog/${slug}`}>
-            <Image src={image} alt={title} fill className="object-cover" />
-          </Link>
+    <Link
+      href={`/blog/${slug}`}
+      className="card-hover group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card"
+    >
+      {/* Thumbnail */}
+      <div className="relative aspect-video overflow-hidden">
+        <Image
+          src={image}
+          alt={title}
+          fill
+          className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+        />
+      </div>
+
+      {/* Body */}
+      <div className="flex flex-1 flex-col gap-3 p-5">
+        {/* Tags */}
+        <div className="flex flex-wrap gap-1.5">
+          {tags.slice(0, 3).map((tag) => (
+            <span key={tag} className="tech-chip capitalize">
+              {tag}
+            </span>
+          ))}
+          {tags.length > 3 && (
+            <span className="tech-chip">+{tags.length - 3}</span>
+          )}
         </div>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
-          <Link href={`/blog/${slug}`}>
-            <h3 className="line-clamp-2 text-xl font-semibold leading-tight group-hover:text-primary">
-              {title}
-            </h3>
-          </Link>
-          <p className="line-clamp-3 text-secondary mt-4">{description}</p>
+
+        <h3 className="line-clamp-2 text-base font-semibold leading-snug tracking-tight transition-colors group-hover:text-brand">
+          {title}
+        </h3>
+        <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+          {description}
+        </p>
+
+        {/* Footer row */}
+        <div className="mt-auto flex items-center justify-between pt-2">
+          <time
+            className="metric-value text-xs text-muted-foreground"
+            dateTime={date}
+          >
+            {formattedDate}
+          </time>
+          <span className="flex items-center gap-1 text-xs text-muted-foreground transition-colors group-hover:text-brand">
+            Read <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+          </span>
         </div>
-      </CardContent>
-      <CardFooter className="p-6 pt-0">
-        <div className="flex w-full flex-col space-y-3">
-          <div className="flex flex-wrap gap-2">
-            {tags.slice(0, 3).map((tag) => (
-              <Badge key={tag} variant="secondary" className="text-xs">
-                {tag}
-              </Badge>
-            ))}
-            {tags.length > 3 && (
-              <Badge variant="outline" className="text-xs">
-                +{tags.length - 3} more
-              </Badge>
-            )}
-          </div>
-          <div className="flex items-center gap-2 justify-between mt-4">
-            <time
-              className="text-sm text-secondary flex items-center gap-2"
-              dateTime={date}
-            >
-              <Calender className="size-4" /> {formattedDate}
-            </time>
-            <Link
-              href={`/blog/${slug}`}
-              className="flex items-center justify-end gap-2 hover:underline underline-offset-4 text-secondary"
-            >
-              Read More <ArrowRight className="size-4" />
-            </Link>
-          </div>
-        </div>
-      </CardFooter>
-    </Card>
+      </div>
+    </Link>
   );
 }

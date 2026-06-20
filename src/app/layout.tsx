@@ -17,7 +17,15 @@ export default function RootLayout({
 }>) {
   return (
     <ViewTransitions>
-      <html lang="en">
+      <html lang="en" className="dark">
+        {/* Runs synchronously before paint to prevent light-mode flash */}
+        <head>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.classList.toggle('dark',t==='dark');})();`,
+            }}
+          />
+        </head>
         <body className={`font-hanken-grotesk antialiased`}>
           <ReactLenis root>
             <Navbar />
