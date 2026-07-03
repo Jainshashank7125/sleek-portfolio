@@ -7,7 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import { siteConfig } from '@/config/Meta';
 import {
   getBlogPostBySlug,
-  getBlogPostSlugs,
+  getPublishedBlogPosts,
   getRelatedPosts,
 } from '@/lib/blog';
 import { Metadata } from 'next';
@@ -20,11 +20,11 @@ interface BlogPostPageProps {
   }>;
 }
 
-// Generate static paths for all blog posts
+// Generate static paths for published blog posts only
 export async function generateStaticParams() {
-  const slugs = getBlogPostSlugs();
+  const posts = getPublishedBlogPosts();
 
-  return slugs.map((slug) => ({
+  return posts.map(({ slug }) => ({
     slug,
   }));
 }
@@ -43,17 +43,26 @@ export async function generateMetadata({
     };
   }
 
-  const { title, description, image } = post.frontmatter;
+  const { title, description, image, date, tags } = post.frontmatter;
+  const url = `${siteConfig.url}/blog/${slug}`;
 
   return {
     metadataBase: new URL(siteConfig.url),
     title,
     description,
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title,
       description,
-      images: [image],
+      url,
+      siteName: siteConfig.title,
+      images: [{ url: image, width: 1200, height: 630, alt: title }],
       type: 'article',
+      publishedTime: date,
+      authors: [siteConfig.author.name],
+      tags,
     },
     twitter: {
       card: 'summary_large_image',
@@ -73,8 +82,27 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
   const relatedPosts = await getRelatedPosts(slug, 3);
 
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.frontmatter.title,
+    description: post.frontmatter.description,
+    image: `${siteConfig.url}${post.frontmatter.image}`,
+    datePublished: post.frontmatter.date,
+    author: {
+      '@type': 'Person',
+      name: siteConfig.author.name,
+      url: siteConfig.url,
+    },
+    mainEntityOfPage: `${siteConfig.url}/blog/${slug}`,
+  };
+
   return (
     <Container className="py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       <div className="space-y-12">
         {/* Back Button */}
         <div>

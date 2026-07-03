@@ -69,12 +69,12 @@
 % ===================== ENGINEERING SNAPSHOT =====================
 \begin{tabularx}{\linewidth}{CCCCC}
   {\large\bfseries\color{accent}3+} &
-  {\large\bfseries\color{accent}1M+} &
+  {\large\bfseries\color{accent}300+} &
   {\large\bfseries\color{accent}50K+} &
   {\large\bfseries\color{accent}99.9\%} &
   {\large\bfseries\color{accent}10+} \\[1pt]
   {\footnotesize\color{muted}Years Experience} &
-  {\footnotesize\color{muted}API Requests Processed} &
+  {\footnotesize\color{muted}Drools Rules Automated} &
   {\footnotesize\color{muted}Records Processed / Day} &
   {\footnotesize\color{muted}Platform Uptime} &
   {\footnotesize\color{muted}Enterprise Clients} \\
@@ -104,7 +104,7 @@
 \begin{itemize}
     \item Led \textbf{full-stack development} of 5+ applications (\textbf{Flutter, React, TypeScript, Java/Spring Boot}), owning the SDLC from database schema design to production deployment.
     \item Architected a \textbf{schema-based multi-tenant PostgreSQL} platform for \textbf{10+ enterprise clients} with strict data isolation and \textbf{role-based access control}.
-    \item Delivered \textbf{REST APIs handling 1M+ monthly requests} with JWT auth and rate limiting; cut API latency \textbf{65\%} via \textbf{Redis caching} and query optimization.
+    \item Delivered \textbf{REST APIs} with JWT auth and rate limiting; cut API latency \textbf{65\%} via \textbf{Redis caching} and query optimization.
     \item Built \textbf{event-driven systems} on \textbf{AWS Lambda + SQS} with dead-letter queues and automatic retries for reliable asynchronous processing.
 \end{itemize}
 

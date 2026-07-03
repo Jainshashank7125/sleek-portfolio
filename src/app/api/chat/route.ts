@@ -8,30 +8,36 @@ const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT_WINDOW = 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 20;
 
+const MAX_BODY_BYTES = 20_000;
+
 const chatSchema = z.object({
   message: z.string().min(1).max(500),
   history: z
     .array(
       z.object({
         role: z.enum(['user', 'model']),
-        parts: z.array(z.object({ text: z.string() })),
+        parts: z
+          .array(z.object({ text: z.string().max(1000) }))
+          .max(10),
       }),
     )
+    .max(10)
     .optional()
     .default([]),
 });
 
 function getClientIP(request: NextRequest): string {
+  // Vercel's edge terminates the client connection and appends the real
+  // peer IP as the last hop of x-forwarded-for. Earlier entries are
+  // whatever the client (or an upstream proxy) claimed and are spoofable,
+  // so only the right-most value can be trusted for rate limiting.
   const forwarded = request.headers.get('x-forwarded-for');
-  const realIP = request.headers.get('x-real-ip');
-  const cfConnectingIP = request.headers.get('cf-connecting-ip');
-
   if (forwarded) {
-    return forwarded.split(',')[0].trim();
+    const ips = forwarded.split(',').map((ip) => ip.trim());
+    return ips[ips.length - 1] || 'unknown';
   }
-  if (realIP) {
-    return realIP;
-  }
+
+  const cfConnectingIP = request.headers.get('cf-connecting-ip');
   if (cfConnectingIP) {
     return cfConnectingIP;
   }
@@ -98,7 +104,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const body = await request.json();
+    const contentLength = Number(request.headers.get('content-length') ?? 0);
+    if (contentLength > MAX_BODY_BYTES) {
+      return NextResponse.json({ error: 'Request too large' }, { status: 413 });
+    }
+
+    const rawBody = await request.text();
+    if (rawBody.length > MAX_BODY_BYTES) {
+      return NextResponse.json({ error: 'Request too large' }, { status: 413 });
+    }
+
+    const body = JSON.parse(rawBody);
     const validatedData = chatSchema.parse(body);
 
     // Prepare the request body for Gemini REST API
@@ -197,7 +213,6 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
         Connection: 'keep-alive',
-        'Access-Control-Allow-Origin': '*',
         'X-RateLimit-Limit': RATE_LIMIT_MAX_REQUESTS.toString(),
         'X-RateLimit-Remaining': rateLimit.remaining.toString(),
       },

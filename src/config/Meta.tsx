@@ -67,8 +67,8 @@ export const pageMetadata: Record<string, PageMeta> = {
     description:
       "Get in touch with me for collaborations, projects, or opportunities. I'd love to hear from you!",
     keywords: ['contact', 'hire', 'collaboration', 'freelance', 'developer'],
-    ogImage: '/assets/logo.png',
-    twitterCard: 'summary',
+    ogImage: '/meta/contact.png',
+    twitterCard: 'summary_large_image',
   },
 
   // Work Experience page
@@ -205,6 +205,7 @@ export function generateMetadata(pathname: string): Metadata {
       card: pageMeta.twitterCard || 'summary_large_image',
       title: pageMeta.title,
       description: pageMeta.description,
+      site: siteConfig.author.twitter,
       creator: siteConfig.author.twitter,
       images: [pageMeta.ogImage || siteConfig.ogImage],
     },

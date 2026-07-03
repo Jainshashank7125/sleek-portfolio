@@ -137,12 +137,7 @@ export const settingsJson = `{
     "workbench.editor.enablePreviewFromQuickOpen": false,
     "editor.gotoLocation.multipleImplementations": "goto",
     "editor.gotoLocation.multipleTypeDefinitions": "goto",
-  
-    "vscode_custom_css.imports": [
-      "file:///E:/vscode/custom-vscode.css",
-      "file:///E:/vscode/custom-vscode-script.js"
-    ],
-  
+
     "[typescriptreact]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode"
     },

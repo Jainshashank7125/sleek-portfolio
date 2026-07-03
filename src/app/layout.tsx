@@ -2,13 +2,27 @@ import ChatBubble from '@/components/common/ChatBubble';
 import Footer from '@/components/common/Footer';
 import Navbar from '@/components/common/Navbar';
 import { Quote } from '@/components/common/Quote';
-import { generateMetadata as getMetadata } from '@/config/Meta';
-import ReactLenis from 'lenis/react';
+import { Toaster } from '@/components/ui/sonner';
+import { siteConfig, generateMetadata as getMetadata } from '@/config/Meta';
+import { SmoothScroll } from '@/lib/lenis';
 import { ViewTransitions } from 'next-view-transitions';
 
 import './globals.css';
 
 export const metadata = getMetadata('/');
+
+const personJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: siteConfig.author.name,
+  url: siteConfig.url,
+  jobTitle: 'Full Stack Engineer',
+  sameAs: [
+    `https://github.com/${siteConfig.author.github}`,
+    `https://linkedin.com/in/${siteConfig.author.linkedin}`,
+    `https://x.com/${siteConfig.author.twitter.replace('@', '')}`,
+  ],
+};
 
 export default function RootLayout({
   children,
@@ -17,7 +31,7 @@ export default function RootLayout({
 }>) {
   return (
     <ViewTransitions>
-      <html lang="en" className="dark">
+      <html lang="en" className="dark" suppressHydrationWarning>
         {/* Runs synchronously before paint to prevent light-mode flash */}
         <head>
           <script
@@ -25,15 +39,26 @@ export default function RootLayout({
               __html: `(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.classList.toggle('dark',t==='dark');})();`,
             }}
           />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+          />
         </head>
         <body className={`font-hanken-grotesk antialiased`}>
-          <ReactLenis root>
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-md focus:bg-background focus:px-4 focus:py-2 focus:text-foreground focus:outline focus:outline-ring"
+          >
+            Skip to content
+          </a>
+          <SmoothScroll>
             <Navbar />
-            {children}
+            <div id="main-content">{children}</div>
             <Quote />
             <Footer />
             <ChatBubble />
-          </ReactLenis>
+            <Toaster />
+          </SmoothScroll>
         </body>
       </html>
     </ViewTransitions>

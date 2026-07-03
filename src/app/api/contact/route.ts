@@ -9,27 +9,33 @@ const RATE_LIMIT_MAX_REQUESTS = 5;
 const contactSchema = z.object({
   name: z.string().min(2).max(100),
   email: z.string().email(),
-  phone: z.string().max(20).optional(),
   message: z.string().min(10).max(1000),
+  // Honeypot: left empty by real visitors, filled in by bots that
+  // auto-complete every field. Non-empty means silently drop the submission.
+  company: z.string().max(500).optional(),
 });
 
 function getClientIP(request: NextRequest): string {
-  // Get IP from various headers in order of preference
+  // Vercel's edge terminates the client connection and appends the real
+  // peer IP as the last hop of x-forwarded-for. Earlier entries are
+  // whatever the client (or an upstream proxy) claimed and are spoofable,
+  // so only the right-most value can be trusted for rate limiting.
   const forwarded = request.headers.get('x-forwarded-for');
-  const realIP = request.headers.get('x-real-ip');
-  const cfConnectingIP = request.headers.get('cf-connecting-ip');
-
   if (forwarded) {
-    return forwarded.split(',')[0].trim();
+    const ips = forwarded.split(',').map((ip) => ip.trim());
+    return ips[ips.length - 1] || 'unknown';
   }
-  if (realIP) {
-    return realIP;
-  }
+
+  const cfConnectingIP = request.headers.get('cf-connecting-ip');
   if (cfConnectingIP) {
     return cfConnectingIP;
   }
 
   return 'unknown';
+}
+
+function escapeMarkdown(text: string): string {
+  return text.replace(/([_*[\]`])/g, '\\$1');
 }
 
 function checkRateLimit(clientIP: string): {
@@ -65,7 +71,6 @@ function checkRateLimit(clientIP: string): {
 async function sendToTelegram(data: {
   name: string;
   email: string;
-  phone?: string;
   message: string;
 }): Promise<boolean> {
   const telegramToken = process.env.TELEGRAM_BOT_TOKEN;
@@ -84,11 +89,11 @@ async function sendToTelegram(data: {
   const message = `
 🔔 *New Contact Form Submission*
 
-👤 *Name:* ${data.name.trim()}
-📧 *Email:* ${data.email.trim()}
+👤 *Name:* ${escapeMarkdown(data.name.trim())}
+📧 *Email:* ${escapeMarkdown(data.email.trim())}
 
 💬 *Message:*
-${data.message.trim()}
+${escapeMarkdown(data.message.trim())}
 
 ⏰ *Submitted:* ${new Date().toISOString()}
 📍 *Timezone:* ${Intl.DateTimeFormat().resolvedOptions().timeZone}
@@ -146,6 +151,14 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     const validatedData = contactSchema.parse(body);
+
+    if (validatedData.company) {
+      // Honeypot tripped — pretend to succeed so bots don't retry or adapt.
+      return NextResponse.json({
+        message: 'Message sent successfully!',
+        success: true,
+      });
+    }
 
     const telegramSent = await sendToTelegram(validatedData);
 

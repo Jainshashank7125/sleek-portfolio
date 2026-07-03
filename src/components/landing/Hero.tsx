@@ -101,6 +101,7 @@ export default function Hero() {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={link.name}
                   className="flex items-center text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <span className="size-5">{link.icon}</span>

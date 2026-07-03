@@ -35,6 +35,9 @@ const contactFormSchema = z.object({
     .max(1000, {
       message: 'Message must not exceed 1000 characters.',
     }),
+  // Honeypot: real visitors never see or fill this field. Bots that
+  // auto-fill every input trip it, letting the API silently drop spam.
+  company: z.string().optional(),
 });
 
 type ContactFormValues = z.infer<typeof contactFormSchema>;
@@ -48,6 +51,7 @@ export default function ContactForm() {
       name: '',
       email: '',
       message: '',
+      company: '',
     },
   });
 
@@ -84,6 +88,19 @@ export default function ContactForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        <div
+          className="pointer-events-none absolute left-[-9999px] top-auto h-px w-px overflow-hidden"
+          aria-hidden="true"
+        >
+          <label htmlFor="company">Company</label>
+          <input
+            id="company"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            {...form.register('company')}
+          />
+        </div>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <FormField
             control={form.control}

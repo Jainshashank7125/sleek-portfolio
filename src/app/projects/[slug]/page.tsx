@@ -7,8 +7,8 @@ import { Separator } from '@/components/ui/separator';
 import { siteConfig } from '@/config/Meta';
 import {
   getProjectCaseStudyBySlug,
-  getProjectCaseStudySlugs,
   getProjectNavigation,
+  getPublishedProjectCaseStudies,
   getRelatedProjectCaseStudies,
 } from '@/lib/project';
 import { Metadata } from 'next';
@@ -21,11 +21,11 @@ interface ProjectCaseStudyPageProps {
   }>;
 }
 
-// Generate static paths for all project case studies
+// Generate static paths for published project case studies only
 export async function generateStaticParams() {
-  const slugs = getProjectCaseStudySlugs();
+  const caseStudies = getPublishedProjectCaseStudies();
 
-  return slugs.map((slug) => ({
+  return caseStudies.map(({ slug }) => ({
     slug,
   }));
 }
@@ -45,15 +45,21 @@ export async function generateMetadata({
 
   const { title, description, image } = caseStudy.frontmatter;
   const ogImage = image || siteConfig.ogImage;
+  const url = `${siteConfig.url}/projects/${slug}`;
 
   return {
     metadataBase: new URL(siteConfig.url),
     title: `${title} - Project Case Study`,
     description,
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title: `${title} - Project Case Study`,
       description,
-      images: [ogImage],
+      url,
+      siteName: siteConfig.title,
+      images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
       type: 'article',
     },
     twitter: {

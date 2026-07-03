@@ -40,8 +40,8 @@ NEXT_PUBLIC_URL="http://localhost:3000"
 ## Getting Started
 
 ```bash
-bun install   # or npm install
-bun dev       # or npm run dev
+npm install
+npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
