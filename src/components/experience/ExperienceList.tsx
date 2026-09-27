@@ -1,7 +1,7 @@
 import { type Experience } from '@/config/Experience';
 import React from 'react';
 
-import { ExperienceCard } from './ExperienceCard';
+import { ExperienceTimeline } from './ExperienceCard';
 
 interface ExperienceListProps {
   experiences: Experience[];
@@ -10,17 +10,11 @@ interface ExperienceListProps {
 export function ExperienceList({ experiences }: ExperienceListProps) {
   if (experiences.length === 0) {
     return (
-      <div className="text-center py-8">
-        <p className="text-muted-foreground">No work experiences found.</p>
-      </div>
+      <p className="text-muted-foreground py-8">
+        No work experience to show yet.
+      </p>
     );
   }
 
-  return (
-    <div className="flex flex-col gap-6">
-      {experiences.map((experience: Experience) => (
-        <ExperienceCard key={experience.company} experience={experience} />
-      ))}
-    </div>
-  );
+  return <ExperienceTimeline experiences={experiences} />;
 }

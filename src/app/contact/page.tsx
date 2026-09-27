@@ -1,13 +1,8 @@
 import Container from '@/components/common/Container';
+import PageHeader from '@/components/common/PageHeader';
 import ContactForm from '@/components/contact/ContactForm';
 import { generateMetadata as getMetadata } from '@/config/Meta';
-import {
-  Github,
-  Linkedin,
-  Mail,
-  MapPin,
-  MessageSquare,
-} from 'lucide-react';
+import { Github, Linkedin, Mail, MapPin, MessageSquare } from 'lucide-react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import React from 'react';
@@ -45,16 +40,10 @@ export default function ContactPage() {
   return (
     <Container className="max-w-5xl py-16">
       {/* Header */}
-      <div className="flex flex-col gap-2">
-        <p className="eyebrow">Get in touch</p>
-        <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
-          Let&apos;s work together
-        </h1>
-        <p className="mt-1 max-w-xl text-muted-foreground">
-          Open to backend/full-stack roles, AI engineering projects, and
-          interesting problems. I typically respond within a day.
-        </p>
-      </div>
+      <PageHeader
+        title="Get in touch"
+        description="Send a message about roles, healthcare and AI engineering work, or an interesting problem. I usually reply within a day."
+      />
 
       {/* 2-col layout */}
       <div className="mt-10 grid gap-12 md:grid-cols-5">
@@ -73,11 +62,11 @@ export default function ContactPage() {
             <ul className="mt-3 flex flex-col gap-4">
               {channels.map(({ icon: Icon, label, value, href }) => (
                 <li key={label} className="flex items-start gap-3">
-                  <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand-muted text-brand">
+                  <span className="bg-brand-muted text-brand mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg">
                     <Icon size={15} strokeWidth={1.75} />
                   </span>
                   <div className="flex flex-col">
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-muted-foreground text-xs">
                       {label}
                     </span>
                     {href ? (
@@ -89,7 +78,7 @@ export default function ContactPage() {
                             ? 'noopener noreferrer'
                             : undefined
                         }
-                        className="text-sm font-medium transition-colors hover:text-brand"
+                        className="hover:text-brand text-sm font-medium transition-colors"
                       >
                         {value}
                       </Link>
@@ -101,15 +90,15 @@ export default function ContactPage() {
               ))}
             </ul>
 
-            <div className="mt-6 rounded-xl border border-border bg-card p-4">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+            <div className="border-border bg-card mt-6 rounded-xl border p-4">
+              <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                 Availability
               </p>
               <p className="mt-2 flex items-center gap-2 text-sm font-medium">
-                <span className="size-2 rounded-full bg-green-500 animate-pulse" />
+                <span className="size-2 animate-pulse rounded-full bg-green-500" />
                 Open to opportunities
               </p>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <p className="text-muted-foreground mt-1 text-xs">
                 Backend / Full-stack · Remote · Full-time or contract
               </p>
             </div>

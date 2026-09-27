@@ -1,135 +1,89 @@
 import { type Experience } from '@/config/Experience';
 import { Link } from 'next-view-transitions';
-import Image from 'next/image';
 import React from 'react';
 
-import Github from '../svgs/Github';
-import LinkedIn from '../svgs/LinkedIn';
-import Website from '../svgs/Website';
-import X from '../svgs/X';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+const parseDescription = (text: string): string =>
+  text.replace(/\*(.*?)\*/g, '<b class="font-semibold text-foreground">$1</b>');
 
-interface ExperienceCardProps {
-  experience: Experience;
-}
-
-const parseDescription = (text: string): string => {
-  return text.replace(/\*(.*?)\*/g, '<b class="font-semibold text-foreground">$1</b>');
-};
-
-export function ExperienceCard({ experience }: ExperienceCardProps) {
+/** Roles as a dated timeline: dates on the left, a rail with a node per role. */
+export function ExperienceTimeline({
+  experiences,
+}: {
+  experiences: Experience[];
+}) {
   return (
-    <div className="flex flex-col gap-4 rounded-xl border border-border bg-card p-6">
-      {/* Company Header */}
-      <div className="flex flex-col gap-2 md:flex-row md:justify-between">
-        {/* Left Side */}
-        <div className="flex items-center gap-4">
-          {experience.image ? (
-            <Image
-              src={experience.image}
-              alt={experience.company}
-              width={100}
-              height={100}
-              className="size-12 rounded-md object-contain"
-            />
-          ) : (
-            <div className="flex size-12 items-center justify-center rounded-md border border-border bg-muted text-base font-semibold text-muted-foreground">
-              {experience.company.charAt(0)}
-            </div>
-          )}
-          <div className="flex flex-col">
-            <div className="flex flex-wrap items-center gap-2">
-              <h3 className="text-lg font-bold tracking-tight">
-                {experience.company}
-              </h3>
-              {experience.website && (
-                <CardLink href={experience.website} label="Visit Website">
-                  <Website />
-                </CardLink>
-              )}
-              {experience.x && (
-                <CardLink href={experience.x} label="Follow on X">
-                  <X />
-                </CardLink>
-              )}
-              {experience.linkedin && (
-                <CardLink href={experience.linkedin} label="Connect on LinkedIn">
-                  <LinkedIn />
-                </CardLink>
-              )}
-              {experience.github && (
-                <CardLink href={experience.github} label="View GitHub">
-                  <Github />
-                </CardLink>
-              )}
-              {experience.isCurrent && (
-                <span className="flex items-center gap-1.5 rounded-md bg-brand-muted px-2 py-0.5 text-xs text-brand">
-                  <span className="size-1.5 animate-pulse rounded-full bg-brand" />
-                  Current
-                </span>
-              )}
-            </div>
-            <p className="text-muted-foreground">{experience.position}</p>
-          </div>
-        </div>
-        {/* Right Side */}
-        <div className="flex flex-col text-sm text-muted-foreground md:text-right">
-          <p className="metric-value">
-            {experience.startDate} —{' '}
-            {experience.isCurrent ? 'Present' : experience.endDate}
-          </p>
-          <p>{experience.location}</p>
-        </div>
-      </div>
-
-      {/* Description */}
-      <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
-        {experience.description.map((description, descIndex) => (
-          <li key={descIndex} className="flex items-start gap-3">
-            <span className="mt-2 block size-1 shrink-0 rounded-full bg-brand/50" />
-            <span
-              dangerouslySetInnerHTML={{
-                __html: parseDescription(description),
-              }}
-            />
-          </li>
-        ))}
-      </ul>
-
-      {/* Technologies */}
-      <div className="flex flex-wrap gap-1.5 pt-1">
-        {experience.technologies.map((tech) => (
-          <span key={tech} className="tech-chip">
-            {tech}
-          </span>
-        ))}
-      </div>
-    </div>
+    <ol>
+      {experiences.map((experience) => (
+        <ExperienceCard key={experience.company} experience={experience} />
+      ))}
+    </ol>
   );
 }
 
-function CardLink({
-  href,
-  label,
-  children,
-}: {
-  href: string;
-  label: string;
-  children: React.ReactNode;
-}) {
+export function ExperienceCard({ experience }: { experience: Experience }) {
+  const { isCurrent } = experience;
+
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Link
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="size-4 text-muted-foreground transition-colors hover:text-foreground"
+    <li className="group grid gap-x-8 md:grid-cols-[10rem_1fr]">
+      <div className="pb-2 md:pt-0.5 md:pb-0 md:text-right">
+        <p className="metric-value font-narrow text-sm font-semibold">
+          {experience.startDate} – {isCurrent ? 'Present' : experience.endDate}
+        </p>
+        <p className="font-narrow text-muted-foreground text-sm">
+          {experience.location}
+        </p>
+      </div>
+
+      <div className="border-border relative border-l pb-10 pl-6 group-last:pb-0">
+        <span
+          aria-hidden
+          className={`border-ink absolute top-1.5 -left-[5px] size-[9px] border-[1.5px] ${
+            isCurrent ? 'bg-ink' : 'bg-background'
+          }`}
+        />
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <h3 className="font-wide text-lg font-semibold tracking-tight">
+            {experience.website ? (
+              <Link
+                href={experience.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+              >
+                {experience.company}
+              </Link>
+            ) : (
+              experience.company
+            )}
+          </h3>
+          {isCurrent && <span className="stamp stamp-paid">Current</span>}
+        </div>
+        <p className="text-muted-foreground">{experience.position}</p>
+
+        <ul className="text-muted-foreground mt-3 flex max-w-[68ch] flex-col gap-2 text-[0.95rem] leading-relaxed">
+          {experience.description.map((description, i) => (
+            <li key={i} className="grid grid-cols-[0.9rem_1fr]">
+              <span aria-hidden className="bg-construct mt-[0.7em] h-px w-2" />
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: parseDescription(description),
+                }}
+              />
+            </li>
+          ))}
+        </ul>
+
+        <ul
+          className="mt-4 flex flex-wrap gap-x-4 gap-y-1"
+          aria-label="Technologies"
         >
-          {children}
-        </Link>
-      </TooltipTrigger>
-      <TooltipContent>{label}</TooltipContent>
-    </Tooltip>
+          {experience.technologies.map((tech) => (
+            <li key={tech} className="tech-chip">
+              {tech}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </li>
   );
 }

@@ -1,0 +1,145 @@
+---
+title: 'Healthcare Claims Automation Platform'
+category: 'Healthcare revenue cycle'
+description: 'An RCM platform that ingests claim files, routes every claim through configurable business rules into operational buckets, and keeps claim status current through clearinghouse integrations.'
+problem: 'Turn high-volume, imperfect claim data into correctly classified, trackable claims — where payer rules change often and much of the claim state lives in external systems.'
+technologies:
+  [
+    'Python',
+    'Django',
+    'FastAPI',
+    'Celery',
+    'Redis',
+    'PostgreSQL',
+    'React',
+    'Stedi (clearinghouse API)',
+    'AWS',
+  ]
+github: ''
+live: ''
+image: '/project/healthcare-claims-automation.png'
+timeline: '2026 — Present'
+role: 'AI Development Engineer'
+team: 'Nodaris AI'
+status: 'in-progress'
+featured: true
+confidential: true
+challenges:
+  [
+    'Claim data arrives imperfect, in bulk, and must be processed asynchronously',
+    'Payer and operational rules change far more often than application code should',
+    'Claim state lives partly in external clearinghouse and payer systems',
+    'Denials, ADR/MDR, and work assignment must work alone and as one workflow',
+  ]
+learnings:
+  [
+    'The backend should execute decisions; a dedicated rules layer should own them',
+    'Clearinghouse state and application claim state are different things',
+    'Validate the whole business workflow, not just an endpoint',
+    'Most production bugs live where DB, domain, API, and UI disagree',
+  ]
+isPublished: true
+---
+
+## Context
+
+I work at **Nodaris AI**, a US healthcare startup adding an **AI layer to the Revenue Cycle Management (RCM) process** — for RCM companies and for healthcare providers — alongside a product suite that lets providers run their revenue cycle **in-house** instead of depending entirely on an outside billing company.
+
+This case study covers the claims side of that platform. I treat RCM not as "submit a claim and get paid", but as a **distributed workflow**:
+
+```text
+Patient / Encounter → Clinical & Billing Data → Claim Creation
+  → Clearinghouse / Payer → Claim Status → Adjudication
+  → Rejection / Denial / Payment → Follow-up & Work Assignment
+  → Payment Reconciliation
+```
+
+## Problem
+
+Every stage of that workflow brings its own engineering constraint:
+
+- Claim data arrives **in bulk and imperfect**, so it has to be validated and processed **asynchronously**.
+- Payer and operational rules **change often** — they can't be hard-coded across controllers, serializers, workers, and frontend conditionals.
+- Much of a claim's real state lives **outside the platform**, in clearinghouse and payer systems.
+- Operational teams need claims sorted into **actionable work**, not just stored.
+
+## Architecture
+
+A high-level view of the claim-processing path:
+
+```text
+   Claims file upload
+          │
+          ▼
+   Schema validation ──► ingestion
+          │
+          ▼
+   [ Celery workers ]  async processing
+          │
+          ▼
+   [ Rules / knowledge layer ]  configurable mappings
+          │                     and business decisions
+          ▼
+   Claim classification & routing
+     ├─ eligible for status check
+     ├─ excluded / not eligible
+     ├─ submitted / processing
+     ├─ paid
+     └─ denied ──► denials · ADR/MDR · work assignment
+          │
+          ▼
+   Claim-status sweep ──► clearinghouse (Stedi) ──► updated claim state
+          │
+          ▼
+   Claims API ──► React claims UI
+```
+
+The key boundary: **the backend executes the workflow, while a separate rules/knowledge layer owns the mappings and business decisions**. Rules can then evolve independently of the application code that runs them.
+
+## Implementation
+
+**Ingestion and async processing.** Uploaded claim files are schema-validated, ingested, and handed to Celery workers. Rule evaluation then classifies each claim into an operational bucket that drives the claims UI.
+
+**Claim-status automation.** For claims eligible for a status check, a sweep queries the clearinghouse. Integrating with **Stedi** meant understanding the healthcare workflow behind the API as well as the API itself:
+
+- identifying the fields a claim-status request actually requires;
+- mapping internal claim models to clearinghouse requests;
+- handling claims originally submitted through **other clearinghouses**;
+- interpreting responses and applying asynchronous status updates;
+- keeping **transport / clearinghouse state separate from application-level claim state**;
+- validating the integration against realistic claim data.
+
+**Operational modules.** **Denials**, **ADR/MDR** documentation requests, and **work assignment** (routing work to the right users or teams based on claim state and rules) are built to work on their own while also taking part in the larger RCM workflow.
+
+**Layer discipline.** I pay close attention to how **database state → domain state → API representation → frontend behavior** line up, because many production bugs happen where those layers disagree — not inside any single query or component.
+
+## Key Tradeoffs
+
+- **Rules layer vs. application code:** a separate rules/knowledge layer adds a boundary to maintain, but it keeps frequently changing payer and operational logic configurable and auditable.
+- **Async vs. synchronous processing:** Celery keeps uploads responsive and resilient, at the cost of more states to track and validate.
+- **Independent modules vs. one monolithic flow:** denials, ADR/MDR, and work assignment are more flexible as separate modules, but their hand-offs need well-defined claim states.
+
+## Results
+
+- An end-to-end claims workflow — **upload → rules → classification → claim-status sweep → work queues** — that I test as a complete business flow, not endpoint by endpoint.
+- Clearinghouse integration that copes with real-world messiness, including claims submitted through other clearinghouses.
+- Business rules with clear ownership, so rule changes don't mean editing code across the stack.
+
+## What's next: Payment Integrity
+
+I'm also helping design **Payment Integrity**: checking that what a payer actually paid matches what *should* have been paid under the claim, the payer response, contractual expectations, adjustments, and remittance data.
+
+```text
+Claim → Expected reimbursement → ERA / payment data → Payment matching
+  → Contract / rule validation → Variance detection
+  → Under / overpayment → Exception → Work queue
+  → Investigation → Recovery / adjustment → Reconciliation
+```
+
+It brings up engineering problems I enjoy: deterministic matching, configurable rules, financial reconciliation, exception workflows, and audit trails.
+
+## Lessons
+
+- **Business rules need an owner.** The application should execute decisions, not scatter them.
+- **An integration is part of a workflow**, not just an API call — its states have to fit the domain model.
+- **Validate the whole flow:** frontend upload → API → PostgreSQL → workers → rules → clearinghouse → database → UI.

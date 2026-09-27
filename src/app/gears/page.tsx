@@ -1,11 +1,11 @@
 import Container from '@/components/common/Container';
+import PageHeader from '@/components/common/PageHeader';
 import Monitor from '@/components/svgs/devices/Monitor';
-import { Separator } from '@/components/ui/separator';
 import { devices, software, webExtensions } from '@/config/Gears';
 import { generateMetadata as getMetadata } from '@/config/Meta';
 import { ArrowUpRight, Puzzle } from 'lucide-react';
-import { Link } from 'next-view-transitions';
 import { Metadata } from 'next';
+import { Link } from 'next-view-transitions';
 import React from 'react';
 
 export const metadata: Metadata = {
@@ -18,9 +18,9 @@ export const metadata: Metadata = {
       follow: true,
       'max-video-preview': -1,
       'max-image-preview': 'large',
-      'max-snippet': -1
-    }
-  }
+      'max-snippet': -1,
+    },
+  },
 };
 
 export default function GearsPage() {
@@ -28,15 +28,10 @@ export default function GearsPage() {
     <Container className="py-16">
       <div className="space-y-8">
         {/* Header */}
-        <div className="space-y-4 text-center">
-          <h1 className="text-4xl font-bold tracking-tight lg:text-5xl">
-            Gears
-          </h1>
-          <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-            My gears and tools i use to get my work done.
-          </p>
-        </div>
-        <Separator />
+        <PageHeader
+          title="Gear"
+          description="The hardware and tools I use to get my work done."
+        />
 
         {/* Devices Section */}
         <div className="space-y-4">
@@ -44,11 +39,11 @@ export default function GearsPage() {
           <div className="flex flex-col flex-wrap gap-4">
             {devices.map((device) => (
               <div key={device.name} className="flex items-center gap-4">
-                <div className="p-2 bg-muted rounded-md flex items-center justify-center text-[#736F70] border border-black/10 dark:border-white/10">
+                <div className="bg-muted flex items-center justify-center rounded-md border border-black/10 p-2 text-[#736F70] dark:border-white/10">
                   {device.icon}
                 </div>
                 <div className="flex flex-col">
-                  <h3 className="text-sm text-secondary">{device.name}</h3>
+                  <h3 className="text-secondary text-sm">{device.name}</h3>
                 </div>
               </div>
             ))}
@@ -58,19 +53,19 @@ export default function GearsPage() {
         {/* Web Extensions Section */}
         <div className="space-y-4 pt-10">
           <div className="flex items-center gap-4">
-            <div className="p-2 bg-muted rounded-md flex items-center justify-center text-[#736F70] border border-black/10 dark:border-white/10">
+            <div className="bg-muted flex items-center justify-center rounded-md border border-black/10 p-2 text-[#736F70] dark:border-white/10">
               <Puzzle className="size-4" />
             </div>
             <h2 className="text-2xl font-semibold">Web Extensions</h2>
           </div>
-          <div className="flex flex-col flex-wrap gap-4 mt-8">
+          <div className="mt-8 flex flex-col flex-wrap gap-4">
             {webExtensions.map((extension, index) => (
               <div key={extension.name} className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
-                  <div className="px-2 py-1 bg-muted rounded-md flex items-center justify-center text-[#736F70] border border-black/10 dark:border-white/10">
-                    <span className="text-sm text-secondary">{index + 1}</span>
+                  <div className="bg-muted flex items-center justify-center rounded-md border border-black/10 px-2 py-1 text-[#736F70] dark:border-white/10">
+                    <span className="text-secondary text-sm">{index + 1}</span>
                   </div>
-                  <h3 className="text-sm text-secondary flex items-center gap-1 ml-4">
+                  <h3 className="text-secondary ml-4 flex items-center gap-1 text-sm">
                     <Link target="_blank" href={extension.href}>
                       {extension.name}
                     </Link>
@@ -85,21 +80,21 @@ export default function GearsPage() {
         {/* Software Section */}
         <div className="space-y-4 pt-10">
           <div className="flex items-center gap-4">
-            <div className="p-2 bg-muted rounded-md flex items-center justify-center text-[#736F70] border border-black/10 dark:border-white/10">
+            <div className="bg-muted flex items-center justify-center rounded-md border border-black/10 p-2 text-[#736F70] dark:border-white/10">
               <Monitor className="size-4" />
             </div>
             <h2 className="text-2xl font-semibold">Software</h2>
           </div>
-          <div className="flex flex-col flex-wrap gap-4 mt-8">
+          <div className="mt-8 flex flex-col flex-wrap gap-4">
             {software.map((app, index) => (
               <div key={app.name} className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
-                  <div className="px-2 py-1 bg-muted rounded-md flex items-center justify-center text-[#736F70] border border-black/10 dark:border-white/10">
-                    <span className="text-sm text-secondary">
+                  <div className="bg-muted flex items-center justify-center rounded-md border border-black/10 px-2 py-1 text-[#736F70] dark:border-white/10">
+                    <span className="text-secondary text-sm">
                       {(index + 1).toString()}
                     </span>
                   </div>
-                  <h3 className="text-sm text-secondary ml-4 flex items-center gap-1">
+                  <h3 className="text-secondary ml-4 flex items-center gap-1 text-sm">
                     <Link target="_blank" href={app.href}>
                       {app.name}
                     </Link>

@@ -1,4 +1,5 @@
 import Container from '@/components/common/Container';
+import PageHeader from '@/components/common/PageHeader';
 import { Button } from '@/components/ui/button';
 import { generateMetadata as getMetadata } from '@/config/Meta';
 import { resumeConfig } from '@/config/Resume';
@@ -13,22 +14,23 @@ export default function ResumePage() {
     <Container className="max-w-4xl py-16">
       <div className="space-y-8">
         <div className="flex flex-col gap-3">
-          <p className="eyebrow">CV</p>
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <h1 className="text-4xl font-bold tracking-tight lg:text-5xl">
-              Resume
-            </h1>
-            <Button variant="outline" asChild>
-              <Link href={resumeConfig.url} target="_blank" rel="noopener noreferrer">
-                Open in new tab
-              </Link>
-            </Button>
-          </div>
-          <p className="max-w-2xl text-lg text-muted-foreground">
-            A snapshot of my experience, skills, and projects.
-          </p>
+          <PageHeader
+            title="Résumé"
+            description="A snapshot of my experience, skills, and projects."
+            action={
+              <Button variant="outline" asChild>
+                <Link
+                  href={resumeConfig.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Open in a new tab
+                </Link>
+              </Button>
+            }
+          />
         </div>
-        <div className="overflow-hidden rounded-xl border border-border">
+        <div className="border-border overflow-hidden rounded-xl border">
           <iframe src={resumeConfig.url} className="min-h-screen w-full" />
         </div>
       </div>

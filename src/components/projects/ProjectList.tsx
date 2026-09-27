@@ -8,20 +8,16 @@ interface ProjectListProps {
   className?: string;
 }
 
-export function ProjectList({ projects, className }: ProjectListProps) {
+export function ProjectList({ projects, className = '' }: ProjectListProps) {
   if (projects.length === 0) {
     return (
-      <div className="text-center py-8">
-        <p className="text-muted-foreground">No projects found.</p>
-      </div>
+      <p className="text-muted-foreground py-8">No projects to show yet.</p>
     );
   }
 
   return (
-    <div
-      className={`grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 ${className}`}
-    >
-      {projects.map((project: Project) => (
+    <div className={`sheet divide-border divide-y ${className}`}>
+      {projects.map((project) => (
         <ProjectCard key={project.title} project={project} />
       ))}
     </div>

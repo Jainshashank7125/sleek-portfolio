@@ -1,0 +1,84 @@
+---
+title: 'Scaling Healthcare Document Ingestion'
+category: 'Performance'
+description: 'Redesigned the PDF-processing path of a healthcare document-ingestion pipeline so pages are rendered as images only when needed — cutting a 14,400-page workload from ~19 minutes to ~85 seconds.'
+problem: 'A real 14,400-page (~100 MB) healthcare PDF took ~19 minutes and ~5.5 GB of temporary rendered images to ingest.'
+technologies: ['Python', 'PyMuPDF', 'OCR', 'Celery', 'Amazon S3', 'PostgreSQL']
+github: ''
+live: ''
+image: '/project/healthcare-document-ingestion.png'
+timeline: '2026 — Present'
+role: 'AI Development Engineer'
+team: 'Nodaris AI'
+status: 'completed'
+featured: true
+confidential: true
+challenges:
+  [
+    'Very large healthcare PDFs mixing digital text, scans, and images',
+    'Rendering every page as an image made time and disk usage explode',
+    'Scanned and mixed-content documents still had to be fully supported',
+    'The fix had to be proven on the real workload, not a synthetic benchmark',
+  ]
+learnings:
+  [
+    'Profile the real data path before optimizing anything',
+    'The biggest wins come from not doing work, not doing work faster',
+    'Keep the slow path for the pages that genuinely need it',
+    'Temporary storage is a cost worth measuring, not just CPU time',
+  ]
+isPublished: true
+---
+
+## Context
+
+Healthcare operations run on documents: claim attachments, medical records, remittances, and scanned correspondence. The platform ingests these PDFs and extracts their content so it can be tied back to patients and claims. Some of these files are **enormous** — one real workload was a single **~100 MB PDF with about 14,400 pages**.
+
+## Problem
+
+On that workload the ingestion pipeline took:
+
+- **~19 minutes** to process the document, and
+- **~5.5 GB** of temporary rendered-image data.
+
+The pipeline was **rendering page images too aggressively**, turning pages into images even when their text and content could be extracted directly. At this page count, the unnecessary rendering dominated both runtime and disk usage.
+
+## Investigation
+
+Rather than micro-optimizing individual functions or tuning a synthetic benchmark, I **profiled the actual ingestion path on the real document**. The profile made it clear that most of the time and storage went into rendering pages that never needed to be images.
+
+## Solution
+
+I changed the PDF-processing strategy so that **a page is rendered as an image only when necessary** — for example, when usable text or raster content can't otherwise be extracted.
+
+```text
+   PDF page
+      │
+      ▼
+   Usable text / content extractable directly?
+      ├─ yes ──► extract directly          (fast path, no image)
+      └─ no  ──► render page image ──► OCR (scanned / mixed content)
+```
+
+The slow path still exists — scanned and mixed-content documents keep working exactly as before — but it now runs **only for the pages that need it**.
+
+## Key Tradeoffs
+
+- **Conditional vs. uniform processing:** always rendering is simpler and more predictable; conditional rendering adds a decision per page but removes most of the work.
+- **Correctness first:** scanned-document support was a hard constraint, so the optimization had to keep the image + OCR path fully intact.
+
+## Results
+
+On the same 14,400-page workload:
+
+- **Processing time:** ~19 min → **~85 sec**
+- **Temporary rendered-image data:** ~5.5 GB → **near-zero**
+- **Scanned / mixed-content documents:** **still fully supported**
+
+That's roughly a **13× speedup**, with almost no unnecessary image storage.
+
+## Lessons
+
+- **Optimize using real workloads.** Understanding the actual data path produced a far bigger win than micro-optimizing functions would have.
+- **The fastest work is work you don't do.** Skipping unnecessary rendering beat making the rendering faster.
+- **Measure storage as well as time.** Gigabytes of temporary files are a real operational cost.

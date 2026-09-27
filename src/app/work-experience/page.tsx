@@ -1,7 +1,8 @@
 import Container from '@/components/common/Container';
+import PageHeader from '@/components/common/PageHeader';
 import { ExperienceList } from '@/components/experience/ExperienceList';
-import { generateMetadata as getMetadata } from '@/config/Meta';
 import { experiences } from '@/config/Experience';
+import { generateMetadata as getMetadata } from '@/config/Meta';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = getMetadata('/work-experience');
@@ -11,16 +12,10 @@ export default function WorkExperiencePage() {
     <Container className="max-w-5xl py-16">
       <div className="space-y-10">
         {/* Header */}
-        <div className="flex flex-col gap-3">
-          <p className="eyebrow">Career</p>
-          <h1 className="text-4xl font-bold tracking-tight lg:text-5xl">
-            Work Experience
-          </h1>
-          <p className="max-w-2xl text-lg text-muted-foreground">
-            Roles where I&apos;ve designed, built, and shipped production
-            systems — from enterprise SaaS to AI platforms.
-          </p>
-        </div>
+        <PageHeader
+          title="Experience"
+          description="Roles where I've designed, built, and run production systems, from enterprise SaaS and AI platforms to the US healthcare revenue cycle."
+        />
 
         <ExperienceList experiences={experiences} />
       </div>

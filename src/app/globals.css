@@ -2,16 +2,6 @@
 @import 'tw-animate-css';
 @plugin "@tailwindcss/typography";
 
-@font-face {
-  font-family: 'Hanken Grotesk';
-  src: url('/fonts/HankenGrotesk-Variable.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Hanken Grotesk Italic';
-  src: url('/fonts/HankenGrotesk-Italic-Variable.ttf') format('truetype');
-}
-
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -20,11 +10,16 @@
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
   --color-brand-muted: var(--brand-muted);
-  --font-sans:
-    'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --color-ink: var(--ink);
+  --color-construct: var(--construct);
+  --color-sheet: var(--sheet);
+  --color-pending: var(--pending);
+  --color-paid: var(--paid);
+  --color-denied: var(--denied);
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
   --font-mono:
-    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
-    'Liberation Mono', monospace;
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono',
+    monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -60,119 +55,175 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/*
+ * Workflow schematic design system.
+ * Light = drafting vellum with graphite ink; dark = blueprint.
+ * Claim-state colours (pending / paid / denied) carry meaning — use them only
+ * for state, never as decoration.
+ */
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --brand: oklch(0.52 0.2 264);
-  --brand-foreground: oklch(0.985 0 0);
-  --brand-muted: oklch(0.52 0.2 264 / 8%);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --radius: 0.2rem;
+
+  --background: #e7e8e3; /* vellum */
+  --sheet: #eeefea; /* raised sheet */
+  --foreground: #1c1f23; /* graphite ink */
+  --ink: #1c1f23;
+  --construct: #8db6cf; /* construction-line blue */
+  --brand: #1f56a5; /* drafting-ink blue */
+  --brand-foreground: #f4f5f1;
+  --brand-muted: rgb(31 86 165 / 9%);
+
+  --pending: #a86d12;
+  --paid: #2c7a4b;
+  --denied: #b0392c;
+
+  --card: #eeefea;
+  --card-foreground: #1c1f23;
+  --popover: #f4f5f1;
+  --popover-foreground: #1c1f23;
+  --primary: #1c1f23;
+  --primary-foreground: #eeefea;
+  --secondary: #dcded8;
+  --secondary-foreground: #1c1f23;
+  --muted: #dcded8;
+  --muted-foreground: #565c63;
+  --accent: #dcded8;
+  --accent-foreground: #1c1f23;
+  --destructive: #b0392c;
+  --border: #c3c7c2;
+  --input: #c3c7c2;
+  --ring: #1f56a5;
+
+  --chart-1: #1f56a5;
+  --chart-2: #2c7a4b;
+  --chart-3: #a86d12;
+  --chart-4: #b0392c;
+  --chart-5: #565c63;
+  --sidebar: #eeefea;
+  --sidebar-foreground: #1c1f23;
+  --sidebar-primary: #1c1f23;
+  --sidebar-primary-foreground: #eeefea;
+  --sidebar-accent: #dcded8;
+  --sidebar-accent-foreground: #1c1f23;
+  --sidebar-border: #c3c7c2;
+  --sidebar-ring: #1f56a5;
 }
 
-/* ── Obsidian — Premium Dark ── */
 .dark {
-  /* Base */
-  --background: oklch(0.08 0.015 275);        /* #0a0a0f  deep slate-black  */
-  --foreground: oklch(0.95 0.018 275);         /* #f0f0ff  near-white        */
+  --background: #0e2940; /* blueprint */
+  --sheet: #113150;
+  --foreground: #e6eef5;
+  --ink: #e6eef5;
+  --construct: #3d6a91;
+  --brand: #8fd0ff;
+  --brand-foreground: #0e2940;
+  --brand-muted: rgb(143 208 255 / 12%);
 
-  /* Brand — electric indigo */
-  --brand: oklch(0.58 0.24 264);              /* #6366f1 */
-  --brand-foreground: oklch(0.98 0 0);
-  --brand-muted: oklch(0.58 0.24 264 / 12%);
+  --pending: #f0bd5e;
+  --paid: #74d6a1;
+  --denied: #ff9483;
 
-  /* Surfaces */
-  --card: oklch(0.12 0.018 278);              /* #12121c */
-  --card-foreground: oklch(0.95 0.018 275);
-  --popover: oklch(0.12 0.018 278);
-  --popover-foreground: oklch(0.95 0.018 275);
+  --card: #113150;
+  --card-foreground: #e6eef5;
+  --popover: #113150;
+  --popover-foreground: #e6eef5;
+  --primary: #e6eef5;
+  --primary-foreground: #0e2940;
+  --secondary: #173b5c;
+  --secondary-foreground: #e6eef5;
+  --muted: #173b5c;
+  --muted-foreground: #9db7cc;
+  --accent: #173b5c;
+  --accent-foreground: #e6eef5;
+  --destructive: #ff9483;
+  --border: #2b5377;
+  --input: #2b5377;
+  --ring: #8fd0ff;
 
-  /* Interactive */
-  --primary: oklch(0.58 0.24 264);            /* brand = primary button */
-  --primary-foreground: oklch(0.98 0 0);
-  --secondary: oklch(0.16 0.022 278);
-  --secondary-foreground: oklch(0.95 0.018 275);
-  --muted: oklch(0.16 0.022 278);
-  --muted-foreground: oklch(0.52 0.04 278);
-  --accent: oklch(0.16 0.022 278);
-  --accent-foreground: oklch(0.95 0.018 275);
-
-  /* Status */
-  --destructive: oklch(0.65 0.22 22);
-
-  /* Chrome */
-  --border: oklch(0.19 0.028 278);            /* #1e1e2e */
-  --input: oklch(0.17 0.025 278);
-  --ring: oklch(0.58 0.24 264);
-
-  /* Charts */
-  --chart-1: oklch(0.58 0.24 264);
-  --chart-2: oklch(0.68 0.20 160);
-  --chart-3: oklch(0.70 0.20 300);
-  --chart-4: oklch(0.72 0.18 55);
-  --chart-5: oklch(0.65 0.22 15);
-
-  /* Sidebar */
-  --sidebar: oklch(0.10 0.016 278);
-  --sidebar-foreground: oklch(0.95 0.018 275);
-  --sidebar-primary: oklch(0.58 0.24 264);
-  --sidebar-primary-foreground: oklch(0.98 0 0);
-  --sidebar-accent: oklch(0.16 0.022 278);
-  --sidebar-accent-foreground: oklch(0.95 0.018 275);
-  --sidebar-border: oklch(0.19 0.028 278);
-  --sidebar-ring: oklch(0.58 0.24 264);
+  --chart-1: #8fd0ff;
+  --chart-2: #74d6a1;
+  --chart-3: #f0bd5e;
+  --chart-4: #ff9483;
+  --chart-5: #9db7cc;
+  --sidebar: #113150;
+  --sidebar-foreground: #e6eef5;
+  --sidebar-primary: #e6eef5;
+  --sidebar-primary-foreground: #0e2940;
+  --sidebar-accent: #173b5c;
+  --sidebar-accent-foreground: #e6eef5;
+  --sidebar-border: #2b5377;
+  --sidebar-ring: #8fd0ff;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    font-size: 106.25%; /* 17px body */
+  }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    font-stretch: 100%;
+    line-height: 1.6;
+    /* Drafting grid: fine 8px construction lines with a stronger 64px major grid */
+    background-image:
+      linear-gradient(
+        to right,
+        color-mix(in srgb, var(--construct) 16%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--construct) 16%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to right,
+        color-mix(in srgb, var(--construct) 7%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--construct) 7%, transparent) 1px,
+        transparent 1px
+      );
+    background-size:
+      64px 64px,
+      64px 64px,
+      8px 8px,
+      8px 8px;
+    background-attachment: fixed;
   }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+  }
+  ::selection {
+    background: var(--brand);
+    color: var(--brand-foreground);
+  }
+}
+
+/* Archivo's width axis is part of the design: wide for display, narrow for labels. */
+.font-wide {
+  font-stretch: 125%;
+}
+.font-narrow {
+  font-stretch: 72%;
 }
 
 .text-secondary {
   color: var(--muted-foreground);
 }
 
-.font-hanken-grotesk {
-  font-family: 'Hanken Grotesk', sans-serif;
-}
-
+/* Legacy class names kept so older pages pick up the new typeface. */
+.font-hanken-grotesk,
 .font-hanken-grotesk-italic {
-  font-family: 'Hanken Grotesk Italic', sans-serif;
+  font-family: var(--font-sans);
 }
 
-/* Code block copy button styles */
 .prose pre {
   @apply relative;
 }
@@ -181,139 +232,159 @@
   @apply opacity-100;
 }
 
-/* Page fade-in animation with blur */
-@keyframes fadeInBlur {
-  0% {
-    opacity: 0.2;
-    filter: blur(5px);
+/* Single page-load reveal; no per-section motion. */
+@keyframes sheetIn {
+  from {
+    opacity: 0;
   }
-  100% {
+  to {
     opacity: 1;
-    filter: blur(0px);
   }
 }
-
 .animate-fade-in-blur {
-  animation: fadeInBlur 0.5s ease-out forwards;
-  animation-delay: 0.3s;
-  opacity: 0.4;
-  filter: blur(3px);
+  animation: sheetIn 0.4s ease-out both;
 }
 
-/* ---- Redesign design system ---- */
+/* ---- Shared vocabulary ---- */
 
-/* Eyebrow / section kicker label */
+/* Small drafting label: condensed, sentence case. */
 .eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--brand);
+  font-stretch: 72%;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--muted-foreground);
 }
 
-/* Monospace technical chip (tech stack, tags) */
+/* Technology tag: plain text with a leader tick, not a pill. */
 .tech-chip {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.01em;
-  line-height: 1;
-  padding: 0.3rem 0.55rem;
-  border-radius: 0.4rem;
-  border: 1px solid var(--border);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-stretch: 85%;
+  font-size: 0.8rem;
+  line-height: 1.4;
   color: var(--muted-foreground);
   white-space: nowrap;
-  transition:
-    color 0.2s ease,
-    border-color 0.2s ease;
 }
-.tech-chip:hover {
-  color: var(--foreground);
-  border-color: var(--ring);
-}
-
-/* Big metric figures */
-.metric-value {
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
-}
-
-/* Subtle dotted grid backdrop (very low contrast) */
-.bg-dot-grid {
-  background-image: radial-gradient(
-    var(--border) 1px,
-    transparent 1px
-  );
-  background-size: 22px 22px;
-  -webkit-mask-image: radial-gradient(
-    ellipse 80% 60% at 50% 0%,
-    #000 30%,
-    transparent 75%
-  );
-  mask-image: radial-gradient(
-    ellipse 80% 60% at 50% 0%,
-    #000 30%,
-    transparent 75%
-  );
-}
-
-/* Soft brand glow used behind hero / cards */
-.bg-brand-glow {
-  background-image: radial-gradient(
-    60% 50% at 50% 0%,
-    var(--brand-muted) 0%,
-    transparent 70%
-  );
-}
-
-/* Gradient text for emphasis words */
-.text-gradient {
-  background-image: linear-gradient(
-    100deg,
-    var(--foreground) 30%,
-    var(--brand) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-/* Hairline divider between sections */
-.section-rule {
+.tech-chip::before {
+  content: '';
+  width: 0.45rem;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--border) 20%,
-    var(--border) 80%,
-    transparent
-  );
+  background: var(--construct);
+}
+a.tech-chip:hover {
+  color: var(--foreground);
 }
 
-/* Card lift on hover */
+.metric-value {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-stretch: 112%;
+  letter-spacing: -0.01em;
+}
+
+/* Drawing sheet: a raised panel with registration ticks at its corners. */
+.sheet {
+  position: relative;
+  background: var(--sheet);
+  border: 1px solid var(--border);
+}
+.sheet::before,
+.sheet::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: var(--ink);
+  pointer-events: none;
+}
+.sheet::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1.5px solid;
+  border-left: 1.5px solid;
+}
+.sheet::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1.5px solid;
+  border-right: 1.5px solid;
+}
+
+/* Claim-state stamp */
+.stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.05rem 0.45rem;
+  border: 1.5px solid currentColor;
+  font-stretch: 75%;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.stamp-paid {
+  color: var(--paid);
+}
+.stamp-pending {
+  color: var(--pending);
+}
+.stamp-denied {
+  color: var(--denied);
+}
+
+/* Dimension line: a rule with end ticks, used between sections. */
+.section-rule {
+  height: 9px;
+  background:
+    linear-gradient(var(--border), var(--border)) center / 100% 1px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) left center / 1.5px 9px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) right center / 1.5px 9px no-repeat;
+}
+
+/* Retired decorations from the previous theme: kept as no-ops. */
+.bg-dot-grid,
+.bg-brand-glow {
+  background: none;
+}
+.text-gradient {
+  color: inherit;
+}
 .card-hover {
-  transition:
-    border-color 0.25s ease,
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
+  transition: border-color 0.2s ease;
 }
 .card-hover:hover {
-  border-color: var(--ring);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px -8px oklch(0 0 0 / 8%);
+  border-color: var(--ink);
 }
-.dark .card-hover:hover {
-  border-color: oklch(0.58 0.24 264 / 50%);
-  box-shadow: 0 8px 32px -8px oklch(0.58 0.24 264 / 18%);
+
+.link-ink {
+  color: var(--brand);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+}
+.link-ink:hover {
+  text-decoration-thickness: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-in-blur {
     animation: none;
-    opacity: 1;
-    filter: none;
   }
-  .card-hover:hover {
-    transform: none;
-  }
+}
+
+.schematic-node:focus-visible > rect:first-child {
+  stroke: var(--ring);
+  stroke-width: 3px;
+}
+
+/* Code blocks: Shiki dual themes on the drawing sheet colours. */
+.dark .shiki,
+.dark .shiki span {
+  color: var(--shiki-dark) !important;
+}
+.prose pre.shiki {
+  background-color: var(--sheet) !important;
+  border: 1px solid var(--border);
+  border-radius: 0;
 }

@@ -1,41 +1,49 @@
+'use client';
+
 import { navbarConfig } from '@/config/Navbar';
 import { Link } from 'next-view-transitions';
-import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import React from 'react';
 
-import Container from './Container';
 import ThemeSwitch from './ThemeSwitch';
 
 export default function Navbar() {
+  const pathname = usePathname();
+
   return (
-    <Container className="sticky top-0 z-50 max-w-5xl py-4 backdrop-blur-sm">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-5">
-          <Link href="/" className="font-semibold tracking-tight">
-            <Image
-              className="size-9 rounded-md border border-border transition-all duration-300 ease-in-out hover:scale-95"
-              src={navbarConfig.logo.src}
-              alt={navbarConfig.logo.alt}
-              width={navbarConfig.logo.width}
-              height={navbarConfig.logo.height}
-            />
-          </Link>
-          <div className="flex items-center gap-4 text-sm">
-            {navbarConfig.navItems.map((item) => (
-              <Link
-                className="text-muted-foreground transition-colors hover:text-foreground"
-                key={item.label}
-                href={item.href}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-        <div className="flex items-center gap-4">
+    <header className="border-border bg-background/90 sticky top-0 z-50 border-b backdrop-blur-sm">
+      <nav className="container mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3">
+        <Link
+          href="/"
+          className="shrink-0 text-[1.05rem] font-semibold tracking-tight whitespace-nowrap sm:[font-stretch:125%]"
+        >
+          Shashank Jain
+        </Link>
+        <div className="flex items-center gap-2 sm:gap-6">
+          <ul className="flex items-center gap-2.5 text-sm sm:gap-5">
+            {navbarConfig.navItems.map((item) => {
+              const active =
+                pathname === item.href || pathname.startsWith(`${item.href}/`);
+              return (
+                <li key={item.label}>
+                  <Link
+                    href={item.href}
+                    aria-current={active ? 'page' : undefined}
+                    className={`font-narrow font-semibold transition-colors ${
+                      active
+                        ? 'text-foreground underline decoration-2 underline-offset-[6px]'
+                        : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
           <ThemeSwitch />
         </div>
-      </div>
-    </Container>
+      </nav>
+    </header>
   );
 }

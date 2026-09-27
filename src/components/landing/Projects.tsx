@@ -2,29 +2,25 @@ import { projects } from '@/config/Projects';
 import { Link } from 'next-view-transitions';
 import React from 'react';
 
-import Container from '../common/Container';
-import SectionHeading from '../common/SectionHeading';
+import Section from '../common/Section';
 import { ProjectList } from '../projects/ProjectList';
-import { Button } from '../ui/button';
 
 export default function Projects() {
-  const featured = projects.filter((p) => p.details).slice(0, 4);
+  const featured = projects.filter((p) => p.details && !p.earlier).slice(0, 4);
 
   return (
-    <Container className="mt-24 max-w-5xl">
-      <SectionHeading
-        subHeading="Selected work"
-        heading="Featured Projects"
-        description="Each is a real system — the problem, the architecture, the tradeoffs, and the results. Work projects stay high-level to respect confidentiality."
-      />
-
-      <ProjectList className="mt-8" projects={featured} />
-
-      <div className="mt-8 flex justify-center">
-        <Button variant="outline" asChild>
-          <Link href="/projects">View all projects</Link>
-        </Button>
-      </div>
-    </Container>
+    <Section
+      id="work"
+      heading="Selected work"
+      description="Healthcare revenue-cycle systems I work on now. Work projects are described at a high level to respect confidentiality."
+    >
+      <ProjectList projects={featured} />
+      <Link
+        href="/projects"
+        className="link-ink mt-6 inline-block text-sm font-medium"
+      >
+        All projects, including earlier AI and SaaS work
+      </Link>
+    </Section>
   );
 }

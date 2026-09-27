@@ -2,15 +2,11 @@ import { type Project } from '@/types/project';
 import { Link } from 'next-view-transitions';
 import React from 'react';
 
-import ArrowRight from '../svgs/ArrowRight';
-import Github from '../svgs/Github';
-import Website from '../svgs/Website';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
-
 interface ProjectCardProps {
   project: Project;
 }
 
+/** A row in the drawing register: what it is and the result on the left, context on the right. */
 export function ProjectCard({ project }: ProjectCardProps) {
   const {
     title,
@@ -24,99 +20,92 @@ export function ProjectCard({ project }: ProjectCardProps) {
     details,
     projectDetailsPageSlug,
     confidential,
+    stages,
   } = project;
 
   const externalLink = live || link;
+  const href =
+    details && projectDetailsPageSlug ? projectDetailsPageSlug : null;
 
   return (
-    <div className="card-hover group relative flex h-full flex-col rounded-xl border border-border bg-card p-6">
-      {/* Header */}
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0">
-          {category && <p className="eyebrow">{category}</p>}
-          <h3 className="mt-2 text-lg font-semibold leading-tight tracking-tight">
-            {title}
-          </h3>
-        </div>
-        <div className="flex shrink-0 items-center gap-2">
-          {externalLink && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  className="flex size-5 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
-                  href={externalLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="View live"
-                >
-                  <Website />
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent>Live</TooltipContent>
-            </Tooltip>
-          )}
-          {github && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  className="flex size-5 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
-                  href={github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="View source"
-                >
-                  <Github />
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent>Source</TooltipContent>
-            </Tooltip>
-          )}
-        </div>
-      </div>
-
-      {/* Description */}
-      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-        {description}
-      </p>
-
-      {/* Headline metric */}
-      {metric && (
-        <p className="metric-value mt-4 inline-block rounded-md bg-brand-muted px-2 py-1 text-xs font-medium text-brand">
-          {metric}
-        </p>
-      )}
-
-      {/* Tech chips */}
-      <div className="mt-4 flex flex-wrap gap-1.5">
-        {technologies.map((tech) => (
-          <span key={tech} className="tech-chip">
-            {tech}
-          </span>
-        ))}
-      </div>
-
-      {/* Footer */}
-      {(details || confidential) && (
-        <div className="mt-auto flex items-center justify-between gap-3 pt-5">
-          {confidential ? (
-            <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-              <span className="size-1.5 rounded-full bg-muted-foreground/50" />
-              Confidential — high-level only
-            </span>
-          ) : (
-            <span />
-          )}
-          {details && projectDetailsPageSlug && (
+    <article className="group bg-sheet has-[a.row-link:hover]:bg-muted/60 relative grid gap-5 p-5 transition-colors md:grid-cols-[1fr_13rem] md:gap-8 md:p-6">
+      <div className="min-w-0">
+        {category && (
+          <p className="font-narrow text-muted-foreground text-sm font-semibold">
+            {category}
+          </p>
+        )}
+        <h3 className="font-wide mt-1 text-lg leading-snug font-semibold tracking-tight">
+          {href ? (
             <Link
-              href={projectDetailsPageSlug}
-              className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              href={href}
+              className="row-link group-hover:underline group-hover:decoration-1 group-hover:underline-offset-4 after:absolute after:inset-0"
             >
-              Read case study
-              <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+              {title}
             </Link>
+          ) : (
+            title
           )}
+        </h3>
+        {metric && (
+          <p className="metric-value text-brand mt-2 font-semibold">{metric}</p>
+        )}
+        <p className="text-muted-foreground mt-2 max-w-[62ch] text-[0.95rem] leading-relaxed">
+          {description}
+        </p>
+      </div>
+
+      <div className="md:border-border flex flex-col gap-4 text-sm md:border-l md:pl-6">
+        {stages && stages.length > 0 && (
+          <div>
+            <p className="font-narrow text-muted-foreground text-xs">
+              Where in the cycle
+            </p>
+            <p className="mt-0.5 font-semibold">{stages.join(', ')}</p>
+          </div>
+        )}
+        <div>
+          <p className="font-narrow text-muted-foreground text-xs">
+            Built with
+          </p>
+          <ul className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5">
+            {technologies.map((tech) => (
+              <li key={tech} className="tech-chip">
+                {tech}
+              </li>
+            ))}
+          </ul>
         </div>
-      )}
-    </div>
+        {(externalLink || github) && (
+          <div className="relative z-10 flex gap-4">
+            {externalLink && (
+              <Link
+                href={externalLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link-ink"
+              >
+                Live site
+              </Link>
+            )}
+            {github && (
+              <Link
+                href={github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link-ink"
+              >
+                Source code
+              </Link>
+            )}
+          </div>
+        )}
+        {confidential && (
+          <p className="text-muted-foreground text-xs">
+            Confidential, shown at a high level
+          </p>
+        )}
+      </div>
+    </article>
   );
 }

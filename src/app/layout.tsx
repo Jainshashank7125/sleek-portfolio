@@ -3,20 +3,28 @@ import Footer from '@/components/common/Footer';
 import Navbar from '@/components/common/Navbar';
 import { Quote } from '@/components/common/Quote';
 import { Toaster } from '@/components/ui/sonner';
-import { siteConfig, generateMetadata as getMetadata } from '@/config/Meta';
+import { generateMetadata as getMetadata, siteConfig } from '@/config/Meta';
 import { SmoothScroll } from '@/lib/lenis';
 import { ViewTransitions } from 'next-view-transitions';
+import { Archivo } from 'next/font/google';
 
 import './globals.css';
 
 export const metadata = getMetadata('/');
+
+const archivo = Archivo({
+  subsets: ['latin'],
+  axes: ['wdth'],
+  variable: '--font-archivo',
+  display: 'swap',
+});
 
 const personJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: siteConfig.author.name,
   url: siteConfig.url,
-  jobTitle: 'Full Stack Engineer',
+  jobTitle: 'AI Development Engineer',
   sameAs: [
     `https://github.com/${siteConfig.author.github}`,
     `https://linkedin.com/in/${siteConfig.author.linkedin}`,
@@ -31,7 +39,11 @@ export default function RootLayout({
 }>) {
   return (
     <ViewTransitions>
-      <html lang="en" className="dark" suppressHydrationWarning>
+      <html
+        lang="en"
+        className={`dark ${archivo.variable}`}
+        suppressHydrationWarning
+      >
         {/* Runs synchronously before paint to prevent light-mode flash */}
         <head>
           <script
@@ -44,10 +56,10 @@ export default function RootLayout({
             dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
           />
         </head>
-        <body className={`font-hanken-grotesk antialiased`}>
+        <body className="antialiased">
           <a
             href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-md focus:bg-background focus:px-4 focus:py-2 focus:text-foreground focus:outline focus:outline-ring"
+            className="focus:bg-background focus:text-foreground focus:outline-ring sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-md focus:px-4 focus:py-2 focus:outline"
           >
             Skip to content
           </a>

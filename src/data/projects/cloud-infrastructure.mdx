@@ -1,0 +1,121 @@
+---
+title: 'Cloud Infrastructure & Production Engineering'
+category: 'Cloud infrastructure'
+description: 'Containerized app and worker workloads on AWS, provisioned with Terraform and shipped through GitHub Actions — plus cross-account, cross-region database refresh and migration workflows.'
+problem: 'Run healthcare workloads on private, reproducible infrastructure — and move encrypted PostgreSQL databases between AWS accounts and regions safely.'
+technologies:
+  [
+    'AWS ECS',
+    'Amazon RDS (PostgreSQL)',
+    'Amazon S3',
+    'Amazon ECR',
+    'CloudFront',
+    'Terraform',
+    'GitHub Actions',
+    'Docker',
+    'AWS KMS',
+    'Secrets Manager',
+  ]
+github: ''
+live: ''
+image: '/project/cloud-infrastructure.png'
+timeline: '2026 — Present'
+role: 'AI Development Engineer'
+team: 'Nodaris AI'
+status: 'in-progress'
+featured: true
+confidential: true
+challenges:
+  [
+    'App and worker workloads that must stay private and reproducible',
+    'Database refreshes across AWS accounts and regions with encrypted snapshots',
+    'Running admin operations against private RDS from inside the VPC',
+    'PostgreSQL client/server version mismatches during dump and restore',
+  ]
+learnings:
+  [
+    'Infrastructure is part of the engineering job, not a hand-off',
+    'Encryption key choices decide what you can share later',
+    'Migration tooling is part of the deployment environment — version it',
+    'Private networking changes where operational work has to run',
+  ]
+isPublished: true
+---
+
+## Context
+
+I don't treat infrastructure as something another team hands me. The same engineers who build the healthcare workflows also provision, deploy, and operate the infrastructure they run on — so I work across **AWS, Terraform, CI/CD, and PostgreSQL operations** as part of the product.
+
+## Architecture
+
+A high-level, account-agnostic view of how the platform runs:
+
+```text
+   Users ──► CloudFront ──► application (ECS)
+                               │
+                               ├──► Celery workers (ECS)
+                               │
+                               ▼
+               ┌── private subnets ─────────────────┐
+               │  RDS PostgreSQL     Redis          │
+               └────────────────────────────────────┘
+                               │
+                               ▼
+               S3: healthcare documents · ingestion artifacts
+                   exports · database-transfer artifacts
+
+   GitHub Actions ──► Docker build ──► ECR ──► ECS deploy
+   Terraform      ──► environments, networking, services
+```
+
+- **ECS** runs both the containerized application and the worker workloads.
+- **RDS PostgreSQL** sits in private networking; **Secrets Manager** holds credentials.
+- **S3** stores healthcare documents, ingestion artifacts, exports, and database-transfer artifacts.
+- **ECR** holds container images; **CloudFront** handles application delivery.
+- **Terraform** provisions environments as code; **GitHub Actions** runs CI/CD and automated deployments; **Docker** keeps local development reproducible.
+
+## Database Refresh & Migration Across Accounts
+
+A recurring operational job is moving and refreshing databases between environments that live in **different AWS accounts and regions**. That work covered:
+
+- RDS snapshots and **encrypted snapshots**;
+- **AWS-managed vs. customer-managed KMS keys** — the key choice decides whether a snapshot can be shared with another account at all;
+- **cross-account snapshot sharing** and **cross-region copies**;
+- PostgreSQL **dumps and restores**, staged through **S3**;
+- running administrative operations **from inside ECS/VPC**, because the databases are not publicly reachable;
+- **Secrets Manager** for credentials along the way.
+
+```text
+Source account / region                  Target account / region
+  RDS snapshot (encrypted)
+     └─ re-encrypt with a shareable key
+          └─ share ─────────────────────► copy (cross-region)
+                                             └─ restore / pg_restore
+   pg_dump ──► S3 transfer bucket ──────────► ECS task inside the VPC ──► RDS
+```
+
+## A Version-Mismatch Lesson
+
+In one migration, a PostgreSQL dump produced with a **newer PostgreSQL client** included configuration that the target **PostgreSQL 16 RDS** instance didn't support, so the restore failed.
+
+The fix was straightforward. The principle behind it matters more:
+
+> **Database migration tooling should be treated as part of the deployment environment — and versioned accordingly.**
+
+## Key Tradeoffs
+
+- **Private networking vs. convenience:** keeping RDS private is the right default for healthcare data, but it means operational tasks have to run from inside the VPC (for example, as ECS tasks) instead of from a laptop.
+- **Customer-managed vs. AWS-managed keys:** customer-managed KMS keys add management overhead, but they're what makes cross-account sharing possible.
+- **Infrastructure as code vs. console changes:** Terraform is slower for one-off tweaks, but it keeps environments reproducible and reviewable.
+
+## Results
+
+- Application and worker workloads running on **ECS**, deployed through **GitHub Actions**, with environments defined in **Terraform**.
+- A repeatable workflow for **cross-account, cross-region database refreshes** with encrypted snapshots and private RDS.
+- Version-pinned migration tooling, so client/server mismatches don't surface for the first time mid-restore.
+
+## Lessons
+
+- **Owning infrastructure makes me a better application engineer** — deployment, networking, and data constraints shape the code.
+- **Key management is an architecture decision**, not a checkbox.
+- **Version your operational tooling** the way you version your application.

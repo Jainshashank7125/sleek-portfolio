@@ -5,28 +5,33 @@ export interface Principle {
 
 export const philosophy: Principle[] = [
   {
-    title: 'Build for maintainability',
+    title: 'Business rules need clear ownership',
     description:
-      "Code is read far more than it's written. I favor clear boundaries, boring solutions, and architecture the next engineer can reason about without a tour.",
+      'Rules that change often should not be scattered across controllers, serializers, workers, and frontend conditionals. The application executes decisions; a dedicated rules layer owns them.',
   },
   {
-    title: 'Automate repetitive work',
+    title: 'Execution is not business success',
     description:
-      'If I do it twice by hand, I script it. Rules engines, CI/CD pipelines, and AI workflows exist to delete toil — not to look clever.',
+      'A worker exiting cleanly does not mean the claim, file, or document was processed. I validate domain state, not just infrastructure state.',
   },
   {
-    title: 'Design for scale',
+    title: 'Optimize using real workloads',
     description:
-      'Idempotency, queues, caching, and tenant isolation are decisions made early, because they are expensive and risky to retrofit later.',
+      'Profiling the real data path beats micro-optimizing functions — that is how a 14,400-page ingestion went from ~19 minutes to ~85 seconds.',
   },
   {
-    title: 'Measure before optimizing',
+    title: 'Idempotency matters',
     description:
-      'I instrument first. Latency, error rates, and real usage data decide what to optimize — not hunches or premature cleverness.',
+      'Healthcare pipelines retry, reprocess, and backfill constantly. Operations should be safe to run more than once whenever possible.',
+  },
+  {
+    title: 'Observability is part of the feature',
+    description:
+      'For async workflows, knowing why something failed and where it stopped is almost as important as the workflow itself.',
   },
   {
     title: 'AI should enhance workflows',
     description:
-      'AI earns its place when it removes real human work, backed by evals and tracing so quality is observable — not because it is novel.',
+      'AI earns its place when it removes real operational work from billing teams and providers — measured and observable, not added because it is novel.',
   },
 ];

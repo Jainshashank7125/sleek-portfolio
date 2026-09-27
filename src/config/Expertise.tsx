@@ -1,44 +1,37 @@
 export interface ExpertisePillar {
   title: string;
   description: string;
-  icon: string;
 }
 
 export const expertise: ExpertisePillar[] = [
   {
-    title: 'AI Systems',
+    title: 'Healthcare RCM Workflows',
     description:
-      'Production LLM agent systems — conversation engines, agent tools, and artifact generation — with eval-driven prompt engineering and tracing to catch regressions before they ship.',
-    icon: 'BrainCircuit',
+      'Claims ingestion, classification, claim-status automation, denials, ADR/MDR, and work assignment — treating the revenue cycle as a distributed workflow, not just "submit and get paid".',
   },
   {
-    title: 'Backend Architecture',
+    title: 'Backend & Async Processing',
     description:
-      'REST and event-driven services in Java/Spring Boot and Python/FastAPI, designed for throughput, idempotency, and clean domain boundaries.',
-    icon: 'Server',
+      'Django and FastAPI services with Celery workers, where success means the business operation actually completed — idempotent, retry-safe, and observable.',
   },
   {
-    title: 'Multi-Tenant SaaS',
+    title: 'Healthcare Integrations',
     description:
-      'Schema-based tenant isolation on PostgreSQL with role-based access control and per-tenant configuration, serving 10+ enterprise clients without cross-org leakage.',
-    icon: 'Building2',
+      'Clearinghouse APIs such as Stedi — mapping internal claim models to requests, interpreting responses, and keeping transport state separate from claim state.',
   },
   {
     title: 'Cloud Infrastructure',
     description:
-      'AWS serverless (Lambda, SQS, API Gateway, RDS) with dead-letter queues, retries, and Terraform-managed, reproducible environments.',
-    icon: 'Cloud',
+      'AWS ECS, RDS, S3, ECR, and CloudFront provisioned with Terraform and shipped through GitHub Actions — including private networking and cross-account database operations.',
   },
   {
-    title: 'Full Stack Development',
+    title: 'Document Ingestion & Performance',
     description:
-      'End-to-end product surfaces in React, Next.js, and TypeScript — from database schema and API design to polished, accessible UI.',
-    icon: 'Layers',
+      'Large, mixed-content healthcare PDFs processed at scale — profiled on real workloads, rendered only when needed, and segmented deterministically into S3.',
   },
   {
-    title: 'Automation Platforms',
+    title: 'AI & Full-Stack Product',
     description:
-      'Rules engines (Drools), CI/CD pipelines, and AI workflows that remove repetitive work and keep business logic maintainable at scale.',
-    icon: 'Workflow',
+      'An AI layer on top of real operational workflows, plus React product surfaces — from database schema and API representation to what the user actually sees.',
   },
 ];
