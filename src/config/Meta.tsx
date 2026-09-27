@@ -16,7 +16,7 @@ export const siteConfig = {
   name: heroConfig.name,
   title: `${heroConfig.name} — ${heroConfig.title}`,
   description:
-    'Shashank Jain designs and builds cloud-native platforms, AI agent systems, and multi-tenant SaaS with Java, Python, React, and AWS.',
+    'Shashank Jain is a product-oriented full-stack engineer building reliable healthcare workflows across application code, data, integrations, and cloud infrastructure.',
   url: process.env.NEXT_PUBLIC_URL || 'https://portfolio.jainshashank.in',
   ogImage: '/meta/opengraph-image.png',
   author: {
@@ -29,10 +29,13 @@ export const siteConfig = {
   keywords: [
     'Shashank Jain',
     'full stack engineer',
+    'product engineer',
+    'healthcare software engineer',
+    'revenue cycle management',
     'AI engineer',
     'systems engineer',
     'backend architecture',
-    'multi-tenant SaaS',
+    'workflow automation',
     'cloud-native',
     'Java',
     'Spring Boot',
@@ -41,7 +44,7 @@ export const siteConfig = {
     'React',
     'Next.js',
     'AWS',
-    'LLM agents',
+    'production reliability',
   ],
 };
 
@@ -89,9 +92,9 @@ export const pageMetadata: Record<string, PageMeta> = {
 
   // Projects page
   '/projects': {
-    title: 'Projects - My Work & Projects Portfolio',
+    title: 'Case Studies - Systems and Product Work',
     description:
-      'Discover my projects and work across different technologies and domains. From web apps to mobile solutions.',
+      'Explore healthcare, cloud infrastructure, AI, SaaS, and enterprise systems through high-level engineering case studies.',
     keywords: [
       'projects',
       'portfolio',
@@ -105,9 +108,9 @@ export const pageMetadata: Record<string, PageMeta> = {
 
   // Blog page
   '/blog': {
-    title: 'Blog - Thoughts & Tutorials',
+    title: 'Writing - Notes from the Work',
     description:
-      'Read my thoughts, tutorials, and insights on engineering, programming, and web development.',
+      'Notes on backend systems, production reliability, databases, application architecture, and product engineering.',
     keywords: [
       'blog',
       'tutorials',

@@ -1,15 +1,129 @@
 import { Project } from '@/types/project';
 
 export const projects: Project[] = [
-  /* ---------- Flagship case studies (work — high-level, no public links) ---------- */
+  /* ---------- Current healthcare and revenue-cycle work ---------- */
+  {
+    title: 'Healthcare Claims Automation Platform',
+    category: 'Healthcare revenue cycle',
+    era: 'current',
+    stages: ['Claim intake', 'Validation', 'Business rules', 'Claim status'],
+    description:
+      'A revenue-cycle platform that turns incoming claim files into validated, classified, and trackable work through asynchronous processing and clearinghouse integrations.',
+    problem:
+      'Make imperfect claim data operationally useful while payer rules change and important state lives in external systems.',
+    metric: 'From intake to a traceable work queue',
+    technologies: [
+      'Python',
+      'Django',
+      'Celery',
+      'PostgreSQL',
+      'React',
+      'Stedi',
+      'AWS',
+    ],
+    github: '',
+    live: '',
+    link: '',
+    image: '',
+    projectDetailsPageSlug: '/projects/healthcare-claims-automation',
+    details: true,
+    isWorking: true,
+    confidential: true,
+  },
+  {
+    title: 'Scaling Healthcare Document Ingestion',
+    category: 'Document processing',
+    era: 'current',
+    stages: ['Documents', 'Validation', 'Async workers', 'Structured data'],
+    description:
+      'Redesigned a healthcare document-ingestion path to avoid unnecessary page rendering while preserving support for scanned and mixed-content documents.',
+    problem:
+      'Keep unusually large and varied documents moving through production without turning every page into expensive temporary data.',
+    metric: 'Faster, leaner processing grounded in real production behavior',
+    technologies: [
+      'Python',
+      'PyMuPDF',
+      'OCR',
+      'Celery',
+      'Amazon S3',
+      'PostgreSQL',
+    ],
+    github: '',
+    live: '',
+    link: '',
+    image: '',
+    projectDetailsPageSlug: '/projects/healthcare-document-ingestion',
+    details: true,
+    isWorking: true,
+    confidential: true,
+  },
+  {
+    title: 'Cloud Infrastructure & Production Engineering',
+    category: 'Cloud infrastructure',
+    era: 'current',
+    stages: ['Build', 'Provision', 'Deploy', 'Operate'],
+    description:
+      'Containerized application and worker workloads on AWS, provisioned repeatable environments with Terraform, and shipped changes through GitHub Actions.',
+    problem:
+      'Give healthcare workloads private, reproducible infrastructure and safe operational paths for encrypted data and database changes.',
+    metric: 'Private, repeatable, production-ready environments',
+    technologies: [
+      'AWS ECS',
+      'RDS PostgreSQL',
+      'S3',
+      'ECR',
+      'CloudFront',
+      'Terraform',
+      'GitHub Actions',
+      'Docker',
+    ],
+    github: '',
+    live: '',
+    link: '',
+    image: '',
+    projectDetailsPageSlug: '/projects/cloud-infrastructure',
+    details: true,
+    isWorking: true,
+    confidential: true,
+  },
+  {
+    title: 'Building Reliable Healthcare Workflows',
+    category: 'Production reliability',
+    era: 'current',
+    stages: ['Observe', 'Recover', 'Re-run safely'],
+    description:
+      'A set of production improvements that make asynchronous healthcare workflows observable, recoverable, and safe to operate.',
+    problem:
+      'Prevent silent failures, preserve the right document-to-patient relationships, and make historical repair work safe to resume.',
+    metric: 'No silent success; recovery is part of the workflow',
+    technologies: [
+      'Python',
+      'Django',
+      'Celery',
+      'PyMuPDF',
+      'Amazon S3',
+      'PostgreSQL',
+    ],
+    github: '',
+    live: '',
+    link: '',
+    image: '',
+    projectDetailsPageSlug: '/projects/reliable-healthcare-workflows',
+    details: true,
+    isWorking: true,
+    confidential: true,
+  },
+
+  /* ---------- Earlier flagship case studies ---------- */
   {
     title: 'Deeply — AI Agent System for Couples',
     category: 'AI Systems',
+    era: 'earlier',
     description:
       "A production LLM agent system that turns two partners' private inputs into one shared synthesis both recognize as fair — conversation engine, agent tools, artifact generation, and context assembly.",
     problem:
       'Synthesize two private perspectives into one fair, shared artifact — reliably, in production.',
-    metric: '0→1 founding-engineer build',
+    metric: 'A founding-engineer build from product idea to production',
     technologies: [
       'TypeScript',
       'Next.js',
@@ -32,10 +146,11 @@ export const projects: Project[] = [
   {
     title: 'AI Ticket Automation Platform',
     category: 'AI · Event-Driven',
+    era: 'earlier',
     description:
       'Intelligent customer-support automation: AI intent classification and retention workflows over a distributed, idempotent ingestion pipeline with retries and dead-letter queues.',
-    problem: 'Manual triage of 10K+ monthly support tickets did not scale.',
-    metric: '70% less manual work',
+    problem: 'Manual support-ticket triage did not scale with product usage.',
+    metric: 'Reliable automation with recovery paths for failed work',
     technologies: [
       'Python',
       'FastAPI',
@@ -58,11 +173,12 @@ export const projects: Project[] = [
   {
     title: 'Drools Credentialing Rules Engine',
     category: 'Backend · Rules Engine',
+    era: 'earlier',
     description:
-      'A 300+ rule Drools engine enforcing healthcare-provider credentialing compliance, with multi-tenant rule isolation and feature-flag-driven execution across health plans.',
+      'A Drools engine for healthcare-provider credentialing, with multi-tenant rule isolation and feature-flag-driven execution across health plans.',
     problem:
-      'Encode payer-specific credentialing logic for 15+ health plans on one shared engine — without cross-org interference.',
-    metric: '300+ rules · 15+ orgs · zero-redeploy toggles',
+      'Encode payer-specific credentialing logic on one shared engine without cross-organization interference.',
+    metric: 'Configurable rules without redeploying the application',
     technologies: ['Java', 'Drools', 'DRL', 'Spring Boot', 'JSON', 'Shell'],
     github: '',
     live: '',
@@ -76,11 +192,12 @@ export const projects: Project[] = [
   {
     title: 'Multi-Source Analytics Aggregation Platform',
     category: 'Multi-Tenant SaaS',
+    era: 'earlier',
     description:
-      'A multi-tenant analytics platform aggregating 3+ external APIs into a unified, dependency-aware pipeline, with real-time sync tracking over WebSockets and Redis token caching.',
+      'A multi-tenant analytics platform aggregating external APIs into a unified, dependency-aware pipeline, with real-time sync tracking and token caching.',
     problem:
-      'Aggregate 50K+ daily records from many external APIs for 50+ tenants, reliably and concurrently.',
-    metric: '50K+ daily records · 50+ tenants · 99.9% uptime',
+      'Aggregate records from many external APIs for multiple tenants, reliably and concurrently.',
+    metric: 'Dependency-aware synchronization across isolated tenants',
     technologies: [
       'Python',
       'FastAPI',
@@ -103,6 +220,7 @@ export const projects: Project[] = [
   {
     title: 'Multi-Tenant Smart Irrigation Platform',
     category: 'Multi-Tenant SaaS',
+    era: 'earlier',
     description:
       'Multi-tenant SaaS with role-based access control, an OAuth2 CRM sync engine with batch upserts, an offline-first PWA for field operations, and an automated email pipeline with SMTP failover.',
     metric: 'Offline-first field operations',
@@ -119,9 +237,10 @@ export const projects: Project[] = [
   {
     title: 'Mobex Health Suite',
     category: 'Healthcare',
+    era: 'earlier',
     description:
-      'Real-time patient monitoring processing 50K+ daily events, with a Flutter QR-based onboarding module and AWS RDS multi-AZ deployment with CloudWatch alerting.',
-    metric: '50K+ daily events · 60% faster check-in',
+      'Real-time patient monitoring with a Flutter QR-based onboarding module and an AWS deployment supported by database redundancy and operational alerting.',
+    metric: 'Connected monitoring and smoother patient onboarding',
     technologies: ['Java', 'Flutter', 'AWS', 'MySQL', 'CloudWatch'],
     github: '',
     live: '',
@@ -135,9 +254,10 @@ export const projects: Project[] = [
   {
     title: 'Infozech iTower Link',
     category: 'Mobile · Telecom',
+    era: 'earlier',
     description:
-      'Re-engineered telecom tower-management app with an offline-first architecture for 500+ field technicians, plus Java middleware integrating the AWS SDK for large-scale asset synchronization.',
-    metric: '500+ field technicians',
+      'Re-engineered a telecom tower-management app with an offline-first architecture for field technicians, plus Java middleware for large-scale asset synchronization.',
+    metric: 'Offline-first field operations',
     technologies: ['Flutter', 'Java', 'AWS'],
     github: '',
     live: '',
@@ -153,6 +273,7 @@ export const projects: Project[] = [
   {
     title: 'Coupon Management API',
     category: 'Open Source',
+    era: 'open-source',
     description:
       'Production-ready REST API for e-commerce discounts — cart-wise, product-wise, and BxGy (Buy X Get Y) — with validation, usage limits, expiration handling, and Swagger docs.',
     technologies: [
@@ -175,6 +296,7 @@ export const projects: Project[] = [
   {
     title: 'WhiteCarrot ATS — Careers Page Builder',
     category: 'Open Source',
+    era: 'open-source',
     description:
       'Multi-tenant careers-page builder letting recruiters create branded company pages with custom sections, job listings, CSV bulk import, per-user drafts, and secure preview tokens.',
     technologies: [
@@ -196,6 +318,7 @@ export const projects: Project[] = [
   {
     title: 'AI Agent Form — Intelligent Copilot',
     category: 'Open Source',
+    era: 'open-source',
     description:
       'A Next.js app with an AI copilot that guides users through form submission with real-time form updates, conversational AI, and step-by-step field validation.',
     technologies: ['Next.js', 'TypeScript', 'React', 'Tailwind CSS', 'Gemini API'],

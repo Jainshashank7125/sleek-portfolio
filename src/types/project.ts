@@ -13,6 +13,8 @@ export interface Project {
   projectDetailsPageSlug: string;
   isWorking: boolean;
   confidential?: boolean;
+  stages?: string[];
+  era?: 'current' | 'earlier' | 'open-source';
 }
 
 export interface ProjectCaseStudyFrontmatter {

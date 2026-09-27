@@ -6,24 +6,22 @@ import X from '@/components/svgs/X';
 export const heroConfig = {
   // Personal Information
   name: 'Shashank Jain',
-  title: 'AI-Enabled Full Stack Engineer',
+  title: 'Product-Oriented Full-Stack Engineer',
   avatar: '/assets/logo.png',
 
   // Current role eyebrow
-  eyebrow: 'Software Development Engineer · Quido Fintech',
+  eyebrow: 'Engineer / Builder / Problem Solver',
 
   // Headline + subheadline (PRD copy)
-  headline: 'AI-Enabled Full Stack Engineer Building Scalable Systems',
-  emphasis: 'Scalable Systems',
+  headline: 'Product-Oriented Full-Stack Engineer',
+  emphasis: 'Full-Stack Engineer',
   subheadline:
-    'I design and build cloud-native platforms, AI agent systems, and multi-tenant SaaS products using Java, Python, React, AWS, and modern architecture patterns.',
+    'I build and operate end-to-end systems where product workflows, backend architecture, asynchronous processing, external integrations, data, and cloud infrastructure meet.',
 
   // Proof line (static — no animated counters)
   proof: [
-    { value: '3+ yrs', label: 'Engineering' },
-    { value: '99.9%', label: 'Uptime' },
-    { value: '50K+', label: 'Daily records' },
-    { value: '10+', label: 'Enterprise clients' },
+    { value: 'End-to-end ownership', label: 'From ingestion to production' },
+    { value: 'Built for recovery', label: 'Async, observable, idempotent' },
   ],
 
   // Skills (names used by the AI assistant prompt + hero stack line)
@@ -41,13 +39,13 @@ export const heroConfig = {
   buttons: [
     {
       variant: 'default',
-      text: 'View Projects',
+      text: 'Explore Case Studies',
       href: '/projects',
       icon: 'Code',
     },
     {
       variant: 'outline',
-      text: 'Download Resume',
+      text: 'View Resume',
       href: '/resume',
       icon: 'CV',
     },
