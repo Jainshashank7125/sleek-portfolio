@@ -44,8 +44,8 @@
   --color-card: var(--card);
   --font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
   --font-mono:
-    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
-    'Liberation Mono', monospace;
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono',
+    monospace;
   --radius-sm: 0;
   --radius-md: 0;
   --radius-lg: 0;
@@ -123,7 +123,6 @@
   }
 
   html {
-    min-width: 20rem;
     scroll-behavior: smooth;
   }
 

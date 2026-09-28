@@ -14,7 +14,11 @@ export default function GearCard({ index, name, icon, href }: GearCardProps) {
       <span className="font-mono text-[0.65rem] text-[var(--field-red)]">
         {String(index).padStart(2, '0')}
       </span>
-      {icon && <span className="text-brand">{icon}</span>}
+      {icon ? (
+        <span className="text-brand">{icon}</span>
+      ) : (
+        <span aria-hidden="true" />
+      )}
       <span className="min-w-0 flex-1 text-sm font-semibold">{name}</span>
       {href && <ArrowUpRight className="size-4 shrink-0" aria-hidden="true" />}
     </>

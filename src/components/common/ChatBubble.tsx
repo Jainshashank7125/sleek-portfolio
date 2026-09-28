@@ -192,24 +192,24 @@ const ChatBubble: React.FC = () => {
 
   return (
     <ExpandableChat
-      className="rounded-none border-border shadow-none [&>button]:size-11 [&>button]:rounded-none [&>button]:border-border [&>button]:shadow-none"
+      className="border-border [&>button]:border-border rounded-none shadow-none [&>button]:size-11 [&>button]:rounded-none [&>button]:shadow-none"
       position="bottom-right"
       size="lg"
       icon={<ChatBubbleIcon className="h-6 w-6" />}
     >
       <ExpandableChatHeader>
         <div className="flex items-center space-x-3">
-          <Avatar className="size-8 border border-primary bg-brand-muted">
+          <Avatar className="border-primary bg-brand-muted size-8 border">
             <AvatarImage src="/assets/logo.png" alt="Assistant" />
             <AvatarFallback>AI</AvatarFallback>
           </Avatar>
           <div>
-            <h3 className="font-semibold text-sm">
+            <h3 className="text-sm font-semibold">
               {heroConfig.name}&apos;s Portfolio Assistant
             </h3>
-            <div className="text-xs text-muted-foreground">
+            <div className="text-muted-foreground text-xs">
               <div className="flex items-center gap-1">
-                <span className="size-2 bg-brand" aria-hidden="true" />
+                <span className="bg-brand size-2" aria-hidden="true" />
                 Available for portfolio questions
               </div>
             </div>
@@ -226,13 +226,13 @@ const ChatBubble: React.FC = () => {
                 className={cn(
                   'flex w-max max-w-xs flex-col gap-2 border px-3 py-2 text-sm',
                   message.sender === 'user'
-                    ? 'ml-auto bg-primary text-primary-foreground'
+                    ? 'bg-primary text-primary-foreground ml-auto'
                     : 'bg-muted',
                 )}
               >
                 <div className="flex items-start space-x-2">
                   {message.sender === 'bot' && (
-                    <Avatar className="size-6 border border-primary bg-brand-muted">
+                    <Avatar className="border-primary bg-brand-muted size-6 border">
                       <AvatarImage src="/assets/logo.png" alt="Assistant" />
                       <AvatarFallback>AI</AvatarFallback>
                     </Avatar>
@@ -269,6 +269,8 @@ const ChatBubble: React.FC = () => {
       <ExpandableChatFooter>
         <div className="flex space-x-2">
           <Input
+            aria-label="Ask the portfolio assistant"
+            data-chat-initial-focus
             placeholder="Ask me about my work and experience..."
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
@@ -277,6 +279,7 @@ const ChatBubble: React.FC = () => {
             className="min-h-11 flex-1 rounded-none"
           />
           <Button
+            aria-label="Send message"
             size="sm"
             onClick={handleSendMessage}
             disabled={!newMessage.trim() || isLoading}

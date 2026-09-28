@@ -2,7 +2,7 @@ import ChatBubble from '@/components/common/ChatBubble';
 import Footer from '@/components/common/Footer';
 import Navbar from '@/components/common/Navbar';
 import { Toaster } from '@/components/ui/sonner';
-import { siteConfig, generateMetadata as getMetadata } from '@/config/Meta';
+import { generateMetadata as getMetadata, siteConfig } from '@/config/Meta';
 import { SmoothScroll } from '@/lib/lenis';
 import { ViewTransitions } from 'next-view-transitions';
 
@@ -46,13 +46,15 @@ export default function RootLayout({
         <body className={`font-hanken-grotesk antialiased`}>
           <a
             href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:border focus:border-border focus:bg-background focus:px-4 focus:py-2 focus:text-foreground"
+            className="focus:border-border focus:bg-background focus:text-foreground sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:border focus:px-4 focus:py-2"
           >
             Skip to content
           </a>
           <SmoothScroll>
             <Navbar />
-            <div id="main-content">{children}</div>
+            <main id="main-content" tabIndex={-1}>
+              {children}
+            </main>
             <Footer />
             <ChatBubble />
             <Toaster />

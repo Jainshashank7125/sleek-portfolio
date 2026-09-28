@@ -1,33 +1,33 @@
-"use client";
+'use client';
 
-import React, { useRef, useState } from "react";
-import { X, MessageCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { MessageCircle, X } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
 
-export type ChatPosition = "bottom-right" | "bottom-left";
-export type ChatSize = "sm" | "md" | "lg" | "xl" | "full";
+export type ChatPosition = 'bottom-right' | 'bottom-left';
+export type ChatSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
 const chatConfig = {
   dimensions: {
-    sm: "sm:max-w-sm sm:max-h-[500px]",
-    md: "sm:max-w-md sm:max-h-[600px]",
-    lg: "sm:max-w-lg sm:max-h-[700px]",
-    xl: "sm:max-w-xl sm:max-h-[800px]",
-    full: "sm:w-full sm:h-full",
+    sm: 'sm:max-w-sm sm:max-h-[500px]',
+    md: 'sm:max-w-md sm:max-h-[600px]',
+    lg: 'sm:max-w-lg sm:max-h-[700px]',
+    xl: 'sm:max-w-xl sm:max-h-[800px]',
+    full: 'sm:w-full sm:h-full',
   },
   positions: {
-    "bottom-right": "bottom-5 right-5",
-    "bottom-left": "bottom-5 left-5",
+    'bottom-right': 'bottom-5 right-5',
+    'bottom-left': 'bottom-5 left-5',
   },
   chatPositions: {
-    "bottom-right": "sm:bottom-[calc(100%+10px)] sm:right-0",
-    "bottom-left": "sm:bottom-[calc(100%+10px)] sm:left-0",
+    'bottom-right': 'sm:bottom-[calc(100%+10px)] sm:right-0',
+    'bottom-left': 'sm:bottom-[calc(100%+10px)] sm:left-0',
   },
   states: {
-    open: "pointer-events-auto opacity-100 visible scale-100 translate-y-0",
+    open: 'pointer-events-auto opacity-100 visible scale-100 translate-y-0',
     closed:
-      "pointer-events-none opacity-0 invisible scale-100 sm:translate-y-5",
+      'pointer-events-none opacity-0 invisible scale-100 sm:translate-y-5',
   },
 };
 
@@ -39,29 +39,99 @@ interface ExpandableChatProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const ExpandableChat: React.FC<ExpandableChatProps> = ({
   className,
-  position = "bottom-right",
-  size = "md",
+  position = 'bottom-right',
+  size = 'md',
   icon,
   children,
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const previousActiveElementRef = useRef<HTMLElement | null>(null);
 
-  const toggleChat = () => setIsOpen(!isOpen);
+  const closeChat = () => setIsOpen(false);
+  const toggleChat = () => setIsOpen((open) => !open);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    previousActiveElementRef.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : toggleRef.current;
+
+    const focusTimer = window.setTimeout(() => {
+      const firstFocusTarget =
+        chatRef.current?.querySelector<HTMLElement>(
+          '[data-chat-initial-focus]',
+        ) ?? null;
+      (firstFocusTarget ?? chatRef.current)?.focus();
+    }, 220);
+
+    return () => {
+      window.clearTimeout(focusTimer);
+      previousActiveElementRef.current?.focus();
+    };
+  }, [isOpen]);
+
+  const handleDialogKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeChat();
+      return;
+    }
+
+    if (event.key !== 'Tab') return;
+
+    const focusableElements = Array.from(
+      event.currentTarget.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ),
+    ).filter(
+      (element) =>
+        element.getAttribute('aria-hidden') !== 'true' &&
+        element.offsetParent !== null,
+    );
+
+    if (focusableElements.length === 0) {
+      event.preventDefault();
+      event.currentTarget.focus();
+      return;
+    }
+
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+    const activeElement = document.activeElement;
+
+    if (event.shiftKey && activeElement === firstElement) {
+      event.preventDefault();
+      lastElement.focus();
+    } else if (!event.shiftKey && activeElement === lastElement) {
+      event.preventDefault();
+      firstElement.focus();
+    }
+  };
 
   return (
     <div
-      className={cn(`fixed ${chatConfig.positions[position]} z-50 hover:cursor-pointer`, className)}
+      className={cn(
+        `fixed ${chatConfig.positions[position]} z-50 hover:cursor-pointer`,
+        className,
+      )}
       {...props}
     >
       <div
         ref={chatRef}
+        id="portfolio-assistant-dialog"
         role="dialog"
         aria-label="Portfolio assistant"
+        aria-modal={isOpen}
         aria-hidden={!isOpen}
+        tabIndex={-1}
+        onKeyDown={handleDialogKeyDown}
         className={cn(
-          "fixed inset-0 flex h-full w-full flex-col overflow-hidden border bg-background transition-all duration-200 ease-out sm:absolute sm:inset-auto sm:h-[80vh] sm:w-[90vw]",
+          'bg-background fixed inset-0 flex h-full w-full flex-col overflow-hidden border transition-all duration-200 ease-out sm:absolute sm:inset-auto sm:h-[80vh] sm:w-[90vw]',
           chatConfig.chatPositions[position],
           chatConfig.dimensions[size],
           isOpen ? chatConfig.states.open : chatConfig.states.closed,
@@ -73,13 +143,14 @@ const ExpandableChat: React.FC<ExpandableChatProps> = ({
           variant="ghost"
           size="icon"
           className="absolute top-2 right-2 sm:hidden"
-          onClick={toggleChat}
+          onClick={closeChat}
           aria-label="Close portfolio assistant"
         >
           <X className="h-4 w-4" />
         </Button>
       </div>
       <ExpandableChatToggle
+        buttonRef={toggleRef}
         icon={icon}
         isOpen={isOpen}
         toggleChat={toggleChat}
@@ -88,37 +159,38 @@ const ExpandableChat: React.FC<ExpandableChatProps> = ({
   );
 };
 
-ExpandableChat.displayName = "ExpandableChat";
+ExpandableChat.displayName = 'ExpandableChat';
 
 const ExpandableChatHeader: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   className,
   ...props
 }) => (
   <div
-    className={cn("flex items-center justify-between p-4 border-b", className)}
+    className={cn('flex items-center justify-between border-b p-4', className)}
     {...props}
   />
 );
 
-ExpandableChatHeader.displayName = "ExpandableChatHeader";
+ExpandableChatHeader.displayName = 'ExpandableChatHeader';
 
 const ExpandableChatBody: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   className,
   ...props
-}) => <div className={cn("flex-grow overflow-y-auto", className)} {...props} />;
+}) => <div className={cn('flex-grow overflow-y-auto', className)} {...props} />;
 
-ExpandableChatBody.displayName = "ExpandableChatBody";
+ExpandableChatBody.displayName = 'ExpandableChatBody';
 
 const ExpandableChatFooter: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   className,
   ...props
-}) => <div className={cn("border-t p-4", className)} {...props} />;
+}) => <div className={cn('border-t p-4', className)} {...props} />;
 
-ExpandableChatFooter.displayName = "ExpandableChatFooter";
+ExpandableChatFooter.displayName = 'ExpandableChatFooter';
 
 interface ExpandableChatToggleProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: React.ReactNode;
+  buttonRef?: React.Ref<HTMLButtonElement>;
   isOpen: boolean;
   toggleChat: () => void;
 }
@@ -126,17 +198,22 @@ interface ExpandableChatToggleProps
 const ExpandableChatToggle: React.FC<ExpandableChatToggleProps> = ({
   className,
   icon,
+  buttonRef,
   isOpen,
   toggleChat,
   ...props
 }) => (
   <Button
+    ref={buttonRef}
     variant="default"
     onClick={toggleChat}
-    aria-label={isOpen ? "Close portfolio assistant" : "Open portfolio assistant"}
+    aria-label={
+      isOpen ? 'Close portfolio assistant' : 'Open portfolio assistant'
+    }
+    aria-controls="portfolio-assistant-dialog"
     aria-expanded={isOpen}
     className={cn(
-      "flex size-11 items-center justify-center transition-colors",
+      'flex size-11 items-center justify-center transition-colors',
       className,
     )}
     {...props}
@@ -149,7 +226,7 @@ const ExpandableChatToggle: React.FC<ExpandableChatToggleProps> = ({
   </Button>
 );
 
-ExpandableChatToggle.displayName = "ExpandableChatToggle";
+ExpandableChatToggle.displayName = 'ExpandableChatToggle';
 
 export {
   ExpandableChat,

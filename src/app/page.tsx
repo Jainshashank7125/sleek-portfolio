@@ -9,9 +9,9 @@ import React from 'react';
 
 export default function Page() {
   return (
-    <main className="min-h-screen overflow-x-clip">
+    <div className="min-h-screen overflow-x-clip">
       <Container>
-        <div className="grid border-b border-border lg:grid-cols-[minmax(0,1.62fr)_minmax(22rem,0.92fr)]">
+        <div className="border-border grid border-b lg:grid-cols-[minmax(0,1.62fr)_minmax(22rem,0.92fr)]">
           <Hero />
           <ProofPanel />
         </div>
@@ -20,6 +20,6 @@ export default function Page() {
       <Experience />
       <Writing />
       <About />
-    </main>
+    </div>
   );
 }

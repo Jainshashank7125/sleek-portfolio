@@ -51,14 +51,16 @@ export const siteConfig = {
 export const pageMetadata: Record<string, PageMeta> = {
   // Home page
   '/': {
-    title: `${heroConfig.name} - ${heroConfig.title}`,
-    description: `${about.description} Explore my projects, experience, and technical expertise.`,
+    title: `${heroConfig.name} — Systems Field Notes`,
+    description:
+      'Product-oriented full-stack engineering across healthcare workflows, backend architecture, data, integrations, and cloud infrastructure.',
     keywords: [
       'portfolio',
       'developer',
       'full-stack',
-      'web development',
-      'projects',
+      'healthcare engineering',
+      'revenue cycle management',
+      'production systems',
     ],
     ogImage: '/meta/hero.png',
     twitterCard: 'summary_large_image',
@@ -66,9 +68,9 @@ export const pageMetadata: Record<string, PageMeta> = {
 
   // Contact page
   '/contact': {
-    title: 'Contact - Get in Touch',
+    title: 'Contact — Start a Conversation',
     description:
-      "Get in touch with me for collaborations, projects, or opportunities. I'd love to hear from you!",
+      'Contact Shashank Jain about product engineering roles and collaborations across backend, full-stack, cloud, and production systems.',
     keywords: ['contact', 'hire', 'collaboration', 'freelance', 'developer'],
     ogImage: '/meta/contact.png',
     twitterCard: 'summary_large_image',
@@ -76,9 +78,9 @@ export const pageMetadata: Record<string, PageMeta> = {
 
   // Work Experience page
   '/work-experience': {
-    title: 'Work Experience - Professional Journey',
+    title: 'Experience — Career Timeline',
     description:
-      'Explore my professional work experience across different companies and roles in software development.',
+      'A career timeline spanning healthcare, AI products, enterprise software, mobile applications, and cloud platforms.',
     keywords: [
       'work experience',
       'career',
@@ -124,8 +126,8 @@ export const pageMetadata: Record<string, PageMeta> = {
 
   // Resume page
   '/resume': {
-    title: 'Resume - Professional CV',
-    description: `View and download ${heroConfig.name}'s professional resume and CV. Technical skills, experience, and qualifications.`,
+    title: 'Résumé — Shashank Jain',
+    description: `View ${heroConfig.name}'s résumé covering product engineering, healthcare systems, backend architecture, and cloud infrastructure.`,
     keywords: [
       'resume',
       'cv',
@@ -140,9 +142,9 @@ export const pageMetadata: Record<string, PageMeta> = {
 
   // Gears page
   '/gears': {
-    title: 'Gears - My Setup & Tools',
+    title: 'Tools — Hardware and Software',
     description:
-      'Discover the tools, devices, and software I use to get my work done efficiently.',
+      'The devices, software, and browser extensions behind my day-to-day engineering work.',
     keywords: [
       'setup',
       'tools',
@@ -157,7 +159,7 @@ export const pageMetadata: Record<string, PageMeta> = {
 
   // Setup page
   '/setup': {
-    title: 'Setup Guide - VS Code Configuration',
+    title: 'Setup Guide — VS Code Configuration',
     description:
       'Complete guide to setting up VS Code with my preferred configuration, extensions, and fonts for optimal development.',
     keywords: [
