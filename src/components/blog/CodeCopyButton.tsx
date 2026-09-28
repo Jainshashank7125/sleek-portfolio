@@ -1,10 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-
-import Copied from '../svgs/Copied';
-import Copy from '../svgs/Copy';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { Check, Copy } from '@phosphor-icons/react';
+import { useEffect, useRef, useState } from 'react';
 
 interface CodeCopyButtonProps {
   code: string;
@@ -12,38 +9,39 @@ interface CodeCopyButtonProps {
 
 export function CodeCopyButton({ code }: CodeCopyButtonProps) {
   const [isCopied, setIsCopied] = useState(false);
+  const resetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(
+    () => () => {
+      if (resetTimer.current) clearTimeout(resetTimer.current);
+    },
+    [],
+  );
 
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(code);
       setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 2000); // Reset after 2 seconds
-    } catch (err) {
-      console.error('Failed to copy text: ', err);
+      if (resetTimer.current) clearTimeout(resetTimer.current);
+      resetTimer.current = setTimeout(() => setIsCopied(false), 2000);
+    } catch (error) {
+      console.error('Failed to copy code', error);
     }
   };
 
   return (
-    <form
-      action={copyToClipboard}
-      className="absolute top-3 right-3 rounded-md opacity-0 transition-all duration-200 group-hover:opacity-100 hover:cursor-pointer"
-      title={isCopied ? 'Copied!' : 'Copy code'}
+    <button
+      type="button"
+      onClick={copyToClipboard}
+      aria-label={isCopied ? 'Code copied' : 'Copy code'}
+      className="absolute top-3 right-3 inline-flex min-h-11 items-center gap-2 border border-white/25 bg-[#15191f] px-3 font-mono text-[0.65rem] tracking-[0.08em] text-white uppercase opacity-100 transition-colors hover:border-white focus-visible:opacity-100 sm:opacity-0 sm:group-focus-within:opacity-100 sm:group-hover:opacity-100"
     >
       {isCopied ? (
-        <Tooltip>
-          <TooltipTrigger className="cursor-pointer">
-            <Copied className="h-4 w-4 text-green-500" />
-          </TooltipTrigger>
-          <TooltipContent>Copied to clipboard!</TooltipContent>
-        </Tooltip>
+        <Check className="size-4" aria-hidden="true" />
       ) : (
-        <Tooltip>
-          <TooltipTrigger className="cursor-pointer">
-            <Copy className="h-4 w-4 text-secondary" />
-          </TooltipTrigger>
-          <TooltipContent>Copy to clipboard</TooltipContent>
-        </Tooltip>
+        <Copy className="size-4" aria-hidden="true" />
       )}
-    </form>
+      {isCopied ? 'Copied' : 'Copy'}
+    </button>
   );
 }

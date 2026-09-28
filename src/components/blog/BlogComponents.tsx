@@ -19,7 +19,7 @@ export const BlogComponents = {
       alt={alt}
       width={800}
       height={400}
-      className="rounded-lg"
+      className="border-border my-10 border"
       {...props}
     />
   ),
@@ -31,7 +31,7 @@ export const BlogComponents = {
     children: React.ReactNode;
     [key: string]: unknown;
   }) => (
-    <h1 className="mb-6 text-4xl font-bold" {...props}>
+    <h1 className="font-editorial mb-6 text-4xl tracking-[-0.035em]" {...props}>
       {children}
     </h1>
   ),
@@ -42,7 +42,10 @@ export const BlogComponents = {
     children: React.ReactNode;
     [key: string]: unknown;
   }) => (
-    <h2 className="mb-4 mt-8 text-3xl font-semibold" {...props}>
+    <h2
+      className="font-editorial border-border mt-14 mb-5 border-t pt-7 text-3xl tracking-[-0.035em]"
+      {...props}
+    >
       {children}
     </h2>
   ),
@@ -53,7 +56,10 @@ export const BlogComponents = {
     children: React.ReactNode;
     [key: string]: unknown;
   }) => (
-    <h3 className="mb-3 mt-6 text-2xl font-medium" {...props}>
+    <h3
+      className="font-editorial mt-9 mb-4 text-2xl tracking-[-0.025em]"
+      {...props}
+    >
       {children}
     </h3>
   ),
@@ -65,7 +71,10 @@ export const BlogComponents = {
     children: React.ReactNode;
     [key: string]: unknown;
   }) => (
-    <p className="mb-4 leading-7 text-muted-foreground" {...props}>
+    <p
+      className="text-muted-foreground mb-5 text-[1.04rem] leading-8"
+      {...props}
+    >
       {children}
     </p>
   ),
@@ -77,7 +86,10 @@ export const BlogComponents = {
     children: React.ReactNode;
     [key: string]: unknown;
   }) => (
-    <ul className="mb-4 ml-6 list-disc space-y-2" {...props}>
+    <ul
+      className="mb-6 ml-5 list-disc space-y-3 marker:text-[var(--field-red)]"
+      {...props}
+    >
       {children}
     </ul>
   ),
@@ -88,7 +100,10 @@ export const BlogComponents = {
     children: React.ReactNode;
     [key: string]: unknown;
   }) => (
-    <ol className="mb-4 ml-6 list-decimal space-y-2" {...props}>
+    <ol
+      className="marker:text-brand mb-6 ml-5 list-decimal space-y-3"
+      {...props}
+    >
       {children}
     </ol>
   ),
@@ -99,7 +114,7 @@ export const BlogComponents = {
     children: React.ReactNode;
     [key: string]: unknown;
   }) => (
-    <li className="leading-7 text-muted-foreground" {...props}>
+    <li className="text-muted-foreground pl-1 leading-7" {...props}>
       {children}
     </li>
   ),
@@ -135,9 +150,9 @@ export const BlogComponents = {
     const codeText = getTextContent(children);
 
     return (
-      <div className="group relative mb-4">
+      <div className="group relative my-8">
         <pre
-          className="overflow-x-auto rounded-lg border bg-muted/30 p-4 text-sm [&>code]:bg-transparent [&>code]:p-0"
+          className="border-border overflow-x-auto border bg-[#15191f] p-5 text-sm text-[#eef1f4] [&>code]:bg-transparent [&>code]:p-0"
           {...props}
         >
           {children}
@@ -167,7 +182,10 @@ export const BlogComponents = {
 
     // Inline code styling
     return (
-      <code className="rounded px-2 py-1 text-sm font-mono" {...props}>
+      <code
+        className="border-border bg-muted border px-1.5 py-0.5 font-mono text-sm"
+        {...props}
+      >
         {children}
       </code>
     );
@@ -181,7 +199,7 @@ export const BlogComponents = {
     [key: string]: unknown;
   }) => (
     <blockquote
-      className="mb-4 border-l-4 border-primary pl-4 italic text-muted-foreground"
+      className="font-editorial text-muted-foreground my-8 border-l-2 border-[var(--field-red)] py-1 pl-5 text-xl leading-relaxed italic"
       {...props}
     >
       {children}

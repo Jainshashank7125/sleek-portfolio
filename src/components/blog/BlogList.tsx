@@ -5,24 +5,29 @@ import { BlogCard } from './BlogCard';
 interface BlogListProps {
   posts: BlogPostPreview[];
   className?: string;
+  startIndex?: number;
 }
 
-export function BlogList({ posts, className = '' }: BlogListProps) {
+export function BlogList({
+  posts,
+  className = '',
+  startIndex = 1,
+}: BlogListProps) {
   if (posts.length === 0) {
     return (
-      <div className="flex min-h-[400px] flex-col items-center justify-center space-y-4 text-center">
-        <h2 className="text-2xl font-semibold">No blog posts found</h2>
-        <p className="text-muted-foreground">
-          Check back later for new content!
+      <div className="border-border border-y py-12">
+        <h2 className="font-editorial text-2xl">No published notes yet.</h2>
+        <p className="text-muted-foreground mt-2">
+          New field notes will appear here as they are ready.
         </p>
       </div>
     );
   }
 
   return (
-    <div className={`grid gap-6 md:grid-cols-2 lg:grid-cols-2 ${className}`}>
-      {posts.map((post) => (
-        <BlogCard key={post.slug} post={post} />
+    <div className={className}>
+      {posts.map((post, offset) => (
+        <BlogCard key={post.slug} post={post} index={startIndex + offset} />
       ))}
     </div>
   );

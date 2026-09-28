@@ -1,29 +1,30 @@
 import Container from '@/components/common/Container';
 import { ExperienceList } from '@/components/experience/ExperienceList';
-import { generateMetadata as getMetadata } from '@/config/Meta';
+import { EditorialPageHeader } from '@/components/field-notes/EditorialPageHeader';
+import { RuledSection } from '@/components/field-notes/RuledSection';
+import { SectionLabel } from '@/components/field-notes/SectionLabel';
 import { experiences } from '@/config/Experience';
+import { generateMetadata as getMetadata } from '@/config/Meta';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = getMetadata('/work-experience');
 
 export default function WorkExperiencePage() {
   return (
-    <Container className="max-w-5xl py-16">
-      <div className="space-y-10">
-        {/* Header */}
-        <div className="flex flex-col gap-3">
-          <p className="eyebrow">Career</p>
-          <h1 className="text-4xl font-bold tracking-tight lg:text-5xl">
-            Work Experience
-          </h1>
-          <p className="max-w-2xl text-lg text-muted-foreground">
-            Roles where I&apos;ve designed, built, and shipped production
-            systems — from enterprise SaaS to AI platforms.
-          </p>
-        </div>
+    <Container>
+      <EditorialPageHeader
+        index="01"
+        eyebrow="Career timeline"
+        title="Roles shaped by the systems behind them."
+        description="A career across healthcare, AI products, enterprise software, mobile applications, and cloud platforms—with increasing ownership from implementation through production operation."
+      />
 
-        <ExperienceList experiences={experiences} />
-      </div>
+      <RuledSection>
+        <SectionLabel index="02">Experience</SectionLabel>
+        <div className="mt-8">
+          <ExperienceList experiences={experiences} />
+        </div>
+      </RuledSection>
     </Container>
   );
 }

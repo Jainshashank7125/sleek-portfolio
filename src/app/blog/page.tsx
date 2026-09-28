@@ -1,5 +1,8 @@
 import { BlogList } from '@/components/blog/BlogList';
 import Container from '@/components/common/Container';
+import { EditorialPageHeader } from '@/components/field-notes/EditorialPageHeader';
+import { RuledSection } from '@/components/field-notes/RuledSection';
+import { SectionLabel } from '@/components/field-notes/SectionLabel';
 import { generateMetadata as getMetadata } from '@/config/Meta';
 import { getAllTags, getPublishedBlogPosts } from '@/lib/blog';
 import { Metadata } from 'next';
@@ -28,40 +31,42 @@ export default function BlogPage() {
   const tags = getAllTags();
 
   return (
-    <Container className="max-w-5xl py-16">
-      {/* Header — consistent with other page headers */}
-      <div className="flex flex-col gap-2">
-        <p className="eyebrow">Technical writing</p>
-        <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
-          Writing
-        </h1>
-        <p className="mt-1 max-w-2xl text-muted-foreground">
-          Deep-dives on backend systems, distributed architectures, AI
-          engineering, and the tradeoffs behind real production decisions.
-        </p>
-      </div>
+    <Container>
+      <EditorialPageHeader
+        index="01"
+        eyebrow="Technical writing"
+        title="Notes from the work."
+        description="Long-form explanations of backend systems, distributed workflows, data infrastructure, and the tradeoffs behind production engineering decisions."
+      />
 
-      {/* Tags */}
-      {tags.length > 0 && (
-        <div className="mt-8 flex flex-wrap gap-2">
-          {tags.map((tag) => (
-            <span key={tag} className="tech-chip capitalize">
-              {tag}
-            </span>
-          ))}
-        </div>
-      )}
+      <RuledSection>
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <SectionLabel index="02">Published notes</SectionLabel>
+            <p className="font-editorial text-muted-foreground mt-6 text-2xl">
+              {posts.length} {posts.length === 1 ? 'essay' : 'essays'} and
+              growing.
+            </p>
+          </div>
 
-      {/* Posts */}
-      <div className="mt-10">
-        <div className="mb-6 flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
-            <span className="metric-value">{posts.length}</span>{' '}
-            {posts.length === 1 ? 'post' : 'posts'}
-          </p>
+          {tags.length > 0 && (
+            <ul
+              className="flex max-w-3xl flex-wrap gap-1.5"
+              aria-label="Topics"
+            >
+              {tags.map((tag) => (
+                <li key={tag} className="tech-chip capitalize">
+                  {tag}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-        <BlogList posts={posts} />
-      </div>
+
+        <div className="mt-9">
+          <BlogList posts={posts} />
+        </div>
+      </RuledSection>
     </Container>
   );
 }
