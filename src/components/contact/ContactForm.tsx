@@ -44,6 +44,9 @@ type ContactFormValues = z.infer<typeof contactFormSchema>;
 
 export default function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionState, setSubmissionState] = useState<
+    'idle' | 'success' | 'error'
+  >('idle');
 
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
@@ -57,6 +60,7 @@ export default function ContactForm() {
 
   const onSubmit = async (data: ContactFormValues) => {
     setIsSubmitting(true);
+    setSubmissionState('idle');
 
     try {
       const response = await fetch('/api/contact', {
@@ -71,14 +75,17 @@ export default function ContactForm() {
 
       if (response.ok) {
         toast.success('Message sent successfully!');
+        setSubmissionState('success');
         form.reset();
       } else {
+        setSubmissionState('error');
         toast.error(
           result.error || 'Failed to send message. Please try again.',
         );
       }
     } catch (error) {
       console.error('Error submitting form:', error);
+      setSubmissionState('error');
       toast.error('Something went wrong. Please try again later.');
     } finally {
       setIsSubmitting(false);
@@ -87,9 +94,9 @@ export default function ContactForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div
-          className="pointer-events-none absolute left-[-9999px] top-auto h-px w-px overflow-hidden"
+          className="pointer-events-none absolute top-auto left-[-9999px] h-px w-px overflow-hidden"
           aria-hidden="true"
         >
           <label htmlFor="company">Company</label>
@@ -122,11 +129,7 @@ export default function ContactForm() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="your@email.com"
-                    type="email"
-                    {...field}
-                  />
+                  <Input placeholder="your@email.com" type="email" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -152,7 +155,11 @@ export default function ContactForm() {
           )}
         />
 
-        <Button type="submit" className="w-fit" disabled={isSubmitting}>
+        <Button
+          type="submit"
+          className="min-h-12 w-fit rounded-none px-6"
+          disabled={isSubmitting}
+        >
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -165,6 +172,19 @@ export default function ContactForm() {
             </>
           )}
         </Button>
+
+        <div aria-live="polite" className="min-h-6 text-sm">
+          {submissionState === 'success' && (
+            <p className="text-brand">
+              Message sent. I’ll get back to you soon.
+            </p>
+          )}
+          {submissionState === 'error' && (
+            <p className="text-destructive">
+              The message could not be sent. You can still reach me by email.
+            </p>
+          )}
+        </div>
       </form>
     </Form>
   );
