@@ -1,7 +1,6 @@
 import ChatBubble from '@/components/common/ChatBubble';
 import Footer from '@/components/common/Footer';
 import Navbar from '@/components/common/Navbar';
-import { Quote } from '@/components/common/Quote';
 import { Toaster } from '@/components/ui/sonner';
 import { siteConfig, generateMetadata as getMetadata } from '@/config/Meta';
 import { SmoothScroll } from '@/lib/lenis';
@@ -54,7 +53,6 @@ export default function RootLayout({
           <SmoothScroll>
             <Navbar />
             <div id="main-content">{children}</div>
-            <Quote />
             <Footer />
             <ChatBubble />
             <Toaster />

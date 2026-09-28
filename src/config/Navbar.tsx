@@ -4,11 +4,9 @@ export interface NavItem {
 }
 
 export const navbarConfig = {
-  logo: {
-    src: '/assets/logo.png',
-    alt: 'logo',
-    width: 100,
-    height: 100,
+  home: {
+    label: 'Shashank Jain — Systems Field Notes',
+    href: '/',
   },
   navItems: [
     {

@@ -57,8 +57,11 @@ const ExpandableChat: React.FC<ExpandableChatProps> = ({
     >
       <div
         ref={chatRef}
+        role="dialog"
+        aria-label="Portfolio assistant"
+        aria-hidden={!isOpen}
         className={cn(
-          "flex flex-col bg-background border sm:rounded-lg shadow-md overflow-hidden transition-all duration-250 ease-out sm:absolute sm:w-[90vw] sm:h-[80vh] fixed inset-0 w-full h-full sm:inset-auto",
+          "fixed inset-0 flex h-full w-full flex-col overflow-hidden border bg-background transition-all duration-200 ease-out sm:absolute sm:inset-auto sm:h-[80vh] sm:w-[90vw]",
           chatConfig.chatPositions[position],
           chatConfig.dimensions[size],
           isOpen ? chatConfig.states.open : chatConfig.states.closed,
@@ -71,6 +74,7 @@ const ExpandableChat: React.FC<ExpandableChatProps> = ({
           size="icon"
           className="absolute top-2 right-2 sm:hidden"
           onClick={toggleChat}
+          aria-label="Close portfolio assistant"
         >
           <X className="h-4 w-4" />
         </Button>
@@ -129,8 +133,10 @@ const ExpandableChatToggle: React.FC<ExpandableChatToggleProps> = ({
   <Button
     variant="default"
     onClick={toggleChat}
+    aria-label={isOpen ? "Close portfolio assistant" : "Open portfolio assistant"}
+    aria-expanded={isOpen}
     className={cn(
-      "w-14 h-14 rounded-full shadow-md flex items-center justify-center hover:shadow-lg hover:shadow-black/30 transition-all duration-300",
+      "flex size-11 items-center justify-center transition-colors",
       className,
     )}
     {...props}
