@@ -1,0 +1,79 @@
+---
+title: 'Healthcare Claims Automation Platform'
+category: 'Healthcare revenue cycle'
+description: 'A revenue-cycle platform that turns incoming claim files into validated, classified, and traceable work through asynchronous processing and healthcare integrations.'
+problem: 'Make imperfect claim data operationally useful while payer rules change and important state lives in external systems.'
+outcome: 'A traceable workflow from claim intake to operational follow-up.'
+technologies:
+  ['Python', 'Django', 'Celery', 'PostgreSQL', 'React', 'Stedi', 'AWS']
+github: ''
+live: ''
+image: ''
+timeline: 'Ongoing product work'
+role: 'Full-stack and production engineering'
+team: 'Cross-functional product team'
+status: 'in-progress'
+featured: true
+confidential: true
+challenges:
+  [
+    'Normalizing imperfect claim data without hiding the original source',
+    'Coordinating internal state with external clearinghouse workflows',
+    'Making background work observable to both engineers and operators',
+  ]
+learnings:
+  [
+    'Healthcare automation needs traceability as much as throughput',
+    'Explicit workflow states make recovery and support work safer',
+    'Business rules belong behind clear boundaries and audit-friendly decisions',
+  ]
+isPublished: true
+---
+
+## Context
+
+Revenue-cycle work crosses product, data, and operations. A claim begins as a collection of clinical and billing facts, passes through validation and business rules, and then moves into external systems whose responses arrive on their own schedule.
+
+My work has focused on turning that distributed process into a system people can understand and operate. The goal is not simply to submit a claim; it is to preserve a clear trail from the source data through every decision, integration, and follow-up state.
+
+## Workflow and architecture
+
+The platform separates immediate request handling from background work. Incoming files and records are validated at the boundary, normalized into a consistent internal model, and handed to asynchronous workers for classification, rule evaluation, and external communication.
+
+```text
+Claim input
+    ↓
+Validation and normalization
+    ↓
+Asynchronous processing
+    ├── Business-rule evaluation
+    ├── Clearinghouse communication
+    └── Status reconciliation
+    ↓
+Traceable operational work queue
+```
+
+PostgreSQL holds durable workflow state. Celery workers perform long-running or retryable work. The React interface exposes the state an operator needs without requiring them to understand the implementation behind it.
+
+## Engineering decisions
+
+- **Keep the source visible.** Normalized fields improve consistency, but the original input remains available for investigation and audit context.
+- **Model the workflow explicitly.** Claim progress is represented through meaningful states rather than inferred from scattered timestamps or side effects.
+- **Put changing rules behind boundaries.** Validation and payer-specific decisions can evolve without rewriting the entire intake path.
+- **Treat integrations as unreliable by default.** External success, delay, duplicate delivery, and partial failure are all normal workflow conditions.
+
+## Recovery and operability
+
+Background jobs are designed to be safe to retry, and important transitions are recorded before work moves to the next stage. Errors retain enough context to explain what failed and what can happen next.
+
+Operational views favor actionable states: work that needs attention, work waiting on an external response, and work that is safe to resume. This makes support and engineering investigation part of the system design instead of an afterthought.
+
+## Tradeoffs
+
+Explicit state and audit context add more modeling than a simple submit-and-forget integration. That cost is worthwhile because revenue-cycle workflows are long-lived, externally dependent, and often reviewed after the original request has finished.
+
+Asynchronous processing also introduces queues and eventual consistency. In return, the user-facing application stays responsive and transient external failures can be recovered without asking someone to restart the whole process.
+
+## What I learned
+
+The most valuable automation is not the one with the fewest human touchpoints. It is the one that gives people a reliable explanation of what happened, what the system decided, and what needs attention next.

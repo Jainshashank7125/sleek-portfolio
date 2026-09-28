@@ -1,14 +1,10 @@
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
+import { SectionLabel } from '@/components/field-notes/SectionLabel';
 import { ProjectCaseStudyFrontmatter } from '@/types/project';
+import { ArrowUpRight, LockSimple } from '@phosphor-icons/react/dist/ssr';
 import rehypeHighlight from '@shikijs/rehype';
 import { MDXRemote } from 'next-mdx-remote/rsc';
-import { Link } from 'next-view-transitions';
 import Image from 'next/image';
 
-import Github from '../svgs/Github';
-import Website from '../svgs/Website';
 import { ProjectComponents } from './ProjectComponents';
 
 interface ProjectContentProps {
@@ -17,201 +13,174 @@ interface ProjectContentProps {
 }
 
 export function ProjectContent({ frontmatter, content }: ProjectContentProps) {
-  const {
-    title,
-    category,
-    description,
-    problem,
-    image,
-    technologies,
-    github,
-    live,
-    timeline,
-    role,
-    team,
-    status,
-    confidential,
-    challenges,
-    learnings,
-  } = frontmatter;
-
-  const statusVariant =
-    status === 'completed'
-      ? 'default'
-      : status === 'in-progress'
-        ? 'secondary'
-        : 'outline';
-  const statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
+  const statusLabel = frontmatter.status.replace('-', ' ');
 
   return (
-    <article className="mx-auto max-w-4xl">
-      <header className="mb-10 space-y-6">
-        {/* Banner */}
-        <div className="relative flex aspect-[16/6] items-end overflow-hidden rounded-xl border border-border bg-card">
-          {image ? (
-            <Image src={image} alt={title} fill className="object-cover" priority />
-          ) : (
-            <>
-              <div className="absolute inset-0 bg-dot-grid opacity-60" />
-              <div className="absolute inset-x-0 top-0 h-40 bg-brand-glow" />
-              <div className="relative p-6">
-                {category && <p className="eyebrow">{category}</p>}
-                <p className="metric-value mt-2 text-xl font-semibold tracking-tight md:text-2xl">
-                  {title}
-                </p>
-              </div>
-            </>
-          )}
-        </div>
+    <article>
+      <header className="pb-14 sm:pb-20">
+        <SectionLabel index="02">
+          {frontmatter.category || 'Case study'}
+        </SectionLabel>
 
-        <div className="space-y-4">
-          <div className="flex flex-wrap items-center gap-3">
-            <Badge variant={statusVariant} className="text-sm">
-              {statusLabel}
-            </Badge>
-            {category && (
-              <Badge variant="outline" className="text-xs">
-                {category}
-              </Badge>
-            )}
-          </div>
-
-          <h1 className="text-4xl font-bold leading-tight tracking-tight lg:text-5xl">
-            {title}
-          </h1>
-
-          <p className="text-xl text-muted-foreground">{description}</p>
-
-          {/* Problem callout */}
-          {problem && (
-            <div className="rounded-lg border border-border bg-brand-muted p-4">
-              <p className="eyebrow">The problem</p>
-              <p className="mt-1.5 text-sm leading-relaxed">{problem}</p>
-            </div>
-          )}
-
-          {/* Meta */}
-          <div className="grid gap-4 rounded-lg border border-border bg-muted/20 p-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Meta label="Timeline" value={timeline} />
-            <Meta label="Role" value={role} />
-            {team && <Meta label="Team" value={team} />}
-            <div>
-              <h5 className="text-xs font-medium text-muted-foreground">
-                Status
-              </h5>
-              <Badge variant={statusVariant} className="mt-1 text-xs">
-                {statusLabel}
-              </Badge>
-            </div>
-          </div>
-
-          {/* Links (only when present) */}
-          {(live || github) && (
-            <div className="flex flex-wrap gap-3">
-              {live && (
-                <Button asChild>
-                  <Link
-                    href={live}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2"
-                  >
-                    <Website className="size-4" />
-                    Live
-                  </Link>
-                </Button>
-              )}
-              {github && (
-                <Button variant="outline" asChild>
-                  <Link
-                    href={github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2"
-                  >
-                    <Github className="size-4" />
-                    Source Code
-                  </Link>
-                </Button>
-              )}
-            </div>
-          )}
-
-          {confidential && (
-            <p className="text-xs text-muted-foreground">
-              This is professional work shared at a high level — architecture,
-              decisions, and outcomes without proprietary detail or links.
+        <div className="mt-8 grid gap-10 xl:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.55fr)] xl:items-end">
+          <div>
+            <h1 className="editorial-page-title max-w-5xl">
+              {frontmatter.title}
+            </h1>
+            <p className="text-muted-foreground mt-7 max-w-3xl text-xl leading-relaxed">
+              {frontmatter.description}
             </p>
+          </div>
+
+          <dl className="border-border grid border-t sm:grid-cols-2 xl:grid-cols-1">
+            <Meta label="Timeline" value={frontmatter.timeline} />
+            <Meta label="Role" value={frontmatter.role} />
+            {frontmatter.team && <Meta label="Team" value={frontmatter.team} />}
+            <Meta label="Status" value={statusLabel} />
+          </dl>
+        </div>
+
+        {frontmatter.problem && (
+          <div className="border-border mt-10 grid gap-3 border-y py-6 md:grid-cols-[10rem_minmax(0,1fr)] md:gap-8">
+            <p className="eyebrow">The problem</p>
+            <p className="font-editorial text-foreground max-w-4xl text-2xl leading-snug">
+              {frontmatter.problem}
+            </p>
+          </div>
+        )}
+
+        {frontmatter.image && (
+          <div className="border-border bg-card relative mt-10 aspect-[16/7] overflow-hidden border">
+            <Image
+              src={frontmatter.image}
+              alt=""
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+        )}
+
+        <div className="border-border mt-8 flex flex-col gap-6 border-b pb-8 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p className="eyebrow">Working stack</p>
+            <ul
+              className="mt-3 flex flex-wrap gap-1.5"
+              aria-label="Technology stack"
+            >
+              {frontmatter.technologies.map((technology) => (
+                <li key={technology} className="tech-chip">
+                  {technology}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {(frontmatter.live || frontmatter.github) && (
+            <div className="flex flex-wrap gap-5">
+              {frontmatter.live && (
+                <ExternalLink href={frontmatter.live}>View live</ExternalLink>
+              )}
+              {frontmatter.github && (
+                <ExternalLink href={frontmatter.github}>
+                  View source
+                </ExternalLink>
+              )}
+            </div>
           )}
         </div>
 
-        <Separator />
+        {frontmatter.confidential && (
+          <p className="text-muted-foreground mt-5 inline-flex items-start gap-2 text-sm leading-relaxed">
+            <LockSimple className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+            Professional work shared at a high level: architecture, decisions,
+            and outcomes without proprietary product or client detail.
+          </p>
+        )}
       </header>
 
-      {/* Tech stack */}
-      <div className="mb-10">
-        <p className="eyebrow mb-3">Stack</p>
-        <div className="flex flex-wrap gap-1.5">
-          {technologies.map((tech) => (
-            <span key={tech} className="tech-chip">
-              {tech}
-            </span>
-          ))}
+      <div className="mx-auto max-w-4xl">
+        <div className="field-notes-prose">
+          <MDXRemote
+            source={content}
+            components={ProjectComponents}
+            options={{
+              mdxOptions: {
+                rehypePlugins: [[rehypeHighlight, { theme: 'github-dark' }]],
+              },
+            }}
+          />
         </div>
-      </div>
 
-      {/* Content */}
-      <div className="prose prose-neutral max-w-none dark:prose-invert prose-headings:tracking-tight prose-pre:rounded-lg prose-pre:border prose-pre:border-border">
-        <MDXRemote
-          source={content}
-          components={ProjectComponents}
-          options={{
-            mdxOptions: {
-              rehypePlugins: [[rehypeHighlight, { theme: 'github-dark' }]],
-            },
-          }}
-        />
+        {(frontmatter.challenges?.length || frontmatter.learnings?.length) && (
+          <div className="border-border mt-16 grid border-y md:grid-cols-2">
+            {frontmatter.challenges && frontmatter.challenges.length > 0 && (
+              <ListNote
+                title="Design constraints"
+                items={frontmatter.challenges}
+              />
+            )}
+            {frontmatter.learnings && frontmatter.learnings.length > 0 && (
+              <ListNote
+                title="What I took away"
+                items={frontmatter.learnings}
+              />
+            )}
+          </div>
+        )}
       </div>
-
-      {/* Challenges & learnings */}
-      {(challenges?.length || learnings?.length) && (
-        <div className="mt-10 grid gap-6 md:grid-cols-2">
-          {challenges && challenges.length > 0 && (
-            <ListCard title="Key Challenges" items={challenges} />
-          )}
-          {learnings && learnings.length > 0 && (
-            <ListCard title="What I Took Away" items={learnings} />
-          )}
-        </div>
-      )}
     </article>
   );
 }
 
 function Meta({ label, value }: { label: string; value: string }) {
   return (
-    <div>
-      <h5 className="text-xs font-medium text-muted-foreground">{label}</h5>
-      <p className="mt-1 text-sm">{value}</p>
+    <div className="border-border border-b py-4 sm:px-5 sm:first:pl-0 xl:px-0">
+      <dt className="text-brand font-mono text-[0.65rem] tracking-[0.11em] uppercase">
+        {label}
+      </dt>
+      <dd className="text-foreground mt-1 text-sm capitalize">{value}</dd>
     </div>
   );
 }
 
-function ListCard({ title, items }: { title: string; items: string[] }) {
+function ExternalLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
   return (
-    <div className="rounded-lg border border-border bg-card p-5">
-      <h3 className="mb-3 text-base font-semibold tracking-tight">{title}</h3>
-      <ul className="space-y-2.5">
-        {items.map((item, index) => (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-brand hover:text-foreground inline-flex min-h-11 items-center gap-2 text-sm font-semibold"
+    >
+      {children}
+      <ArrowUpRight className="size-4" aria-hidden="true" />
+    </a>
+  );
+}
+
+function ListNote({ title, items }: { title: string; items: string[] }) {
+  return (
+    <section className="py-7 md:px-8 md:first:border-r md:first:pl-0 md:last:pr-0">
+      <h2 className="font-editorial text-2xl tracking-[-0.025em]">{title}</h2>
+      <ul className="mt-5 space-y-3">
+        {items.map((item) => (
           <li
-            key={index}
-            className="flex items-start gap-2.5 text-sm text-muted-foreground"
+            key={item}
+            className="text-muted-foreground grid grid-cols-[0.75rem_minmax(0,1fr)] gap-2 text-sm leading-relaxed"
           >
-            <span className="mt-1.5 block size-1.5 shrink-0 rounded-full bg-brand" />
-            {item}
+            <span className="text-[var(--field-red)]" aria-hidden="true">
+              →
+            </span>
+            <span>{item}</span>
           </li>
         ))}
       </ul>
-    </div>
+    </section>
   );
 }

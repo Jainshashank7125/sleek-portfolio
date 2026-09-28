@@ -1,122 +1,109 @@
+import { resolveProjectActions } from '@/lib/project-actions.mjs';
 import { type Project } from '@/types/project';
+import {
+  ArrowRight,
+  ArrowUpRight,
+  LockSimple,
+} from '@phosphor-icons/react/dist/ssr';
 import { Link } from 'next-view-transitions';
 import React from 'react';
 
-import ArrowRight from '../svgs/ArrowRight';
-import Github from '../svgs/Github';
-import Website from '../svgs/Website';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
-
 interface ProjectCardProps {
   project: Project;
+  index: number;
 }
 
-export function ProjectCard({ project }: ProjectCardProps) {
-  const {
-    title,
-    category,
-    description,
-    metric,
-    technologies,
-    github,
-    live,
-    link,
-    details,
-    projectDetailsPageSlug,
-    confidential,
-  } = project;
+interface ProjectAction {
+  kind: 'detail' | 'live' | 'github';
+  label: string;
+  href: string;
+  external: boolean;
+}
 
-  const externalLink = live || link;
+export function ProjectCard({ project, index }: ProjectCardProps) {
+  const actions = resolveProjectActions(project) as ProjectAction[];
 
   return (
-    <div className="card-hover group relative flex h-full flex-col rounded-xl border border-border bg-card p-6">
-      {/* Header */}
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0">
-          {category && <p className="eyebrow">{category}</p>}
-          <h3 className="mt-2 text-lg font-semibold leading-tight tracking-tight">
-            {title}
-          </h3>
-        </div>
-        <div className="flex shrink-0 items-center gap-2">
-          {externalLink && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  className="flex size-5 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
-                  href={externalLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="View live"
-                >
-                  <Website />
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent>Live</TooltipContent>
-            </Tooltip>
-          )}
-          {github && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  className="flex size-5 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
-                  href={github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="View source"
-                >
-                  <Github />
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent>Source</TooltipContent>
-            </Tooltip>
-          )}
-        </div>
+    <article className="group border-border grid gap-6 border-b py-8 first:border-t md:grid-cols-[4.5rem_minmax(0,1fr)] lg:gap-10 lg:py-10">
+      <div className="text-brand font-mono text-[0.68rem] tracking-[0.12em] uppercase">
+        {String(index).padStart(2, '0')}
       </div>
 
-      {/* Description */}
-      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-        {description}
-      </p>
+      <div className="min-w-0">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(15rem,0.55fr)] lg:gap-12">
+          <div>
+            {project.category && <p className="eyebrow">{project.category}</p>}
+            <h3 className="font-editorial mt-3 max-w-3xl text-3xl leading-[1.02] tracking-[-0.035em] text-balance sm:text-4xl">
+              {project.title}
+            </h3>
+            <p className="text-muted-foreground mt-5 max-w-3xl text-base leading-relaxed">
+              {project.description}
+            </p>
+            {project.problem && (
+              <p className="text-muted-foreground mt-4 max-w-3xl border-l border-[var(--field-red)] pl-4 text-sm leading-relaxed">
+                <span className="text-foreground font-semibold">
+                  The problem:{' '}
+                </span>
+                {project.problem}
+              </p>
+            )}
+          </div>
 
-      {/* Headline metric */}
-      {metric && (
-        <p className="metric-value mt-4 inline-block rounded-md bg-brand-muted px-2 py-1 text-xs font-medium text-brand">
-          {metric}
-        </p>
-      )}
-
-      {/* Tech chips */}
-      <div className="mt-4 flex flex-wrap gap-1.5">
-        {technologies.map((tech) => (
-          <span key={tech} className="tech-chip">
-            {tech}
-          </span>
-        ))}
-      </div>
-
-      {/* Footer */}
-      {(details || confidential) && (
-        <div className="mt-auto flex items-center justify-between gap-3 pt-5">
-          {confidential ? (
-            <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-              <span className="size-1.5 rounded-full bg-muted-foreground/50" />
-              Confidential — high-level only
-            </span>
-          ) : (
-            <span />
-          )}
-          {details && projectDetailsPageSlug && (
-            <Link
-              href={projectDetailsPageSlug}
-              className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          <div className="lg:border-border flex flex-col lg:border-l lg:pl-8">
+            {project.metric && (
+              <p className="font-editorial text-foreground text-xl leading-snug">
+                {project.metric}
+              </p>
+            )}
+            <ul
+              className="mt-5 flex flex-wrap gap-1.5"
+              aria-label="Technology stack"
             >
-              Read case study
-              <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-            </Link>
-          )}
+              {project.technologies.map((technology) => (
+                <li key={technology} className="tech-chip">
+                  {technology}
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3 lg:mt-auto lg:pt-8">
+              {actions.map((action) =>
+                action.external ? (
+                  <a
+                    key={`${action.kind}-${action.href}`}
+                    href={action.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-brand hover:text-foreground inline-flex min-h-11 items-center gap-2 text-sm font-semibold"
+                  >
+                    {action.label}
+                    <ArrowUpRight className="size-4" aria-hidden="true" />
+                  </a>
+                ) : (
+                  <Link
+                    key={`${action.kind}-${action.href}`}
+                    href={action.href}
+                    className="text-brand hover:text-foreground inline-flex min-h-11 items-center gap-2 text-sm font-semibold"
+                  >
+                    {action.label}
+                    <ArrowRight
+                      className="size-4 transition-transform group-hover:translate-x-0.5"
+                      aria-hidden="true"
+                    />
+                  </Link>
+                ),
+              )}
+
+              {project.confidential && (
+                <span className="text-muted-foreground inline-flex items-center gap-1.5 font-mono text-[0.65rem] tracking-[0.05em] uppercase">
+                  <LockSimple className="size-3.5" aria-hidden="true" />
+                  High-level only
+                </span>
+              )}
+            </div>
+          </div>
         </div>
-      )}
-    </div>
+      </div>
+    </article>
   );
 }

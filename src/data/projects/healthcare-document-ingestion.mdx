@@ -1,0 +1,78 @@
+---
+title: 'Scaling Healthcare Document Ingestion'
+category: 'Document processing'
+description: 'A redesigned ingestion path for large, mixed-content healthcare documents that avoids unnecessary work while preserving scanned-document support.'
+problem: 'Keep unusually large and varied documents moving through production without turning every page into expensive temporary data.'
+outcome: 'A leaner document path grounded in the content that each file actually contains.'
+technologies: ['Python', 'PyMuPDF', 'OCR', 'Celery', 'Amazon S3', 'PostgreSQL']
+github: ''
+live: ''
+image: ''
+timeline: 'Production optimization'
+role: 'Backend and production engineering'
+team: 'Healthcare platform team'
+status: 'completed'
+featured: true
+confidential: true
+challenges:
+  [
+    'Supporting text, scans, and mixed-content files through one workflow',
+    'Reducing temporary work without losing extraction quality',
+    'Keeping large documents recoverable when a downstream step fails',
+  ]
+learnings:
+  [
+    'Inspecting the document before choosing a path prevents expensive assumptions',
+    'Persisted stage boundaries make long-running pipelines easier to recover',
+    'Production behavior is the best guide for optimization priorities',
+  ]
+isPublished: true
+---
+
+## Context
+
+Healthcare documents arrive in many forms: text-based PDFs, scanned images, and files containing both. The original processing path treated them too similarly, rendering pages even when usable text was already present and carrying temporary artifacts farther through the workflow than necessary.
+
+I redesigned the path around a simpler question: what work does this document actually require?
+
+## Workflow and architecture
+
+The ingestion boundary validates the file and records durable document state. A lightweight inspection step then selects the appropriate extraction strategy. Text-first documents avoid image conversion; scanned or mixed-content pages use OCR only where it contributes useful information.
+
+```text
+Multi-format document
+    ↓
+Validation and content inspection
+    ↓
+Asynchronous document workflow
+    ├── Direct text extraction
+    ├── Selective OCR
+    └── Classification and enrichment
+    ↓
+Structured, traceable data
+```
+
+Object storage holds source documents, while the database records workflow state and extracted references. Queue workers isolate expensive processing from web requests and allow capacity to follow the workload.
+
+## Engineering decisions
+
+- **Inspect before rendering.** The pipeline chooses a processing mode from the document's content instead of assuming every page needs the most expensive path.
+- **Keep source files authoritative.** Derived artifacts are disposable; the original document and durable workflow state are not.
+- **Use selective OCR.** Scanned content still works, but text-bearing pages are not converted merely for consistency.
+- **Separate orchestration from extraction.** Workflow state, storage, and recovery remain understandable even as extraction tools change.
+
+## Recovery and operability
+
+Each meaningful stage records its progress so a worker can resume from a known boundary. Failures surface with the document and stage that produced them, making it possible to retry a narrow unit of work instead of starting the entire ingestion process again.
+
+Temporary resources have explicit lifetimes, and cleanup is safe to repeat. That matters because interrupted cleanup is itself a production scenario, especially when documents vary widely in size and structure.
+
+## Tradeoffs
+
+A content-aware path has more branches than a universal render-and-OCR pipeline. It therefore needs clearer classification rules and fixtures covering text, scan, and mixed cases. The benefit is that expensive work is reserved for the pages that need it.
+
+Selective processing also means preserving consistent output contracts across different extraction strategies. That extra boundary work keeps downstream consumers independent of how a value was discovered.
+
+## What I learned
+
+The strongest optimization came from removing work, not making the same work marginally faster. Understanding real document shapes first made the architecture both leaner and easier to explain.

@@ -1,9 +1,6 @@
 import Container from '@/components/common/Container';
 import { ProjectContent } from '@/components/projects/ProjectContent';
 import { ProjectNavigation } from '@/components/projects/ProjectNavigation';
-import ArrowLeft from '@/components/svgs/ArrowLeft';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { siteConfig } from '@/config/Meta';
 import {
   getProjectCaseStudyBySlug,
@@ -11,36 +8,27 @@ import {
   getPublishedProjectCaseStudies,
   getRelatedProjectCaseStudies,
 } from '@/lib/project';
+import { ArrowLeft, ArrowRight } from '@phosphor-icons/react/dist/ssr';
 import { Metadata } from 'next';
 import { Link } from 'next-view-transitions';
 import { notFound } from 'next/navigation';
 
 interface ProjectCaseStudyPageProps {
-  params: Promise<{
-    slug: string;
-  }>;
+  params: Promise<{ slug: string }>;
 }
 
-// Generate static paths for published project case studies only
 export async function generateStaticParams() {
-  const caseStudies = getPublishedProjectCaseStudies();
-
-  return caseStudies.map(({ slug }) => ({
-    slug,
-  }));
+  return getPublishedProjectCaseStudies().map(({ slug }) => ({ slug }));
 }
 
-// Generate metadata for each project case study
 export async function generateMetadata({
   params,
 }: ProjectCaseStudyPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const caseStudy = await getProjectCaseStudyBySlug(slug);
+  const caseStudy = getProjectCaseStudyBySlug(slug);
 
   if (!caseStudy || !caseStudy.frontmatter.isPublished) {
-    return {
-      title: 'Project Not Found',
-    };
+    return { title: 'Project Not Found' };
   }
 
   const { title, description, image } = caseStudy.frontmatter;
@@ -51,9 +39,7 @@ export async function generateMetadata({
     metadataBase: new URL(siteConfig.url),
     title: `${title} - Project Case Study`,
     description,
-    alternates: {
-      canonical: url,
-    },
+    alternates: { canonical: url },
     openGraph: {
       title: `${title} - Project Case Study`,
       description,
@@ -75,112 +61,63 @@ export default async function ProjectCaseStudyPage({
   params,
 }: ProjectCaseStudyPageProps) {
   const { slug } = await params;
-  const caseStudy = await getProjectCaseStudyBySlug(slug);
+  const caseStudy = getProjectCaseStudyBySlug(slug);
 
-  if (!caseStudy || !caseStudy.frontmatter.isPublished) {
-    notFound();
-  }
+  if (!caseStudy || !caseStudy.frontmatter.isPublished) notFound();
 
-  const navigation = await getProjectNavigation(slug);
-  const relatedProjects = await getRelatedProjectCaseStudies(slug, 2);
+  const navigation = getProjectNavigation(slug);
+  const relatedProjects = getRelatedProjectCaseStudies(slug, 2);
 
   return (
-    <Container className="py-16">
-      <div className="space-y-12">
-        {/* Back Button */}
-        <div>
-          <Button variant="ghost" asChild className="group">
-            <Link href="/projects" className="flex items-center space-x-2">
-              <ArrowLeft className="size-4" />
-              <span>Back to Projects</span>
-            </Link>
-          </Button>
-        </div>
-
-        {/* Project Content */}
-        <ProjectContent
-          frontmatter={caseStudy.frontmatter}
-          content={caseStudy.content}
-        />
-
-        {/* Project Navigation */}
-        <ProjectNavigation
-          previous={navigation.previous}
-          next={navigation.next}
-        />
-
-        {/* Related Projects */}
-        {relatedProjects.length > 0 && (
-          <div className="space-y-6">
-            <Separator />
-            <div className="space-y-6">
-              <h2 className="text-2xl font-semibold">Related Projects</h2>
-              <div className="grid gap-6 md:grid-cols-2">
-                {relatedProjects.map((project) => (
-                  <div
-                    key={project.slug}
-                    className="group rounded-lg border bg-card p-6 transition-colors hover:bg-muted/50"
-                  >
-                    <Link href={`/projects/${project.slug}`}>
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-2">
-                          <h3 className="text-lg font-semibold group-hover:text-primary">
-                            {project.frontmatter.title}
-                          </h3>
-                          <div className="text-xs">
-                            <div
-                              className={`inline-block rounded px-2 py-1 text-xs font-medium ${
-                                project.frontmatter.status === 'completed'
-                                  ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                                  : project.frontmatter.status === 'in-progress'
-                                    ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
-                                    : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400'
-                              }`}
-                            >
-                              {project.frontmatter.status
-                                .charAt(0)
-                                .toUpperCase() +
-                                project.frontmatter.status.slice(1)}
-                            </div>
-                          </div>
-                        </div>
-                        <p className="text-sm text-muted-foreground line-clamp-2">
-                          {project.frontmatter.description}
-                        </p>
-                        <div className="flex flex-wrap gap-1">
-                          {project.frontmatter.technologies
-                            .slice(0, 3)
-                            .map((tech) => (
-                              <span
-                                key={tech}
-                                className="rounded bg-muted px-2 py-1 text-xs"
-                              >
-                                {tech}
-                              </span>
-                            ))}
-                          {project.frontmatter.technologies.length > 3 && (
-                            <span className="rounded bg-muted px-2 py-1 text-xs">
-                              +{project.frontmatter.technologies.length - 3}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </Link>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Back to Projects CTA */}
-        <div className="text-center">
-          <Separator className="mb-8" />
-          <Button asChild size="lg">
-            <Link href="/projects">View All Projects</Link>
-          </Button>
-        </div>
+    <Container>
+      <div className="py-8 sm:py-10">
+        <Link
+          href="/projects"
+          className="text-muted-foreground hover:text-brand inline-flex min-h-11 items-center gap-2 font-mono text-[0.68rem] tracking-[0.1em] uppercase"
+        >
+          <ArrowLeft className="size-4" aria-hidden="true" />
+          All projects
+        </Link>
       </div>
+
+      <ProjectContent
+        frontmatter={caseStudy.frontmatter}
+        content={caseStudy.content}
+      />
+
+      <ProjectNavigation
+        previous={navigation.previous}
+        next={navigation.next}
+      />
+
+      {relatedProjects.length > 0 && (
+        <section className="py-14 sm:py-20">
+          <p className="eyebrow">Related field notes</p>
+          <div className="border-border mt-6 grid border-t md:grid-cols-2">
+            {relatedProjects.map((project) => (
+              <Link
+                key={project.slug}
+                href={`/projects/${project.slug}`}
+                className="group border-border border-b py-7 md:border-r md:px-7 md:first:pl-0 md:last:border-r-0 md:last:pr-0"
+              >
+                <p className="text-brand font-mono text-[0.65rem] tracking-[0.1em] uppercase">
+                  {project.frontmatter.category || 'Case study'}
+                </p>
+                <h2 className="font-editorial mt-3 text-2xl leading-tight tracking-[-0.025em]">
+                  {project.frontmatter.title}
+                </h2>
+                <span className="text-brand mt-5 inline-flex items-center gap-2 text-sm font-semibold">
+                  Read case study
+                  <ArrowRight
+                    className="size-4 transition-transform group-hover:translate-x-1"
+                    aria-hidden="true"
+                  />
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </Container>
   );
 }

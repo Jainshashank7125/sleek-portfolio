@@ -10,6 +10,28 @@ import path from 'path';
 
 const projectsDirectory = path.join(process.cwd(), 'src/data/projects');
 
+function isProjectFrontmatter(
+  value: unknown,
+): value is ProjectCaseStudyFrontmatter {
+  if (!value || typeof value !== 'object') return false;
+
+  const data = value as Record<string, unknown>;
+
+  return (
+    typeof data.title === 'string' &&
+    data.title.trim().length > 0 &&
+    typeof data.description === 'string' &&
+    data.description.trim().length > 0 &&
+    Array.isArray(data.technologies) &&
+    data.technologies.every((technology) => typeof technology === 'string') &&
+    typeof data.timeline === 'string' &&
+    typeof data.role === 'string' &&
+    ['completed', 'in-progress', 'archived'].includes(String(data.status)) &&
+    typeof data.featured === 'boolean' &&
+    typeof data.isPublished === 'boolean'
+  );
+}
+
 /**
  * Get all project case study files from the projects directory
  */
@@ -40,15 +62,13 @@ export function getProjectCaseStudyBySlug(
     const fileContents = fs.readFileSync(fullPath, 'utf8');
     const { data, content } = matter(fileContents);
 
-    // Validate frontmatter
-    const frontmatter = data as ProjectCaseStudyFrontmatter;
-    if (!frontmatter.title || !frontmatter.description) {
+    if (!isProjectFrontmatter(data)) {
       throw new Error(`Invalid frontmatter in ${slug}.mdx`);
     }
 
     return {
       slug,
-      frontmatter,
+      frontmatter: data,
       content,
     };
   } catch (error) {
@@ -133,8 +153,13 @@ export function getProjectNavigation(currentSlug: string): {
   previous: { title: string; slug: string } | null;
   next: { title: string; slug: string } | null;
 } {
-  // Only navigate between projects that actually have a case-study page.
-  const projects = configProjects.filter((project) => project.details);
+  const publishedSlugs = new Set(
+    getPublishedProjectCaseStudies().map(({ slug }) => `/projects/${slug}`),
+  );
+  const projects = configProjects.filter(
+    (project) =>
+      project.details && publishedSlugs.has(project.projectDetailsPageSlug),
+  );
 
   // Find current project in config
   const currentProjectIndex = projects.findIndex(
