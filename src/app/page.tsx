@@ -1,22 +1,25 @@
+import Container from '@/components/common/Container';
 import About from '@/components/landing/About';
 import Experience from '@/components/landing/Experience';
-import Expertise from '@/components/landing/Expertise';
 import Hero from '@/components/landing/Hero';
-import Philosophy from '@/components/landing/Philosophy';
-import Work from '@/components/landing/Projects';
-import Setup from '@/components/landing/Setup';
+import Projects from '@/components/landing/Projects';
+import ProofPanel from '@/components/landing/ProofPanel';
+import Writing from '@/components/landing/Writing';
 import React from 'react';
 
 export default function Page() {
   return (
-    <main className="min-h-screen pb-24">
-      <Hero />
-      <Expertise />
-      <Work />
+    <div className="min-h-screen overflow-x-clip">
+      <Container>
+        <div className="border-border grid border-b lg:grid-cols-[minmax(0,1.62fr)_minmax(22rem,0.92fr)]">
+          <Hero />
+          <ProofPanel />
+        </div>
+      </Container>
+      <Projects />
       <Experience />
-      <Philosophy />
+      <Writing />
       <About />
-      <Setup />
-    </main>
+    </div>
   );
 }

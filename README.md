@@ -1,34 +1,29 @@
-# Shashank Jain — Portfolio
+# Shashank Jain — Systems Field Notes
 
-A systems-engineering portfolio for **Shashank Jain**, an AI-Enabled Full Stack Engineer building scalable, cloud-native systems. It showcases engineering case studies (architecture, tradeoffs, results), core expertise, and an engineering philosophy — not just a list of apps.
+A product-engineering portfolio for Shashank Jain. Healthcare and revenue-cycle work leads the story, supported by earlier AI, SaaS, enterprise, mobile, and open-source systems.
 
-Built with Next.js 15, TypeScript, Tailwind CSS v4, and shadcn/ui. Live at **[portfolio.jainshashank.in](https://portfolio.jainshashank.in)**.
+The interface follows an editorial field-notes direction: warm paper surfaces, serif headlines, technical labels, ruled layouts, and qualitative case studies that focus on architecture, decisions, recovery, tradeoffs, and lessons.
+
+Built with Next.js 15, React 19, TypeScript, Tailwind CSS v4, and MDX. The production site is [portfolio.jainshashank.in](https://portfolio.jainshashank.in).
 
 ## Features
 
-- **Next.js 15** (App Router) + **React 19**
-- **Tailwind CSS v4** design system with dark/light mode
-- **shadcn/ui** components
-- **MDX** case studies for projects (structured: Context · Problem · Architecture · Implementation · Tradeoffs · Results · Lessons)
-- **AI assistant** (Gemini) that answers questions about my work
-- **Contact form** with Telegram integration
-- SEO optimized, responsive, TypeScript-first
+- Responsive light and dark field-notes design system
+- Config-driven homepage, career timeline, projects, and metadata
+- MDX case studies and technical writing with syntax highlighting and code copy
+- Static metadata, sitemap, and structured data for published routes
+- Portfolio assistant and contact form with preserved API integrations
+- Accessible navigation, keyboard focus, form validation, and reduced-motion support
 
-## Tech & Content Map
+## Content map
 
-The site is config-driven. Most content lives in `src/config`:
+- `src/config` — positioning, projects, experience, navigation, metadata, résumé, setup, and tools
+- `src/data/projects` — published engineering case studies
+- `src/data/blog` — published technical notes
+- `src/components/field-notes` — reusable editorial layout primitives
+- `src/components/landing` — homepage sections
 
-- `Hero.tsx` — headline, subheadline, CTAs, skills, social links
-- `Expertise.tsx` — core expertise pillars
-- `Projects.tsx` — project cards (flagship + secondary + open-source)
-- `Philosophy.tsx` — engineering principles
-- `Experience.tsx` — work history
-- `Meta.tsx` — SEO / metadata
-- `Navbar.tsx`, `Footer.tsx`, `Setup.tsx`, `Gears.tsx`, `Contact.tsx`, `Resume.ts`, `ChatPrompt.ts`
-
-Project case studies are MDX files in `src/data/projects/`.
-
-## Environment Variables
+## Environment variables
 
 ```env
 TELEGRAM_BOT_TOKEN="your-token"
@@ -37,14 +32,20 @@ GEMINI_API_KEY="your-api-key"
 NEXT_PUBLIC_URL="http://localhost:3000"
 ```
 
-## Getting Started
+## Local development
 
 ```bash
 npm install
+npm test
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3000](http://localhost:3000). Before shipping, run:
+
+```bash
+npm run lint
+npm run build
+```
 
 ## License
 

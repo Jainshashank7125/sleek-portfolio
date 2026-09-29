@@ -1,0 +1,80 @@
+---
+title: 'Building Reliable Healthcare Workflows'
+category: 'Production reliability'
+description: 'Production improvements that make asynchronous healthcare workflows observable, recoverable, and safe to operate.'
+problem: 'Prevent silent failures, preserve the right document-to-patient relationships, and make historical repair work safe to resume.'
+outcome: 'Recovery became an explicit capability of the workflow rather than an emergency procedure.'
+technologies:
+  ['Python', 'Django', 'Celery', 'PyMuPDF', 'Amazon S3', 'PostgreSQL']
+github: ''
+live: ''
+image: ''
+timeline: 'Ongoing reliability work'
+role: 'Backend and production engineering'
+team: 'Healthcare platform team'
+status: 'in-progress'
+featured: true
+confidential: true
+challenges:
+  [
+    'Distinguishing completed work from work that only appeared successful',
+    'Repairing historical records without duplicating side effects',
+    'Preserving relationships across asynchronous processing boundaries',
+  ]
+learnings:
+  [
+    'A successful job needs a verified business outcome, not only a clean exit',
+    'Idempotency is what turns recovery from a risky event into a routine action',
+    'Repair tools deserve the same observability as the primary workflow',
+  ]
+isPublished: true
+---
+
+## Context
+
+Asynchronous systems can report technical success while leaving the business workflow incomplete. A task may exit cleanly even though a relationship was not persisted, a downstream artifact is missing, or a later step has no way to find the work it should continue.
+
+I treated those gaps as product and architecture problems. The aim was to make failure visible, protect identity relationships, and give operators safe recovery paths.
+
+## Workflow and architecture
+
+The reliability work spans the primary workflow and the repair path around it. Durable identifiers connect documents, patient context, extracted data, and downstream records. Background jobs validate their expected outcome before marking work complete.
+
+```text
+Durable workflow state
+    ↓
+Idempotent background step
+    ↓
+Outcome verification
+    ├── Complete and continue
+    ├── Retry a safe boundary
+    └── Escalate with context
+
+Historical repair uses the same boundaries,
+checkpoints, and observability.
+```
+
+Repair commands scan bounded sets of records, record checkpoints, and reuse the same domain services as normal processing wherever possible.
+
+## Engineering decisions
+
+- **Verify business outcomes.** A queue acknowledgement is not enough when the expected record or relationship is absent.
+- **Carry stable identifiers.** Work does not depend on a temporary filename or an implicit ordering to find its domain context.
+- **Make writes idempotent.** Re-running a step converges on the intended state instead of duplicating records or external effects.
+- **Build bounded repair tools.** Historical work supports dry runs, checkpoints, and scoped batches rather than one opaque operation.
+
+## Recovery and operability
+
+Failures include the stage, durable identifiers, and safe next action. Retries happen only around boundaries designed for replay. When automatic recovery is not appropriate, the system creates an explicit operational state instead of silently continuing.
+
+Historical repair work emits progress and can resume from a checkpoint. This keeps a long-running recovery from becoming an all-or-nothing event and lets the operator inspect effects before expanding the scope.
+
+## Tradeoffs
+
+Idempotency and outcome verification require additional database constraints, queries, and domain-level definitions of success. That work is less visible than a new feature, but it lowers the cost and risk of every later failure.
+
+Reusing production services in repair tools keeps behavior consistent, though it also means those services need clear transaction and side-effect boundaries. The resulting design is easier to test and safer to operate.
+
+## What I learned
+
+Reliability is not the absence of failures. It is the ability to notice incomplete work, explain its state, and move it forward without creating a second problem.

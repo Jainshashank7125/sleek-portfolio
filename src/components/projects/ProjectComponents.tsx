@@ -43,7 +43,7 @@ const Technology = ({ name }: { name: string }) => {
     TechnologyComponents[name] || TechnologyComponents[name.toLowerCase()];
 
   return (
-    <div className="inline-flex items-center gap-2 rounded-full bg-muted/50 px-3 py-1.5 text-sm font-medium">
+    <div className="tech-chip gap-2">
       {TechComponent && <TechComponent />}
       <span>{name}</span>
     </div>
@@ -53,8 +53,8 @@ const Technology = ({ name }: { name: string }) => {
 // Custom TechStack component for displaying multiple technologies
 const TechStack = ({ technologies }: { technologies: string[] }) => {
   return (
-    <div className="my-6 rounded-lg border bg-muted/20 p-4">
-      <h4 className="mb-3 text-lg font-semibold">Technology Stack</h4>
+    <div className="border-border my-8 border-y py-5">
+      <h4 className="font-editorial mb-4 text-xl">Technology stack</h4>
       <div className="flex flex-wrap gap-2">
         {technologies.map((tech) => (
           <Technology key={tech} name={tech} />
@@ -77,32 +77,28 @@ const ProjectMeta = ({
   status?: string;
 }) => {
   return (
-    <div className="my-6 grid gap-4 rounded-lg border bg-muted/20 p-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="border-border my-8 grid border-y sm:grid-cols-2 lg:grid-cols-4">
       {timeline && (
-        <div>
-          <h5 className="text-sm font-semibold text-muted-foreground">
-            Timeline
-          </h5>
+        <div className="border-border border-b py-4 lg:border-r lg:border-b-0 lg:px-4 lg:first:pl-0">
+          <h5 className="eyebrow">Timeline</h5>
           <p className="text-sm">{timeline}</p>
         </div>
       )}
       {role && (
-        <div>
-          <h5 className="text-sm font-semibold text-muted-foreground">Role</h5>
+        <div className="border-border border-b py-4 lg:border-r lg:border-b-0 lg:px-4">
+          <h5 className="eyebrow">Role</h5>
           <p className="text-sm">{role}</p>
         </div>
       )}
       {team && (
-        <div>
-          <h5 className="text-sm font-semibold text-muted-foreground">Team</h5>
+        <div className="border-border border-b py-4 lg:border-r lg:border-b-0 lg:px-4">
+          <h5 className="eyebrow">Team</h5>
           <p className="text-sm">{team}</p>
         </div>
       )}
       {status && (
-        <div>
-          <h5 className="text-sm font-semibold text-muted-foreground">
-            Status
-          </h5>
+        <div className="py-4 lg:px-4 lg:last:pr-0">
+          <h5 className="eyebrow">Status</h5>
           <Badge
             variant={
               status === 'completed'
@@ -123,17 +119,17 @@ const ProjectMeta = ({
 // Custom Challenges component
 const Challenges = ({ challenges }: { challenges: string[] }) => {
   return (
-    <div className="my-6 rounded-lg border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-800 dark:bg-yellow-950/20">
-      <h4 className="mb-3 text-lg font-semibold text-yellow-800 dark:text-yellow-200">
-        Key Challenges
-      </h4>
+    <div className="border-border my-8 border-y py-5">
+      <h4 className="font-editorial mb-4 text-xl">Key Challenges</h4>
       <ul className="space-y-2">
         {challenges.map((challenge, index) => (
           <li
             key={index}
-            className="flex items-start gap-2 text-sm text-yellow-700 dark:text-yellow-300"
+            className="text-muted-foreground flex items-start gap-2 text-sm"
           >
-            <span className="mt-1 block size-1.5 rounded-full bg-yellow-500 dark:bg-yellow-400" />
+            <span className="text-[var(--field-red)]" aria-hidden="true">
+              →
+            </span>
             {challenge}
           </li>
         ))}
@@ -145,17 +141,17 @@ const Challenges = ({ challenges }: { challenges: string[] }) => {
 // Custom Learnings component
 const Learnings = ({ learnings }: { learnings: string[] }) => {
   return (
-    <div className="my-6 rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-950/20">
-      <h4 className="mb-3 text-lg font-semibold text-green-800 dark:text-green-200">
-        Key Learnings
-      </h4>
+    <div className="border-border my-8 border-y py-5">
+      <h4 className="font-editorial mb-4 text-xl">Key Learnings</h4>
       <ul className="space-y-2">
         {learnings.map((learning, index) => (
           <li
             key={index}
-            className="flex items-start gap-2 text-sm text-green-700 dark:text-green-300"
+            className="text-muted-foreground flex items-start gap-2 text-sm"
           >
-            <span className="mt-1 block size-1.5 rounded-full bg-green-500 dark:bg-green-400" />
+            <span className="text-[var(--field-red)]" aria-hidden="true">
+              →
+            </span>
             {learning}
           </li>
         ))}
@@ -180,7 +176,7 @@ export const ProjectComponents = {
       alt={alt}
       width={800}
       height={400}
-      className="rounded-lg"
+      className="border-border my-10 border"
       {...props}
     />
   ),
@@ -191,7 +187,7 @@ export const ProjectComponents = {
     children: React.ReactNode;
     [key: string]: unknown;
   }) => (
-    <h1 className="mb-6 text-4xl font-bold" {...props}>
+    <h1 className="font-editorial mb-6 text-4xl tracking-[-0.035em]" {...props}>
       {children}
     </h1>
   ),
@@ -202,7 +198,10 @@ export const ProjectComponents = {
     children: React.ReactNode;
     [key: string]: unknown;
   }) => (
-    <h2 className="mb-4 mt-8 text-3xl font-semibold" {...props}>
+    <h2
+      className="font-editorial border-border mt-14 mb-5 border-t pt-7 text-3xl tracking-[-0.035em]"
+      {...props}
+    >
       {children}
     </h2>
   ),
@@ -213,7 +212,10 @@ export const ProjectComponents = {
     children: React.ReactNode;
     [key: string]: unknown;
   }) => (
-    <h3 className="mb-3 mt-6 text-2xl font-medium" {...props}>
+    <h3
+      className="font-editorial mt-9 mb-4 text-2xl tracking-[-0.025em]"
+      {...props}
+    >
       {children}
     </h3>
   ),
@@ -224,7 +226,10 @@ export const ProjectComponents = {
     children: React.ReactNode;
     [key: string]: unknown;
   }) => (
-    <p className="mb-4 leading-7 text-muted-foreground" {...props}>
+    <p
+      className="text-muted-foreground mb-5 text-[1.04rem] leading-8"
+      {...props}
+    >
       {children}
     </p>
   ),
@@ -235,7 +240,10 @@ export const ProjectComponents = {
     children: React.ReactNode;
     [key: string]: unknown;
   }) => (
-    <ul className="mb-4 ml-6 list-disc space-y-2" {...props}>
+    <ul
+      className="mb-6 ml-5 list-disc space-y-3 marker:text-[var(--field-red)]"
+      {...props}
+    >
       {children}
     </ul>
   ),
@@ -246,7 +254,10 @@ export const ProjectComponents = {
     children: React.ReactNode;
     [key: string]: unknown;
   }) => (
-    <ol className="mb-4 ml-6 list-decimal space-y-2" {...props}>
+    <ol
+      className="marker:text-brand mb-6 ml-5 list-decimal space-y-3"
+      {...props}
+    >
       {children}
     </ol>
   ),
@@ -257,7 +268,7 @@ export const ProjectComponents = {
     children: React.ReactNode;
     [key: string]: unknown;
   }) => (
-    <li className="leading-7 text-muted-foreground" {...props}>
+    <li className="text-muted-foreground pl-1 leading-7" {...props}>
       {children}
     </li>
   ),
@@ -293,9 +304,9 @@ export const ProjectComponents = {
     const codeText = getTextContent(children);
 
     return (
-      <div className="group relative mb-4">
+      <div className="group relative my-8">
         <pre
-          className="overflow-x-auto rounded-lg border bg-muted/30 p-4 text-sm [&>code]:bg-transparent [&>code]:p-0"
+          className="border-border overflow-x-auto border bg-[#15191f] p-5 text-sm text-[#eef1f4] [&>code]:bg-transparent [&>code]:p-0"
           {...props}
         >
           {children}
@@ -322,7 +333,10 @@ export const ProjectComponents = {
     }
 
     return (
-      <code className="rounded px-2 py-1 text-sm font-mono" {...props}>
+      <code
+        className="border-border bg-muted border px-1.5 py-0.5 font-mono text-sm"
+        {...props}
+      >
         {children}
       </code>
     );
@@ -335,7 +349,7 @@ export const ProjectComponents = {
     [key: string]: unknown;
   }) => (
     <blockquote
-      className="mb-4 border-l-4 border-primary pl-4 italic text-muted-foreground"
+      className="font-editorial text-muted-foreground my-8 border-l-2 border-[var(--field-red)] py-1 pl-5 text-xl leading-relaxed italic"
       {...props}
     >
       {children}

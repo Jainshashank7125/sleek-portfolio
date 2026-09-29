@@ -1,37 +1,49 @@
 import Container from '@/components/common/Container';
-import { Button } from '@/components/ui/button';
+import { EditorialPageHeader } from '@/components/field-notes/EditorialPageHeader';
+import { RuledSection } from '@/components/field-notes/RuledSection';
+import { SectionLabel } from '@/components/field-notes/SectionLabel';
 import { generateMetadata as getMetadata } from '@/config/Meta';
 import { resumeConfig } from '@/config/Resume';
+import { ArrowUpRight } from '@phosphor-icons/react/dist/ssr';
 import { Metadata } from 'next';
-import { Link } from 'next-view-transitions';
-import React from 'react';
 
 export const metadata: Metadata = getMetadata('/resume');
 
 export default function ResumePage() {
   return (
-    <Container className="max-w-4xl py-16">
-      <div className="space-y-8">
-        <div className="flex flex-col gap-3">
-          <p className="eyebrow">CV</p>
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <h1 className="text-4xl font-bold tracking-tight lg:text-5xl">
-              Resume
-            </h1>
-            <Button variant="outline" asChild>
-              <Link href={resumeConfig.url} target="_blank" rel="noopener noreferrer">
-                Open in new tab
-              </Link>
-            </Button>
-          </div>
-          <p className="max-w-2xl text-lg text-muted-foreground">
-            A snapshot of my experience, skills, and projects.
-          </p>
+    <Container>
+      <EditorialPageHeader
+        index="01"
+        eyebrow="Résumé"
+        title="Experience, in one document."
+        description="A concise record of the roles, systems, and technologies behind the field notes across this portfolio."
+        actions={
+          <a
+            href={resumeConfig.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="border-foreground hover:border-brand hover:text-brand inline-flex min-h-11 items-center gap-2 border px-5 text-sm font-semibold"
+          >
+            Open in new tab
+            <ArrowUpRight className="size-4" aria-hidden="true" />
+          </a>
+        }
+      />
+
+      <RuledSection>
+        <SectionLabel index="02">Document preview</SectionLabel>
+        <div className="border-border bg-card mt-8 border">
+          <iframe
+            src={resumeConfig.url}
+            title="Shashank Jain résumé"
+            className="min-h-[75vh] w-full sm:min-h-screen"
+          />
         </div>
-        <div className="overflow-hidden rounded-xl border border-border">
-          <iframe src={resumeConfig.url} className="min-h-screen w-full" />
-        </div>
-      </div>
+        <p className="text-muted-foreground mt-4 text-sm sm:hidden">
+          If the embedded document is difficult to read on a small screen, use
+          “Open in new tab” above.
+        </p>
+      </RuledSection>
     </Container>
   );
 }

@@ -1,5 +1,6 @@
 'use client';
 
+import { persistTheme, readStoredTheme } from '@/lib/theme.mjs';
 import React, { useCallback, useEffect, useState } from 'react';
 
 import Moon from '../svgs/Moon';
@@ -9,83 +10,46 @@ interface ThemeSwitchProps {
   className?: string;
 }
 
-export default function ThemeSwitch({ className }: ThemeSwitchProps) {
-  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
-  const [mounted, setMounted] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
+type Theme = 'light' | 'dark';
+
+function applyTheme(theme: Theme) {
+  document.documentElement.classList.toggle('dark', theme === 'dark');
+  document.documentElement.dataset.theme = theme;
+}
+
+export default function ThemeSwitch({ className = '' }: ThemeSwitchProps) {
+  const [theme, setTheme] = useState<Theme>('light');
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-
-    setTheme(savedTheme as 'light' | 'dark');
-    document.documentElement.classList.toggle('dark', savedTheme === 'dark');
-    setMounted(true);
+    const storedTheme = readStoredTheme(() => window.localStorage) as Theme;
+    setTheme(storedTheme);
+    applyTheme(storedTheme);
   }, []);
 
-  const toggleTheme = useCallback(
-    async (event: React.MouseEvent<HTMLButtonElement>) => {
-      if (isAnimating) return;
+  const toggleTheme = useCallback(() => {
+    setTheme((currentTheme) => {
+      const nextTheme: Theme = currentTheme === 'light' ? 'dark' : 'light';
+      persistTheme(() => window.localStorage, nextTheme);
+      applyTheme(nextTheme);
+      return nextTheme;
+    });
+  }, []);
 
-      setIsAnimating(true);
-      const rect = event.currentTarget.getBoundingClientRect();
-      const x = rect.left + rect.width / 2;
-      const y = rect.top + rect.height / 2;
-
-      const transition = document.createElement('div');
-      transition.style.position = 'fixed';
-      transition.style.inset = '0';
-      transition.style.zIndex = '9999';
-      transition.style.pointerEvents = 'none';
-      transition.style.backgroundColor =
-        theme === 'light' ? '#0a0a0f' : 'oklch(1 0 0)';
-      transition.style.clipPath = 'circle(0% at var(--x) var(--y))';
-      transition.style.transition = 'clip-path 600ms ease-in-out';
-      transition.style.setProperty('--x', `${x}px`);
-      transition.style.setProperty('--y', `${y}px`);
-
-      document.body.appendChild(transition);
-
-      requestAnimationFrame(() => {
-        transition.style.clipPath = 'circle(150% at var(--x) var(--y))';
-      });
-
-      await new Promise((resolve) => setTimeout(resolve, 300));
-
-      const newTheme = theme === 'light' ? 'dark' : 'light';
-      setTheme(newTheme);
-      localStorage.setItem('theme', newTheme);
-      document.documentElement.classList.toggle('dark');
-
-      await new Promise((resolve) => setTimeout(resolve, 300));
-      transition.remove();
-      setIsAnimating(false);
-    },
-    [theme, isAnimating],
-  );
-
-  if (!mounted) return null;
+  const isDark = theme === 'dark';
 
   return (
     <button
+      type="button"
       onClick={toggleTheme}
-      disabled={isAnimating}
-      className={`relative flex h-8 w-8 items-center justify-center overflow-hidden transition-opacity hover:opacity-80 ${className} hover:cursor-pointer`}
-      aria-label="Toggle theme"
+      className={`inline-flex size-11 items-center justify-center border border-transparent text-foreground transition-colors hover:border-border hover:text-brand ${className}`}
+      aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
+      aria-pressed={isDark}
     >
-      <Sun
-        className={`absolute h-5 w-5 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
-          theme === 'dark'
-            ? 'translate-y-0 scale-100 opacity-100'
-            : 'translate-y-5 scale-50 opacity-0'
-        }`}
-      />
-      <Moon
-        className={`absolute h-5 w-5 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
-          theme === 'light'
-            ? 'translate-y-0 scale-100 opacity-100'
-            : 'translate-y-5 scale-50 opacity-0'
-        }`}
-      />
+      {isDark ? (
+        <Sun className="size-5" aria-hidden="true" />
+      ) : (
+        <Moon className="size-5" aria-hidden="true" />
+      )}
     </button>
   );
 }

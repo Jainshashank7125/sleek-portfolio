@@ -1,0 +1,74 @@
+{
+  "proof": {
+    "headline": "Complex workflows, made reliable.",
+    "items": [
+      {
+        "title": "End-to-end ownership",
+        "description": "From ingestion to production"
+      },
+      {
+        "title": "Built for recovery",
+        "description": "Async, observable, idempotent"
+      }
+    ],
+    "note": "Trace the whole path. Make recovery part of the design."
+  },
+  "featuredWorkflow": {
+    "title": "Scaling Healthcare Document Ingestion",
+    "description": "A production document-ingestion path that turns multi-format healthcare documents into structured data through validation, asynchronous processing, extraction, enrichment, and external integrations.",
+    "themes": [
+      "Healthcare claims automation",
+      "Cloud infrastructure and production engineering",
+      "Reliable healthcare workflows"
+    ],
+    "stages": [
+      {
+        "title": "Multi-format documents",
+        "detail": "PDF, TIFF, scanned, and mixed-content inputs",
+        "icon": "Files"
+      },
+      {
+        "title": "Ingestion & Validation",
+        "detail": "Validate inputs and establish a traceable processing record",
+        "icon": "Checks"
+      },
+      {
+        "title": "Async Processing",
+        "detail": "Queue-backed workers isolate slow and recoverable work",
+        "icon": "Queue"
+      },
+      {
+        "title": "OCR & Data Extraction",
+        "detail": "Render and recognize content only when the document needs it",
+        "icon": "Scan"
+      },
+      {
+        "title": "Classification & Enrichment",
+        "detail": "Apply domain context and prepare usable records",
+        "icon": "Tag"
+      },
+      {
+        "title": "External Integrations",
+        "detail": "Exchange status and workflow data with trusted services",
+        "icon": "Link"
+      },
+      {
+        "title": "Structured Data",
+        "detail": "Deliver searchable, operationally useful output",
+        "icon": "Database"
+      }
+    ]
+  },
+  "homepageProjects": [
+    "/projects/healthcare-claims-automation",
+    "/projects/cloud-infrastructure",
+    "/projects/reliable-healthcare-workflows"
+  ],
+  "aboutInterests": [
+    "Healthcare and revenue-cycle workflows",
+    "Asynchronous and event-driven systems",
+    "Cloud infrastructure and production reliability",
+    "Product engineering across the full stack",
+    "Developer tooling and technical writing"
+  ]
+}

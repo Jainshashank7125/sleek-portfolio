@@ -1,0 +1,91 @@
+---
+title: 'Cloud Infrastructure & Production Engineering'
+category: 'Cloud infrastructure'
+description: 'Containerized application and worker workloads on AWS, provisioned as repeatable environments and delivered through an automated release path.'
+problem: 'Give healthcare workloads private, reproducible infrastructure and safe operational paths for encrypted data and database changes.'
+outcome: 'A production foundation that makes deployment, isolation, and recovery deliberate.'
+technologies:
+  [
+    'AWS ECS',
+    'RDS PostgreSQL',
+    'S3',
+    'ECR',
+    'CloudFront',
+    'Terraform',
+    'GitHub Actions',
+    'Docker',
+  ]
+github: ''
+live: ''
+image: ''
+timeline: 'Platform foundation and ongoing operations'
+role: 'Cloud and application engineering'
+team: 'Product engineering'
+status: 'in-progress'
+featured: true
+confidential: true
+challenges:
+  [
+    'Running web and worker workloads with different scaling needs',
+    'Keeping data services private while preserving practical operations',
+    'Making infrastructure and application changes move together safely',
+  ]
+learnings:
+  [
+    'Repeatability is a product feature for the engineering team',
+    'Application recovery requirements should shape infrastructure boundaries',
+    'Deployment design includes migrations, workers, secrets, and rollback paths',
+  ]
+isPublished: true
+---
+
+## Context
+
+The application includes web services, asynchronous workers, databases, object storage, and user-facing assets. Moving it into production required more than selecting cloud services; the environment had to be reproducible, private where appropriate, and understandable during an incident.
+
+I worked across the application and infrastructure layers so deployment decisions reflected how the product actually behaves.
+
+## Workflow and architecture
+
+Web and worker processes are packaged as containers and run as separate ECS services. They share a release artifact but keep independent runtime and scaling concerns. RDS PostgreSQL provides durable relational state, S3 holds document data, and CloudFront serves public assets without exposing the private application network.
+
+```text
+Source change
+    ↓
+Test and container build
+    ↓
+Versioned image in ECR
+    ↓
+Terraform-managed AWS environment
+    ├── Web service
+    ├── Queue workers
+    ├── Private database
+    └── Encrypted object storage
+    ↓
+Health checks, logs, and rollback path
+```
+
+Terraform describes the environment, while GitHub Actions coordinates verification, image publication, and deployment steps.
+
+## Engineering decisions
+
+- **Separate web and worker services.** They can be observed and scaled according to their own failure and workload patterns.
+- **Keep stateful services private.** Application services reach the database through controlled network paths rather than public exposure.
+- **Version infrastructure and application delivery.** Changes are reviewable and environments can be reconstructed from the same definitions.
+- **Make operational steps explicit.** Database migrations, health checks, and worker rollout are part of the deployment design.
+
+## Recovery and operability
+
+Service health, structured logs, and task-level visibility make it possible to distinguish application failures from infrastructure failures. Versioned images support controlled rollback, while durable queues prevent background work from depending on a single container's lifetime.
+
+Backups and encrypted storage protect durable data. Infrastructure definitions reduce the number of recovery steps that depend on memory or undocumented console changes.
+
+## Tradeoffs
+
+Managed services and infrastructure as code add setup and platform knowledge compared with a single-server deployment. They also produce a much clearer separation between disposable compute and durable state.
+
+Sharing one container artifact between web and worker services simplifies releases, but the runtime commands and health signals must remain distinct. That discipline keeps convenience from collapsing important operational boundaries.
+
+## What I learned
+
+Cloud infrastructure works best when it expresses the application's recovery model. The important diagram is not only where services run, but which state survives, which work can replay, and how an operator knows the system is healthy.
