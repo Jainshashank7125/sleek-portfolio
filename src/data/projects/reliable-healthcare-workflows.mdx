@@ -1,0 +1,115 @@
+---
+title: 'Building Reliable Healthcare Workflows'
+category: 'Reliability'
+description: 'A set of fixes that make asynchronous healthcare workflows reliable, recoverable, observable, and safe to operate — from false-success detection to idempotent backfills and safer user onboarding.'
+problem: 'Async healthcare pipelines that reported success after processing had failed, kept only the last patient in scanned documents, or served the wrong source file.'
+technologies:
+  ['Python', 'Django', 'Celery', 'PyMuPDF', 'OCR', 'Amazon S3', 'PostgreSQL']
+github: ''
+live: ''
+image: '/project/reliable-healthcare-workflows.png'
+timeline: '2026 — Present'
+role: 'AI Development Engineer'
+team: 'Nodaris AI'
+status: 'in-progress'
+featured: true
+confidential: true
+challenges:
+  [
+    'Celery tasks reporting success when the business operation had failed',
+    'Scanned multi-patient documents collapsing to the last patient found',
+    'Document downloads built on incorrect storage assumptions',
+    'User provisioning that returned temporary passwords through the API',
+  ]
+learnings:
+  [
+    'Successful execution does not mean successful business processing',
+    'Fixes must cover historical data too — backfills should be idempotent',
+    'Deterministic storage paths make systems easier to reason about',
+    'Deployment discipline is a reliability feature',
+  ]
+isPublished: true
+---
+
+## Context
+
+Healthcare pipelines retry, reprocess, and backfill constantly, and they run asynchronously across workers, storage, and external systems. None of the fixes below is huge on its own. Together they share one theme:
+
+> **Making asynchronous healthcare workflows reliable, recoverable, observable, and safe to operate.**
+
+## 1. Detecting Celery false successes
+
+**Problem.** An async ingestion task could report **success** even when processing had failed internally. The task treated *"the function finished"* as success instead of checking the resulting application state.
+
+**Fix.** The task now **verifies the resulting `FileState`** and correctly propagates processing failures.
+
+**Why it matters.** It stops the most dangerous kind of failure: infrastructure reports success while the business operation quietly failed.
+
+```text
+Before:  task finished ──► SUCCESS               (even if the file failed)
+After:   task finished ──► check FileState ──┬─► SUCCESS
+                                             └─► FAILURE (propagated)
+```
+
+## 2. Multi-patient and scanned documents
+
+**Problem.** When ingesting scanned documents that contained several patients, processing could **keep only the last patient/document it detected**.
+
+**Fix.** I reworked ingestion to:
+
+- process documents **per patient**;
+- handle **scanned pages**;
+- extract **date-of-birth** information;
+- generate **patient-specific review PDFs**;
+- keep document associations intact throughout the pipeline.
+
+This meant working across OCR and document extraction, application models, storage, and async processing at the same time.
+
+## 3. Original PDF segment generation, with an idempotent backfill
+
+**Problem.** A document-download workflow relied on **incorrect storage assumptions**, so it could serve the wrong source or fail to find generated documents.
+
+**Fix.** Segmentation now slices the **original PDF** with **PyMuPDF** and stores each segment in **S3 under a deterministic path**.
+
+**Historical data.** A fix that only covers new uploads is half a fix. I wrote an **idempotent backfill** that regenerates missing segment PDFs for existing records. It's safe to run repeatedly, so it covers new and historical documents alike.
+
+## 4. Safer user provisioning
+
+**Problem.** An audit of the RCM user-management flows found lifecycle gaps:
+
+- invited users were created **without a complete activation flow**;
+- **temporary passwords were returned directly in API responses**;
+- there was **no transactional-email** behavior.
+
+**Fix.** I introduced a **Django email abstraction** and transactional email support. That lets provisioning move toward proper **invitation and reset** workflows instead of exposing credentials through application APIs. The point was to design the complete user lifecycle, not just the authentication endpoints.
+
+## 5. A staging incident, and what it taught
+
+**What happened.** A database migration was applied to a shared staging environment from work that **hadn't been merged** into the shared deployment branch yet. The schema no longer matched the deployed application, and **uploads failed** until the environment was corrected.
+
+**What it highlighted:**
+
+- deployment discipline and **migration ownership**;
+- **environment parity** and migration tracking;
+- **rollback strategies**;
+- **monitoring and alerting** that surface schema/application drift quickly.
+
+Diagnosing it meant reading application code, database state, deployment history, and infrastructure together. That's the side of engineering I enjoy.
+
+## Key Tradeoffs
+
+- **Stricter success checks vs. simpler tasks:** validating domain state adds code to every task, but it turns silent failures into visible ones.
+- **Backfills vs. forward-only fixes:** a backfill costs extra work and has to be idempotent, but without one, historical data stays broken.
+
+## Results
+
+- **No more silent false-success runs** in document ingestion.
+- Multi-patient scanned documents keep **every** patient, each with its own review PDF.
+- Document downloads served from **deterministic S3 paths**, with historical records **backfilled**.
+- User onboarding that moves toward **invitation/reset flows** instead of exposed credentials.
+
+## Lessons
+
+- **Successful execution ≠ successful processing.** Validate infrastructure state *and* domain state.
+- **Idempotency matters.** Anything that might run twice should be safe to run twice.
+- **Observability is part of the feature.** Knowing *why* something failed and *where* it stopped is almost as important as the happy path.

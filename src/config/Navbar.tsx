@@ -12,7 +12,7 @@ export const navbarConfig = {
   },
   navItems: [
     {
-      label: 'Projects',
+      label: 'Work',
       href: '/projects',
     },
     {
@@ -24,7 +24,7 @@ export const navbarConfig = {
       href: '/blog',
     },
     {
-      label: 'Resume',
+      label: 'Résumé',
       href: '/resume',
     },
   ] as NavItem[],

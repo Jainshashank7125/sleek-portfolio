@@ -1,0 +1,14 @@
+{
+  "name": "showreel",
+  "private": true,
+  "type": "module",
+  "description": "15-second portfolio showreel: canvas renderer + synthesized soundtrack, rendered with headless Chromium and ffmpeg.",
+  "scripts": {
+    "audio": "node audio.mjs",
+    "stills": "node render.mjs stills 1,3,5,8,10,12,14.9",
+    "render": "node audio.mjs && node render.mjs video showreel.mp4 8 6"
+  },
+  "dependencies": {
+    "playwright-core": "^1.63.0"
+  }
+}

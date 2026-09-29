@@ -37,7 +37,7 @@ export default function ThemeSwitch({ className }: ThemeSwitchProps) {
       transition.style.zIndex = '9999';
       transition.style.pointerEvents = 'none';
       transition.style.backgroundColor =
-        theme === 'light' ? '#0a0a0f' : 'oklch(1 0 0)';
+        theme === 'light' ? '#0e2940' : '#e7e8e3';
       transition.style.clipPath = 'circle(0% at var(--x) var(--y))';
       transition.style.transition = 'clip-path 600ms ease-in-out';
       transition.style.setProperty('--x', `${x}px`);

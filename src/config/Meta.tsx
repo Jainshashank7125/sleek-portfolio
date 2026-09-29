@@ -16,7 +16,7 @@ export const siteConfig = {
   name: heroConfig.name,
   title: `${heroConfig.name} — ${heroConfig.title}`,
   description:
-    'Shashank Jain designs and builds cloud-native platforms, AI agent systems, and multi-tenant SaaS with Java, Python, React, and AWS.',
+    'Shashank Jain is an AI Development Engineer building AI-enabled US healthcare revenue cycle (RCM) systems — claims automation, clearinghouse integrations, document ingestion, and AWS infrastructure.',
   url: process.env.NEXT_PUBLIC_URL || 'https://portfolio.jainshashank.in',
   ogImage: '/meta/opengraph-image.png',
   author: {
@@ -29,19 +29,21 @@ export const siteConfig = {
   keywords: [
     'Shashank Jain',
     'full stack engineer',
-    'AI engineer',
-    'systems engineer',
+    'AI development engineer',
+    'healthcare software engineer',
+    'revenue cycle management',
+    'RCM',
+    'healthcare claims automation',
+    'clearinghouse integration',
     'backend architecture',
-    'multi-tenant SaaS',
-    'cloud-native',
-    'Java',
-    'Spring Boot',
     'Python',
+    'Django',
     'FastAPI',
+    'Celery',
     'React',
-    'Next.js',
+    'PostgreSQL',
     'AWS',
-    'LLM agents',
+    'Terraform',
   ],
 };
 
@@ -91,7 +93,7 @@ export const pageMetadata: Record<string, PageMeta> = {
   '/projects': {
     title: 'Projects - My Work & Projects Portfolio',
     description:
-      'Discover my projects and work across different technologies and domains. From web apps to mobile solutions.',
+      'Case studies in US healthcare RCM — claims automation, document ingestion at scale, AWS infrastructure, and reliable async workflows — plus earlier AI and SaaS work.',
     keywords: [
       'projects',
       'portfolio',

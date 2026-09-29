@@ -13,6 +13,10 @@ export interface Project {
   projectDetailsPageSlug: string;
   isWorking: boolean;
   confidential?: boolean;
+  /** Revenue-cycle stages this project touches (matches the hero schematic). */
+  stages?: string[];
+  /** Case study from a previous role — listed under "Earlier work". */
+  earlier?: boolean;
 }
 
 export interface ProjectCaseStudyFrontmatter {

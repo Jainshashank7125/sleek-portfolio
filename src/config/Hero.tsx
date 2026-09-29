@@ -6,54 +6,42 @@ import X from '@/components/svgs/X';
 export const heroConfig = {
   // Personal Information
   name: 'Shashank Jain',
-  title: 'AI-Enabled Full Stack Engineer',
+  title: 'AI Development Engineer',
   avatar: '/assets/logo.png',
 
-  // Current role eyebrow
-  eyebrow: 'Software Development Engineer · Quido Fintech',
-
-  // Headline + subheadline (PRD copy)
-  headline: 'AI-Enabled Full Stack Engineer Building Scalable Systems',
-  emphasis: 'Scalable Systems',
+  // Headline + subheadline
+  headline: 'I build the software between a claim and a payment.',
   subheadline:
-    'I design and build cloud-native platforms, AI agent systems, and multi-tenant SaaS products using Java, Python, React, AWS, and modern architecture patterns.',
-
-  // Proof line (static — no animated counters)
-  proof: [
-    { value: '3+ yrs', label: 'Engineering' },
-    { value: '99.9%', label: 'Uptime' },
-    { value: '50K+', label: 'Daily records' },
-    { value: '10+', label: 'Enterprise clients' },
-  ],
+    'AI Development Engineer at Nodaris AI, working on the US healthcare revenue cycle: claims automation, clearinghouse integrations, document ingestion, and the AWS infrastructure underneath. Before healthcare, I built AI agent systems and multi-tenant SaaS.',
 
   // Skills (names used by the AI assistant prompt + hero stack line)
   skills: [
-    { name: 'Java / Spring Boot', href: 'https://spring.io/projects/spring-boot' },
-    { name: 'Python / FastAPI', href: 'https://fastapi.tiangolo.com/' },
-    { name: 'TypeScript', href: 'https://www.typescriptlang.org/' },
-    { name: 'React / Next.js', href: 'https://nextjs.org/' },
-    { name: 'Node.js', href: 'https://nodejs.org/' },
+    { name: 'Python / Django', href: 'https://www.djangoproject.com/' },
+    { name: 'FastAPI', href: 'https://fastapi.tiangolo.com/' },
+    { name: 'React', href: 'https://react.dev/' },
     { name: 'PostgreSQL', href: 'https://www.postgresql.org/' },
-    { name: 'AWS', href: 'https://aws.amazon.com/' },
+    { name: 'Celery / Redis', href: 'https://docs.celeryq.dev/' },
+    { name: 'AWS (ECS · RDS · S3)', href: 'https://aws.amazon.com/' },
+    { name: 'Terraform', href: 'https://www.terraform.io/' },
   ],
 
   // Buttons Configuration (3 CTAs)
   buttons: [
     {
       variant: 'default',
-      text: 'View Projects',
+      text: 'See the work',
       href: '/projects',
       icon: 'Code',
     },
     {
       variant: 'outline',
-      text: 'Download Resume',
+      text: 'Résumé',
       href: '/resume',
       icon: 'CV',
     },
     {
       variant: 'outline',
-      text: 'Contact Me',
+      text: 'Get in touch',
       href: '/contact',
       icon: 'Chat',
     },
@@ -73,7 +61,7 @@ export const socialLinks = [
     icon: <LinkedIn />,
   },
   {
-    name: 'Github',
+    name: 'GitHub',
     href: 'https://github.com/Jainshashank7125',
     icon: <Github />,
   },
